@@ -17,29 +17,30 @@ import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.MotorIds;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
-      DriveConstants.kFrontLeftDrivingCanId,
-      DriveConstants.kFrontLeftTurningCanId,
+      MotorIds.kFrontLeftDrivingCanId,
+      MotorIds.kFrontLeftTurningCanId,
       DriveConstants.kFrontLeftChassisAngularOffset);
 
   private final MAXSwerveModule m_frontRight = new MAXSwerveModule(
-      DriveConstants.kFrontRightDrivingCanId,
-      DriveConstants.kFrontRightTurningCanId,
+      MotorIds.kFrontRightDrivingCanId,
+      MotorIds.kFrontRightTurningCanId,
       DriveConstants.kFrontRightChassisAngularOffset);
 
   private final MAXSwerveModule m_rearLeft = new MAXSwerveModule(
-      DriveConstants.kRearLeftDrivingCanId,
-      DriveConstants.kRearLeftTurningCanId,
+      MotorIds.kRearLeftDrivingCanId,
+      MotorIds.kRearLeftTurningCanId,
       DriveConstants.kBackLeftChassisAngularOffset);
 
   private final MAXSwerveModule m_rearRight = new MAXSwerveModule(
-      DriveConstants.kRearRightDrivingCanId,
-      DriveConstants.kRearRightTurningCanId,
+      MotorIds.kRearRightDrivingCanId,
+      MotorIds.kRearRightTurningCanId,
       DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
@@ -119,12 +120,13 @@ public class DriveSubsystem extends SubsystemBase {
   /**
    * Method to drive the robot using joystick info.
    *
-   * @param xSpeed        Speed of the robot in the x direction (forward).
-   * @param ySpeed        Speed of the robot in the y direction (sideways).
-   * @param rot           Angular rate of the robot.
-   * @param fieldOrientation Whether the provided x and y speeds are relative to the
-   *                      field.
-   * @param rateLimit     Whether to enable rate limiting for smoother control.
+   * @param xSpeed           Speed of the robot in the x direction (forward).
+   * @param ySpeed           Speed of the robot in the y direction (sideways).
+   * @param rot              Angular rate of the robot.
+   * @param fieldOrientation Whether the provided x and y speeds are relative to
+   *                         the
+   *                         field.
+   * @param rateLimit        Whether to enable rate limiting for smoother control.
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean rateLimit) {
 
@@ -263,7 +265,7 @@ public class DriveSubsystem extends SubsystemBase {
    *
    * @return The field orientation as a boolean.
    */
-  public boolean getFieldOrientation (){
+  public boolean getFieldOrientation() {
     return fieldOrientation;
   }
 }
