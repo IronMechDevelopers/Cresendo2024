@@ -6,6 +6,8 @@ package frc.robot;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -74,12 +76,15 @@ public final class Constants {
   }
 
   public static final class ModuleConstants {
-    // The MAXSwerve module can be configured with one of three pinion gears: 12T, 13T, or 14T.
-    // This changes the drive speed of the module (a pinion gear with more teeth will result in a
+    // The MAXSwerve module can be configured with one of three pinion gears: 12T,
+    // 13T, or 14T.
+    // This changes the drive speed of the module (a pinion gear with more teeth
+    // will result in a
     // robot that drives faster).
     public static final int kDrivingMotorPinionTeeth = 13;
 
-    // Invert the turning encoder, since the output shaft rotates in the opposite direction of
+    // Invert the turning encoder, since the output shaft rotates in the opposite
+    // direction of
     // the steering motor in the MAXSwerve Module.
     public static final boolean kTurningEncoderInverted = true;
 
@@ -87,7 +92,8 @@ public final class Constants {
     public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
     public static final double kWheelDiameterMeters = Units.inchesToMeters(3.0);
     public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
-    // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
+    // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
+    // teeth on the bevel pinion
     public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
     public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
         / kDrivingMotorReduction;
@@ -144,7 +150,28 @@ public final class Constants {
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
   }
 
+  public static final class VisionConstants {
+
+    public static final boolean kUsingVision = true;
+    public static final double kTagSize = 0.1651;
+    public static final double kCameraVerticalFocalLength = 699.3778103158814;
+    public static final double kCameraHorizontalFocalLength = 677.7161226393544;
+    public static final double kCameraVerticalFocalCenter = 345.6059345433618;
+    public static final double kCameraHorizontalFocalCenter = 207.12741326228522;
+  }
+
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
+
+  }
+
+  public static final class AutoLocationsConstants {
+    public static final Rotation2d kZeroDegreeRotation = new Rotation2d(Units.degreesToRadians(0));
+    public static final Rotation2d k180DegreeRotation = new Rotation2d(Units.degreesToRadians(180));
+
+    public static final Pose2d kBlueShootLocation1 = new Pose2d(1.3, 5.79, new Rotation2d(Units.degreesToRadians(0)));
+    public static final Pose2d kBlueStartingNote1 = new Pose2d(Units.inchesToMeters(114),Units.inchesToMeters(161.64), kZeroDegreeRotation);
+    public static final Pose2d kBlueStartingNote2 = new Pose2d(Units.inchesToMeters(114),Units.inchesToMeters(104.6), kZeroDegreeRotation);
+    public static final Pose2d kBlueStartingNote3 = new Pose2d(Units.inchesToMeters(114),Units.inchesToMeters(47.64), kZeroDegreeRotation);
   }
 }
