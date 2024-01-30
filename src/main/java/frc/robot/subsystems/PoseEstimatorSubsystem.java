@@ -76,7 +76,6 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     private static Thread visionThread;
     private ShuffleboardTab softwareTab = Shuffleboard.getTab("Software");
 
-
     public PoseEstimatorSubsystem(DriveSubsystem driveSubsystem) {
         this.driveSubsystem = driveSubsystem;
         AprilTagFieldLayout layout;
@@ -237,12 +236,10 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
             AprilTagDetection[] detections = detector.detect(grayMat);
 
-            if(detections.length>0)
-            {
+            if (detections.length > 0) {
                 softwareTab.add("Vision targets", true);
                 softwareTab.add("targets", detections);
-            }
-            else{
+            } else {
                 softwareTab.add("Vision targets", false);
             }
 
@@ -263,119 +260,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
                 // determine pose
                 Transform3d pose = estimator.estimate(detection);
 
-
-                // draw lines around the tag
-                for (int i = 0; i <= 3; i++) {
-                    int j = (i + 1) % 4;
-                    Point pt1 = new Point(detection.getCornerX(i), detection.getCornerY(i));
-                    Point pt2 = new Point(detection.getCornerX(j), detection.getCornerY(j));
-                    Imgproc.line(mat, pt1, pt2, outlineColor, 2);
-                }
-
-                // mark the center of the tag
-                double cx = detection.getCenterX();
-                double cy = detection.getCenterY();
-                int ll = 10;
-                Imgproc.line(mat, new Point(cx - ll, cy), new Point(cx + ll, cy), crossColor, 2);
-                Imgproc.line(mat, new Point(cx, cy - ll), new Point(cx, cy + ll), crossColor, 2);
-
-                // identify the tag
-                Imgproc.putText(
-                        mat,
-                        Integer.toString(detection.getId()),
-                        new Point(cx + ll, cy),
-                        Imgproc.FONT_HERSHEY_SIMPLEX,
-                        1,
-                        crossColor,
-                        3);
-
-                
-
-                { // draw a frustum in front of the AprilTag
-                  // use the estimated pose from above before any other transforms
-
-                    // camera same as above but different format for OpenCV
-                    float[] cameraParm = { (float) VisionConstants.kCameraVerticalFocalLength, 0.f,
-                            (float) VisionConstants.kCameraVerticalFocalCenter,
-                            0.f, (float) VisionConstants.kCameraHorizontalFocalLength,
-                            (float) VisionConstants.kCameraHorizontalFocalCenter,
-                            0.f, 0.f, 1.f };
-                    Mat K = new Mat(3, 3, CvType.CV_32F); // camera matrix
-                    K.put(0, 0, cameraParm);
-
-                    MatOfDouble distCoeffs = new MatOfDouble(); // not using any camera distortions so it's empty
-
-                    // 3D points of ideal, original corners, flat on the tag, scaled to the actual
-                    // tag size
-                    MatOfPoint3f bottom = new MatOfPoint3f(
-                            new Point3(-1. * VisionConstants.kTagSize / 2., 1. * VisionConstants.kTagSize / 2., 0.),
-                            new Point3(1. * VisionConstants.kTagSize / 2., 1. * VisionConstants.kTagSize / 2., 0.),
-                            new Point3(1. * VisionConstants.kTagSize / 2., -1. * VisionConstants.kTagSize / 2., 0.),
-                            new Point3(-1. * VisionConstants.kTagSize / 2., -1. * VisionConstants.kTagSize / 2., 0.));
-
-                    // 3D points of the ideal, original corners, in front of the tag to make a
-                    // frustum, scaled to the actual tag size
-                    // note that the orientation and size of the face of the box can be controlled
-                    // by the sign of the "Z"
-                    // value of the "top" variable.
-                    // "-" (negative) gives larger top facing straight away from the plane of the
-                    // tag
-                    // "+" (positive) gives smaller top facing toward the camera
-                    MatOfPoint3f top = new MatOfPoint3f(
-                            new Point3(-1. * VisionConstants.kTagSize / 2., 1. * VisionConstants.kTagSize / 2.,
-                                    -0.7 * VisionConstants.kTagSize),
-                            new Point3(1. * VisionConstants.kTagSize / 2., 1. * VisionConstants.kTagSize / 2.,
-                                    -0.7 * VisionConstants.kTagSize),
-                            new Point3(1. * VisionConstants.kTagSize / 2., -1. * VisionConstants.kTagSize / 2.,
-                                    -0.7 * VisionConstants.kTagSize),
-                            new Point3(-1. * VisionConstants.kTagSize / 2., -1. * VisionConstants.kTagSize / 2.,
-                                    -0.7 * VisionConstants.kTagSize));
-
-                    double[] rotationVector = pose.getRotation().getQuaternion().toRotationVector().getData(); // 3x1 3
-                                                                                                               // rows 1
-                                                                                                               // col
-
-                    Mat T = new Mat(3, 1, CvType.CV_64FC1);
-                    Mat R = new Mat(3, 1, CvType.CV_64FC1);
-                    T.put(0, 0, pose.getX(), pose.getY(), pose.getZ());
-                    R.put(0, 0, rotationVector[0], rotationVector[1], rotationVector[2]);
-
-                    MatOfPoint2f imagePointsBottom = new MatOfPoint2f();
-                    Calib3d.projectPoints(bottom, R, T, K, distCoeffs, imagePointsBottom);
-
-                    MatOfPoint2f imagePointsTop = new MatOfPoint2f();
-                    Calib3d.projectPoints(top, R, T, K, distCoeffs, imagePointsTop);
-
-                    ArrayList<Point> topCornerPoints = new ArrayList<Point>();
-
-                    // draw from bottom points to top points - pillars
-                    for (int i = 0; i < 4; i++) {
-                        double x1;
-                        double y1;
-                        double x2;
-                        double y2;
-                        x1 = imagePointsBottom.get(i, 0)[0];
-                        y1 = imagePointsBottom.get(i, 0)[1];
-                        x2 = imagePointsTop.get(i, 0)[0];
-                        y2 = imagePointsTop.get(i, 0)[1];
-
-                        topCornerPoints.add(new Point(x2, y2));
-
-                        Imgproc.line(mat,
-                                new Point(x1, y1),
-                                new Point(x2, y2),
-                                outlineColor,
-                                2);
-                    }
-
-                    MatOfPoint topCornersTemp = new MatOfPoint();
-                    topCornersTemp.fromList(topCornerPoints);
-
-                    ArrayList<MatOfPoint> topCorners = new ArrayList<MatOfPoint>();
-                    topCorners.add(topCornersTemp);
-
-                    Imgproc.polylines(mat, topCorners, true, outlineColor, 2);
-                } /* end draw a frustum in front of the AprilTag */
+                drawFrustumOnMat(detection, mat, outlineColor, crossColor, pose);
 
                 // These transformations are required for the correct robot pose.
                 // They arise from the tag facing the camera thus Pi radians rotated or CCW/CW
@@ -412,27 +297,15 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
                 // transform to camera from robot chassis center at floor level
                 Transform3d cameraInRobotFrame = new Transform3d(
-                        // new Translation3d(0., 0., 0.),// camera at center bottom of robot zeros for
-                        // test data
-                        // new Rotation3d(0.0, Units.degreesToRadians(0.),
-                        // Units.degreesToRadians(0.0))); // camera in line with robot chassis
-                        new Translation3d(0.2, 0., 0.8), // camera in front of center of robot and above ground
-                        new Rotation3d(0.0, Units.degreesToRadians(-30.), Units.degreesToRadians(0.0))); // camera in
-                                                                                                         // line with
-                                                                                                         // robot
-                                                                                                         // chassis
-                // y = -30 camera points up; +30 points down; sign is correct but backwards of
-                // LL
+                        VisionConstants.kCameraLocation,
+                        VisionConstants.kCameraRotation);
 
                 // robot in field is the composite of 3 pieces
                 Pose3d robotInFieldFrame = ComputerVisionUtil.objectToRobotPose(tagInFieldFrame, pose,
                         cameraInRobotFrame);
                 // end transforms to get the robot pose from this vision tag pose
 
-                // put pose into dashboard
-                Rotation3d rot = robotInFieldFrame.getRotation();
-
-                setVisionPose(new Pose2d(robotInFieldFrame.getX(), robotInFieldFrame.getY(), rot.toRotation2d()));
+                setVisionPose(robotInFieldFrame.toPose2d());
 
                 double distance = visionPose2d.getTranslation().getDistance(this.getCurrentPose().getTranslation());
                 if (Math.abs(distance) <= 1) {
@@ -446,6 +319,120 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
             outputStream.putFrame(mat);
         }
 
+    }
+
+    private static void drawFrustumOnMat(AprilTagDetection detection, Mat mat, Scalar outlineColor, Scalar crossColor,
+            Transform3d pose) {
+        // draw lines around the tag
+        for (int i = 0; i <= 3; i++) {
+            int j = (i + 1) % 4;
+            Point pt1 = new Point(detection.getCornerX(i), detection.getCornerY(i));
+            Point pt2 = new Point(detection.getCornerX(j), detection.getCornerY(j));
+            Imgproc.line(mat, pt1, pt2, outlineColor, 2);
+        }
+
+        // mark the center of the tag
+        double cx = detection.getCenterX();
+        double cy = detection.getCenterY();
+        int ll = 10;
+        Imgproc.line(mat, new Point(cx - ll, cy), new Point(cx + ll, cy), crossColor, 2);
+        Imgproc.line(mat, new Point(cx, cy - ll), new Point(cx, cy + ll), crossColor, 2);
+
+        // identify the tag
+        Imgproc.putText(
+                mat,
+                Integer.toString(detection.getId()),
+                new Point(cx + ll, cy),
+                Imgproc.FONT_HERSHEY_SIMPLEX,
+                1,
+                crossColor,
+                3);
+
+        { // draw a frustum in front of the AprilTag
+          // use the estimated pose from above before any other transforms
+
+            // camera same as above but different format for OpenCV
+            float[] cameraParm = { (float) VisionConstants.kCameraVerticalFocalLength, 0.f,
+                    (float) VisionConstants.kCameraVerticalFocalCenter,
+                    0.f, (float) VisionConstants.kCameraHorizontalFocalLength,
+                    (float) VisionConstants.kCameraHorizontalFocalCenter,
+                    0.f, 0.f, 1.f };
+            Mat K = new Mat(3, 3, CvType.CV_32F); // camera matrix
+            K.put(0, 0, cameraParm);
+
+            MatOfDouble distCoeffs = new MatOfDouble(); // not using any camera distortions so it's empty
+
+            // 3D points of ideal, original corners, flat on the tag, scaled to the actual
+            // tag size
+            MatOfPoint3f bottom = new MatOfPoint3f(
+                    new Point3(-1. * VisionConstants.kTagSize / 2., 1. * VisionConstants.kTagSize / 2., 0.),
+                    new Point3(1. * VisionConstants.kTagSize / 2., 1. * VisionConstants.kTagSize / 2., 0.),
+                    new Point3(1. * VisionConstants.kTagSize / 2., -1. * VisionConstants.kTagSize / 2., 0.),
+                    new Point3(-1. * VisionConstants.kTagSize / 2., -1. * VisionConstants.kTagSize / 2., 0.));
+
+            // 3D points of the ideal, original corners, in front of the tag to make a
+            // frustum, scaled to the actual tag size
+            // note that the orientation and size of the face of the box can be controlled
+            // by the sign of the "Z"
+            // value of the "top" variable.
+            // "-" (negative) gives larger top facing straight away from the plane of the
+            // tag
+            // "+" (positive) gives smaller top facing toward the camera
+            MatOfPoint3f top = new MatOfPoint3f(
+                    new Point3(-1. * VisionConstants.kTagSize / 2., 1. * VisionConstants.kTagSize / 2.,
+                            -0.7 * VisionConstants.kTagSize),
+                    new Point3(1. * VisionConstants.kTagSize / 2., 1. * VisionConstants.kTagSize / 2.,
+                            -0.7 * VisionConstants.kTagSize),
+                    new Point3(1. * VisionConstants.kTagSize / 2., -1. * VisionConstants.kTagSize / 2.,
+                            -0.7 * VisionConstants.kTagSize),
+                    new Point3(-1. * VisionConstants.kTagSize / 2., -1. * VisionConstants.kTagSize / 2.,
+                            -0.7 * VisionConstants.kTagSize));
+
+            double[] rotationVector = pose.getRotation().getQuaternion().toRotationVector().getData(); // 3x1 3
+                                                                                                       // rows 1
+                                                                                                       // col
+
+            Mat T = new Mat(3, 1, CvType.CV_64FC1);
+            Mat R = new Mat(3, 1, CvType.CV_64FC1);
+            T.put(0, 0, pose.getX(), pose.getY(), pose.getZ());
+            R.put(0, 0, rotationVector[0], rotationVector[1], rotationVector[2]);
+
+            MatOfPoint2f imagePointsBottom = new MatOfPoint2f();
+            Calib3d.projectPoints(bottom, R, T, K, distCoeffs, imagePointsBottom);
+
+            MatOfPoint2f imagePointsTop = new MatOfPoint2f();
+            Calib3d.projectPoints(top, R, T, K, distCoeffs, imagePointsTop);
+
+            ArrayList<Point> topCornerPoints = new ArrayList<Point>();
+
+            // draw from bottom points to top points - pillars
+            for (int i = 0; i < 4; i++) {
+                double x1;
+                double y1;
+                double x2;
+                double y2;
+                x1 = imagePointsBottom.get(i, 0)[0];
+                y1 = imagePointsBottom.get(i, 0)[1];
+                x2 = imagePointsTop.get(i, 0)[0];
+                y2 = imagePointsTop.get(i, 0)[1];
+
+                topCornerPoints.add(new Point(x2, y2));
+
+                Imgproc.line(mat,
+                        new Point(x1, y1),
+                        new Point(x2, y2),
+                        outlineColor,
+                        2);
+            }
+
+            MatOfPoint topCornersTemp = new MatOfPoint();
+            topCornersTemp.fromList(topCornerPoints);
+
+            ArrayList<MatOfPoint> topCorners = new ArrayList<MatOfPoint>();
+            topCorners.add(topCornersTemp);
+
+            Imgproc.polylines(mat, topCorners, true, outlineColor, 2);
+        } /* end draw a frustum in front of the AprilTag */
     }
 
 }

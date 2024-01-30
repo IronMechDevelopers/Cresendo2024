@@ -8,7 +8,9 @@ import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -158,6 +160,11 @@ public final class Constants {
     public static final double kCameraHorizontalFocalLength = 677.7161226393544;
     public static final double kCameraVerticalFocalCenter = 345.6059345433618;
     public static final double kCameraHorizontalFocalCenter = 207.12741326228522;
+
+    public static final Translation3d kCameraLocation = new Translation3d(0.2, 0., 0.8);
+    // y = -30 camera points up; +30 points down; sign is correct but backwards of
+    public static final Rotation3d kCameraRotation = new Rotation3d(0.0, Units.degreesToRadians(-30.),
+        Units.degreesToRadians(0.0));
   }
 
   public static final class NeoMotorConstants {
@@ -170,8 +177,11 @@ public final class Constants {
     public static final Rotation2d k180DegreeRotation = new Rotation2d(Units.degreesToRadians(180));
 
     public static final Pose2d kBlueShootLocation1 = new Pose2d(1.3, 5.79, new Rotation2d(Units.degreesToRadians(0)));
-    public static final Pose2d kBlueStartingNote1 = new Pose2d(Units.inchesToMeters(114),Units.inchesToMeters(161.64), kZeroDegreeRotation);
-    public static final Pose2d kBlueStartingNote2 = new Pose2d(Units.inchesToMeters(114),Units.inchesToMeters(104.6), kZeroDegreeRotation);
-    public static final Pose2d kBlueStartingNote3 = new Pose2d(Units.inchesToMeters(114),Units.inchesToMeters(47.64), kZeroDegreeRotation);
+    public static final Pose2d kBlueStartingNote1 = new Pose2d(Units.inchesToMeters(114), Units.inchesToMeters(161.64),
+        kZeroDegreeRotation);
+    public static final Pose2d kBlueStartingNote2 = new Pose2d(Units.inchesToMeters(114), Units.inchesToMeters(104.6),
+        kZeroDegreeRotation);
+    public static final Pose2d kBlueStartingNote3 = new Pose2d(Units.inchesToMeters(114), Units.inchesToMeters(47.64),
+        kZeroDegreeRotation);
   }
 }
