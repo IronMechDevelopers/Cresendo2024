@@ -260,6 +260,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
                     continue;
                 }
 
+                // determine pose
+                Transform3d pose = estimator.estimate(detection);
+
 
                 // draw lines around the tag
                 for (int i = 0; i <= 3; i++) {
@@ -286,8 +289,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
                         crossColor,
                         3);
 
-                // determine pose
-                Transform3d pose = estimator.estimate(detection);
+                
 
                 { // draw a frustum in front of the AprilTag
                   // use the estimated pose from above before any other transforms
