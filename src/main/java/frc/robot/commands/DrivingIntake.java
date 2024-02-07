@@ -6,7 +6,7 @@ import frc.robot.subsystems.StagingSubsytem;
 public class DrivingIntake extends SequentialCommandGroup {
 
     public DrivingIntake(StagingSubsytem stagingSubsytem) {
-        addCommands(new IntakeCommand(stagingSubsytem), new BackupIntake(stagingSubsytem).withTimeout(.25));
+        addCommands(new IntakeCommand(stagingSubsytem), new BackupIntake(stagingSubsytem).withTimeout(2));
     }
 
 }

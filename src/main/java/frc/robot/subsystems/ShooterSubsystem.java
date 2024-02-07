@@ -7,6 +7,8 @@ import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.MotorIds;
+
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -20,7 +22,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public ShooterSubsystem() {
 
-        this.shooterMotor = new CANSparkMax(2, MotorType.kBrushless);
+        this.shooterMotor = new CANSparkMax(MotorIds.kTopShooterMotor, MotorType.kBrushless);
 
         shooterMotor.restoreFactoryDefaults();
         m_pidController = shooterMotor.getPIDController();
