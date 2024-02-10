@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -55,26 +58,29 @@ public final class Constants {
     public static final double kBackLeftChassisAngularOffset = Math.PI;
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
-  
-
     public static final boolean kGyroReversed = false;
+
+    public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(
+        new PIDConstants(5.0, 0, 0), // Translation constants
+        new PIDConstants(5.0, 0, 0), // Rotation constants
+        AutoConstants.kMaxSpeedMetersPerSecond,
+        new Translation2d(kWheelBase / 2, kTrackWidth / 2).getNorm(), // Drive base radius (distance from center to
+                                                                      // furthest module)
+        new ReplanningConfig());
+
   }
 
   public static final class MotorIds {
-      // SPARK MAX CAN IDs
-    public static final int kFrontLeftDrivingCanId = 50;
-    public static final int kRearLeftDrivingCanId = 30;
-    public static final int kFrontRightDrivingCanId = 41;
-    public static final int kRearRightDrivingCanId = 20;
+    // SPARK MAX CAN IDs
+    public static final int kFrontLeftDrivingCanId = 10;
+    public static final int kFrontRightDrivingCanId = 20;
+    public static final int kRearRightDrivingCanId = 30;
+    public static final int kRearLeftDrivingCanId = 40;
 
-    public static final int kFrontLeftTurningCanId = 31;
-    public static final int kRearLeftTurningCanId = 40;
+    public static final int kFrontLeftTurningCanId = 11;
     public static final int kFrontRightTurningCanId = 21;
-    public static final int kRearRightTurningCanId = 60;
-
-    public static final int kShooterCanId = 45;
-    public static final int kCollectorCanId = 35;
-    public static final int kStagingCanId = 25;
+    public static final int kRearRightTurningCanId = 31;
+    public static final int kRearLeftTurningCanId = 41;
   }
 
   public static final class ModuleConstants {
@@ -161,9 +167,9 @@ public final class Constants {
     public static final double kCameraVerticalFocalCenter = 345.6059345433618;
     public static final double kCameraHorizontalFocalCenter = 207.12741326228522;
 
-    public static final Translation3d kCameraLocation = new Translation3d(0.2, 0., 0.8);
+    public static final Translation3d kCameraLocation = new Translation3d(00, 0., Units.inchesToMeters(12));
     // y = -30 camera points up; +30 points down; sign is correct but backwards of
-    public static final Rotation3d kCameraRotation = new Rotation3d(0.0, Units.degreesToRadians(-30.),
+    public static final Rotation3d kCameraRotation = new Rotation3d(0.0, Units.degreesToRadians(0),
         Units.degreesToRadians(0.0));
   }
 

@@ -70,6 +70,8 @@ public class RobotContainer {
 
     SmartDashboard.putData("Invert Field Orientation", new InvertFieldRelative(m_robotDrive));
     softwareTab.add("TwoNoteAuto", new TwoNoteAuto(m_robotDrive, m_poseEstimator));
+
+    m_poseEstimator.setToCurrentVisionPose();
   }
 
   /**

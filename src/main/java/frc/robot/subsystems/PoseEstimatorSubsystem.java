@@ -16,6 +16,8 @@ import org.opencv.core.Point3;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.apriltag.AprilTagDetection;
 import edu.wpi.first.apriltag.AprilTagDetector;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -30,7 +32,7 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.ComputerVisionUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -39,6 +41,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.VisionConstants;
 import edu.wpi.first.math.Vector;
@@ -75,6 +78,12 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
     private static Thread visionThread;
     private ShuffleboardTab softwareTab = Shuffleboard.getTab("Software");
+    private ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
+    private GenericEntry poseEntry = visionTab.add("Pose", "Nothing").getEntry();
+    private GenericEntry usingVisioGenericEntry = visionTab.add("Using Vision", false).getEntry();
+    private GenericEntry visionTargetsGenericEntry = visionTab.add("Vision targets", "").getEntry();
+    private GenericEntry targetsGenericEntry = visionTab.add("Targets", "").getEntry();
+    private GenericEntry lastVisionUsedGenericEntry = visionTab.add("lastVisionUsedGenericEntry", "").getEntry();
 
     public PoseEstimatorSubsystem(DriveSubsystem driveSubsystem) {
         this.driveSubsystem = driveSubsystem;
@@ -101,15 +110,35 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
                 stateStdDevs,
                 visionMeasurementStdDevs);
 
-        ShuffleboardTab tab = Shuffleboard.getTab("Vision");
-        tab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
-        tab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
+        visionTab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
 
         if (VisionConstants.kUsingVision) {
+            usingVisioGenericEntry.setBoolean(true);
             visionThread = new Thread(this::apriltagVisionThreadProc);
             visionThread.setDaemon(true);
             visionThread.start();
+
         }
+
+        AutoBuilder.configureHolonomic(
+                this::getCurrentPose,
+                this::setCurrentPose,
+                driveSubsystem::getSpeeds,
+                driveSubsystem::driveRobotRelative,
+                Constants.DriveConstants.pathFollowerConfig,
+                () -> {
+                    // Boolean supplier that controls when the path will be mirrored for the red
+                    // alliance
+                    // This will flip the path being followed to the red side of the field.
+                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    return false;
+                },
+                this);
 
     }
 
@@ -123,10 +152,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         // poseEstimator.updateWithTime(Timer.getFPGATimestamp(),
         // driveSubsystem.getGyroscopeRotation(),
         // driveSubsystem.getModulePositions());
-        ShuffleboardTab tab = Shuffleboard.getTab("Vision");
-        tab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
+        poseEntry.setString(getFomattedPose());
         field2d.setRobotPose(getCurrentPose());
-
+        driveSubsystem.setPose(getCurrentPose());
     }
 
     private String getFomattedPose() {
@@ -237,10 +265,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
             AprilTagDetection[] detections = detector.detect(grayMat);
 
             if (detections.length > 0) {
-                softwareTab.add("Vision targets", true);
-                softwareTab.add("targets", detections);
+                visionTargetsGenericEntry.setBoolean(true);
             } else {
-                softwareTab.add("Vision targets", false);
+                visionTargetsGenericEntry.setBoolean(false);
             }
 
             // have not seen any tags yet
@@ -252,6 +279,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
                         && detection.getDecisionMargin() > 50.) // margin < 20 seems bad; margin > 120 are good
                 {
                     tagInFieldFrame = aprilTagFieldLayout.getTagPose(detection.getId()).get();
+
                 } else {
                     System.out.println("bad id " + detection.getId() + " " + detection.getDecisionMargin());
                     continue;
@@ -306,13 +334,17 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
                 // end transforms to get the robot pose from this vision tag pose
 
                 setVisionPose(robotInFieldFrame.toPose2d());
+                Pose2d tempPose = getVisionPose();
 
-                double distance = visionPose2d.getTranslation().getDistance(this.getCurrentPose().getTranslation());
+                double distance = tempPose.getTranslation().getDistance(this.getCurrentPose().getTranslation());
                 if (Math.abs(distance) <= 1) {
                     if (VisionConstants.kUsingVision) {
-                        poseEstimator.addVisionMeasurement(visionPose2d, timestamp);
+                        poseEstimator.addVisionMeasurement(tempPose, timestamp);
                         SmartDashboard.putNumber("Last Image used", timestamp);
+                        lastVisionUsedGenericEntry.setString(detection.getId() + " at " + timestamp);
                     }
+                } else {
+                    System.out.println("rejected pose");
                 }
 
             }
