@@ -32,7 +32,6 @@ public class IntakeCommand extends Command {
     // What it needs to do after the command is done.
     @Override
     public void end(boolean interrupted) {
-        DataLogManager.log("ENDING INTAKE");
         m_stagingSubsytem.stopMotor();
 
     }
@@ -40,7 +39,7 @@ public class IntakeCommand extends Command {
     // How it checks the command is done.
     @Override
     public boolean isFinished() {
-        return m_stagingSubsytem.isNoteInside();
+        return false;
     }
 
 }

@@ -22,8 +22,10 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DrivingIntake;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.InvertFieldRelative;
+import frc.robot.commands.Shoot2;
 import frc.robot.commands.ZeroGyro;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StagingSubsytem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -41,6 +43,7 @@ public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final StagingSubsytem m_StagingSubsytem = new StagingSubsytem();
+  private final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
   private static final Joystick driverLeftStick = new Joystick(0);
   private static final Joystick driverRightStick = new Joystick(1);
   private static final XboxController copilotXbox = new XboxController(2);
@@ -80,9 +83,10 @@ public class RobotContainer {
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
-    new JoystickButton(driverRightStick, 1).onTrue(new ZeroGyro(m_robotDrive));
+    new JoystickButton(driverRightStick, 3).onTrue(new ZeroGyro(m_robotDrive));
     new JoystickButton(driverLeftStick, 1).toggleOnTrue(new DrivingIntake(m_StagingSubsytem));
     new JoystickButton(driverLeftStick, 4).whileTrue(new IntakeCommand(m_StagingSubsytem, Constants.SpeedConstants.OuttakeSpeed));
+    new JoystickButton(driverRightStick, 1).toggleOnTrue(new Shoot2(m_StagingSubsytem, m_ShooterSubsystem));
     SmartDashboard.putData("Invert Field Orientation", new InvertFieldRelative(m_robotDrive));
     SmartDashboard.putBoolean("Field Orientation:", m_robotDrive.getFieldOrientation());
   }

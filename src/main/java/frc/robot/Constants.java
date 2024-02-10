@@ -155,7 +155,7 @@ public final class Constants {
   } 
 
   public static final class SpeedConstants { 
-  public static final double InTakeSpeed = 0.25; 
-  public static final double OuttakeSpeed = -0.25;
+  public static final double InTakeSpeed = 0.5; 
+  public static final double OuttakeSpeed = -0.5;
   }
 }

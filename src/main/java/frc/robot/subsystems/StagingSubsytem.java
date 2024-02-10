@@ -17,6 +17,8 @@ public class StagingSubsytem extends SubsystemBase {
 
     // .4-3.1 V between 80cm - 10cm
     private final AnalogInput rangeFinder = new AnalogInput(0);
+    //  line break sensor code
+    private final DigitalInput laser = new DigitalInput(1);
 
     public StagingSubsytem() {
 
@@ -31,6 +33,8 @@ public class StagingSubsytem extends SubsystemBase {
 
     public boolean isNoteInside() {
         return rangeFinder.getValue() > 1000;
+        // line break sensor code 
+        //return laser.getValue () > 0;
     }
 
     public void stopMotor() {
@@ -42,7 +46,8 @@ public class StagingSubsytem extends SubsystemBase {
     public void setMotor(double speed) {
         bottomIntakeMotor.set(-1 * speed);
         topIntakeMotor.set(-1 * speed);
-        conveyorMotor.set(-1 *speed);
+        conveyorMotor.set(speed >0 ? -.75: .75);
+        
     }
 
     @Override
@@ -50,6 +55,7 @@ public class StagingSubsytem extends SubsystemBase {
         super.periodic();
         SmartDashboard.putBoolean("isNoteInside", isNoteInside());
         SmartDashboard.putNumber("Range Finder", rangeFinder.getValue());
+        SmartDashboard.putBoolean("BREAK SENSOR", laser.get());
     }
 
 }

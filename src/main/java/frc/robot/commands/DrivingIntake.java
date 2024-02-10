@@ -7,7 +7,10 @@ import frc.robot.subsystems.StagingSubsytem;
 public class DrivingIntake extends SequentialCommandGroup {
 
     public DrivingIntake(StagingSubsytem stagingSubsytem) {
-        addCommands(new IntakeCommand(stagingSubsytem, Constants.SpeedConstants.InTakeSpeed), new IntakeCommand(stagingSubsytem,Constants.SpeedConstants.OuttakeSpeed).withTimeout(2));
+        addCommands(
+                new IntakeCommand(stagingSubsytem, Constants.SpeedConstants.InTakeSpeed)
+                        .until(() -> stagingSubsytem.isNoteInside()),
+                new IntakeCommand(stagingSubsytem, Constants.SpeedConstants.OuttakeSpeed).withTimeout(.25));
     }
 
 }
