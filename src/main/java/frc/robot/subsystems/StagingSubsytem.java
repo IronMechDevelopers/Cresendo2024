@@ -13,6 +13,7 @@ public class StagingSubsytem extends SubsystemBase {
 
     private CANSparkMax bottomIntakeMotor;
     private CANSparkMax topIntakeMotor;
+    private CANSparkMax conveyorMotor;
 
     // .4-3.1 V between 80cm - 10cm
     private final AnalogInput rangeFinder = new AnalogInput(0);
@@ -21,9 +22,11 @@ public class StagingSubsytem extends SubsystemBase {
 
         this.bottomIntakeMotor = new CANSparkMax(MotorIds.kBottomIntakeMotorCanId, MotorType.kBrushed);
         this.topIntakeMotor = new CANSparkMax(MotorIds.kTopIntakeMotor, MotorType.kBrushed);
+        this.conveyorMotor = new CANSparkMax (MotorIds.kConveyorMotor,MotorType.kBrushed);
 
         bottomIntakeMotor.restoreFactoryDefaults();
         topIntakeMotor.restoreFactoryDefaults();
+        conveyorMotor.restoreFactoryDefaults();
     }
 
     public boolean isNoteInside() {
@@ -33,11 +36,13 @@ public class StagingSubsytem extends SubsystemBase {
     public void stopMotor() {
         bottomIntakeMotor.set(0);
         topIntakeMotor.set(0);
+        conveyorMotor.set(0);
     }
 
     public void setMotor(double speed) {
         bottomIntakeMotor.set(-1 * speed);
         topIntakeMotor.set(-1 * speed);
+        conveyorMotor.set(-1 *speed);
     }
 
     @Override

@@ -68,6 +68,7 @@ public final class Constants {
 
     public static final int kBottomIntakeMotorCanId = 50;
     public static final int kTopIntakeMotor = 51;
+    public static final int kConveyorMotor = 54;
 
     public static final int kTopShooterMotor = 60;
   }
@@ -124,7 +125,9 @@ public final class Constants {
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
     public static final int kDrivingMotorCurrentLimit = 50; // amps
-    public static final int kTurningMotorCurrentLimit = 20; // amps
+    public static final int kTurningMotorCurrentLimit = 20; // amps 
+
+    
   }
 
   public static final class OIConstants {
@@ -149,5 +152,10 @@ public final class Constants {
 
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
+  } 
+
+  public static final class SpeedConstants { 
+  public static final double InTakeSpeed = 0.25; 
+  public static final double OuttakeSpeed = -0.25;
   }
 }

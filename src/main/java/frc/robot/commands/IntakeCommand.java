@@ -6,10 +6,14 @@ import frc.robot.subsystems.StagingSubsytem;
 
 public class IntakeCommand extends Command {
     private StagingSubsytem m_stagingSubsytem;
+    private double speed;
 
-    public IntakeCommand(StagingSubsytem stagingSubsytem) {
+
+
+    public IntakeCommand(StagingSubsytem stagingSubsytem, double speed) {
         super();
         this.m_stagingSubsytem = stagingSubsytem;
+        this.speed = speed;
 
         addRequirements(stagingSubsytem);
     }
@@ -21,7 +25,7 @@ public class IntakeCommand extends Command {
     // Runs the commands given and it runs every .2 seconds.
     @Override
     public void execute() {
-        m_stagingSubsytem.setMotor(.25);
+        m_stagingSubsytem.setMotor(speed);
 
     }
 
