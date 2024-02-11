@@ -84,6 +84,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     private GenericEntry visionTargetsGenericEntry = visionTab.add("Vision targets", "").getEntry();
     private GenericEntry targetsGenericEntry = visionTab.add("Targets", "").getEntry();
     private GenericEntry lastVisionUsedGenericEntry = visionTab.add("lastVisionUsedGenericEntry", "").getEntry();
+    private GenericEntry timestampGenericEntry = visionTab.add("timestamp", "").getEntry();
+    private GenericEntry cameraGenericEntry = visionTab.add("camera", "").getEntry();
 
     public PoseEstimatorSubsystem(DriveSubsystem driveSubsystem) {
         this.driveSubsystem = driveSubsystem;
@@ -92,9 +94,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         try {
             layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
             Optional<Alliance> alliance = DriverStation.getAlliance();
-            layout.setOrigin(
-                    alliance.isPresent() && alliance.get() == Alliance.Blue ? OriginPosition.kBlueAllianceWallRightSide
-                            : OriginPosition.kRedAllianceWallRightSide);
+            layout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
         } catch (IOException e) {
             DriverStation.reportError("Failed to load AprilTagFieldLayout", e.getStackTrace());
             layout = null;
@@ -127,15 +127,6 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
                 driveSubsystem::driveRobotRelative,
                 Constants.DriveConstants.pathFollowerConfig,
                 () -> {
-                    // Boolean supplier that controls when the path will be mirrored for the red
-                    // alliance
-                    // This will flip the path being followed to the red side of the field.
-                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-                    var alliance = DriverStation.getAlliance();
-                    if (alliance.isPresent()) {
-                        return alliance.get() == DriverStation.Alliance.Red;
-                    }
                     return false;
                 },
                 this);
@@ -145,13 +136,15 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // Update pose estimator with drivetrain sensors
-        poseEstimator.update(
+        // poseEstimator.update(
+        // driveSubsystem.getGyroscopeRotation(),
+        // driveSubsystem.getModulePositions());
+        double timestamp = Timer.getFPGATimestamp();
+
+        poseEstimator.updateWithTime(timestamp,
                 driveSubsystem.getGyroscopeRotation(),
                 driveSubsystem.getModulePositions());
 
-        // poseEstimator.updateWithTime(Timer.getFPGATimestamp(),
-        // driveSubsystem.getGyroscopeRotation(),
-        // driveSubsystem.getModulePositions());
         poseEntry.setString(getFomattedPose());
         field2d.setRobotPose(getCurrentPose());
         driveSubsystem.setPose(getCurrentPose());
@@ -258,11 +251,11 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
                 continue;
             }
 
-            double timestamp = Timer.getFPGATimestamp();
-
             Imgproc.cvtColor(mat, grayMat, Imgproc.COLOR_RGB2GRAY);
 
             AprilTagDetection[] detections = detector.detect(grayMat);
+            String targets = "";
+            targetsGenericEntry.setString(targets);
 
             if (detections.length > 0) {
                 visionTargetsGenericEntry.setBoolean(true);
@@ -279,6 +272,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
                         && detection.getDecisionMargin() > 50.) // margin < 20 seems bad; margin > 120 are good
                 {
                     tagInFieldFrame = aprilTagFieldLayout.getTagPose(detection.getId()).get();
+                    targets += " " + detection.getId();
+                    targetsGenericEntry.setString(targets);
 
                 } else {
                     System.out.println("bad id " + detection.getId() + " " + detection.getDecisionMargin());
@@ -288,7 +283,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
                 // determine pose
                 Transform3d pose = estimator.estimate(detection);
 
-                drawFrustumOnMat(detection, mat, outlineColor, crossColor, pose);
+                // drawFrustumOnMat(detection, mat, outlineColor, crossColor, pose);
 
                 // These transformations are required for the correct robot pose.
                 // They arise from the tag facing the camera thus Pi radians rotated or CCW/CW
@@ -339,12 +334,16 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
                 double distance = tempPose.getTranslation().getDistance(this.getCurrentPose().getTranslation());
                 if (Math.abs(distance) <= 1) {
                     if (VisionConstants.kUsingVision) {
-                        poseEstimator.addVisionMeasurement(tempPose, timestamp);
-                        SmartDashboard.putNumber("Last Image used", timestamp);
-                        lastVisionUsedGenericEntry.setString(detection.getId() + " at " + timestamp);
+                        poseEstimator.addVisionMeasurement(tempPose, Timer.getFPGATimestamp());
+                        // SmartDashboard.putNumber("Last Image used", Timer.getFPGATimestamp());
+                        lastVisionUsedGenericEntry.setString(detection.getId() + " at " +
+                                Timer.getFPGATimestamp());
                     }
                 } else {
-                    System.out.println("rejected pose");
+                    // System.out.println("rejected pose for " + Math.abs(distance));
+                    // lastVisionUsedGenericEntry
+                    // .setString(detection.getId() + " at " + timestamp + " rejected " +
+                    // Math.abs(distance));
                 }
 
             }
