@@ -74,6 +74,10 @@ public class ShooterSubsystem extends SubsystemBase {
         m_pidController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
     }
 
+    public void setMotorToPercent(double speed) {
+        shooterMotor.set(speed);
+    }
+
     public double getRPM() {
         return movingAverageVelocity;
     }

@@ -22,7 +22,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DrivingIntake;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.InvertFieldRelative;
-import frc.robot.commands.Shoot2;
+import frc.robot.commands.Shoot;
 import frc.robot.commands.ZeroGyro;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -85,8 +85,9 @@ public class RobotContainer {
             m_robotDrive));
     new JoystickButton(driverRightStick, 3).onTrue(new ZeroGyro(m_robotDrive));
     new JoystickButton(driverLeftStick, 1).toggleOnTrue(new DrivingIntake(m_StagingSubsytem));
-    new JoystickButton(driverLeftStick, 4).whileTrue(new IntakeCommand(m_StagingSubsytem, Constants.SpeedConstants.OuttakeSpeed));
-    new JoystickButton(driverRightStick, 1).toggleOnTrue(new Shoot2(m_StagingSubsytem, m_ShooterSubsystem));
+    new JoystickButton(driverLeftStick, 4)
+        .whileTrue(new IntakeCommand(m_StagingSubsytem, Constants.SpeedConstants.OuttakeSpeed));
+    new JoystickButton(driverRightStick, 1).toggleOnTrue(new Shoot(m_StagingSubsytem, m_ShooterSubsystem));
     SmartDashboard.putData("Invert Field Orientation", new InvertFieldRelative(m_robotDrive));
     SmartDashboard.putBoolean("Field Orientation:", m_robotDrive.getFieldOrientation());
   }
