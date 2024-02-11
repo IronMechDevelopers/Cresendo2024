@@ -71,6 +71,7 @@ public final class Constants {
     public static final int kConveyorMotor = 54;
 
     public static final int kTopShooterMotor = 60;
+    public static final int kBottomShooterMotor = 61;
   }
 
   public static final class ModuleConstants {
