@@ -10,8 +10,8 @@ import frc.robot.subsystems.StagingSubsytem;
 public class Shoot2 extends SequentialCommandGroup {
     public Shoot2(StagingSubsytem stagingSubsytem, ShooterSubsystem shooterSubsystem) {
         addCommands(
-                new ParallelRaceGroup(new ShootWarmpUpCommand(shooterSubsystem, 500),
-                        new WaitCommand(.5)
+                new ParallelRaceGroup(new ShootWarmpUpCommand(shooterSubsystem, .5),
+                        new WaitCommand(1)
                                 .andThen(new IntakeCommand(stagingSubsytem, Constants.SpeedConstants.InTakeSpeed))
                                 .withTimeout(5)));
     }

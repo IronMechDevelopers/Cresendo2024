@@ -6,12 +6,12 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class ShootWarmpUpCommand extends Command {
     private ShooterSubsystem m_shooterSubsystem;
-    private double rpm;
+    private double percent;
 
-    public ShootWarmpUpCommand(ShooterSubsystem shooterSubsystem, double rpm) {
+    public ShootWarmpUpCommand(ShooterSubsystem shooterSubsystem, double percent) {
         super();
         this.m_shooterSubsystem = shooterSubsystem;
-        this.rpm = rpm;
+        this.percent = percent;
 
         addRequirements(m_shooterSubsystem);
     }
@@ -23,7 +23,7 @@ public class ShootWarmpUpCommand extends Command {
     // Runs the commands given and it runs every .2 seconds.
     @Override
     public void execute() {
-        m_shooterSubsystem.setMotorToRPM(rpm);
+        m_shooterSubsystem.setMotorToPercent(percent);
 
     }
 
@@ -31,7 +31,6 @@ public class ShootWarmpUpCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         m_shooterSubsystem.stopMotor();
-        DataLogManager.log("ENDING SHOOT");
 
     }
 
