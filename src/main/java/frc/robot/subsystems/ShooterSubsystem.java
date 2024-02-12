@@ -13,20 +13,33 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class ShooterSubsystem extends SubsystemBase {
 
-    private CANSparkMax shooterMotor;
-    private SparkPIDController m_pidController;
-    private RelativeEncoder m_encoder;
+    private CANSparkMax shooteTopMotor;
+    private CANSparkMax shooteBottomMotor;
+    private SparkPIDController m_pidTopController;
+    private RelativeEncoder m_encoderTop;
+    private SparkPIDController m_pidBottomController;
+    private RelativeEncoder m_encoderBotom;
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
     private LinearFilter filter;
     private double movingAverageVelocity;
 
     public ShooterSubsystem() {
 
-        this.shooterMotor = new CANSparkMax(MotorIds.kTopShooterMotor, MotorType.kBrushless);
+        SmartDashboard.putNumber("Shoot Speed", .11);
 
-        shooterMotor.restoreFactoryDefaults();
-        m_pidController = shooterMotor.getPIDController();
-        m_encoder = shooterMotor.getEncoder();
+        this.shooteTopMotor = new CANSparkMax(MotorIds.kTopShooterMotor, MotorType.kBrushless);
+        this.shooteBottomMotor = new CANSparkMax(MotorIds.kBottomShooterMotor, MotorType.kBrushless);
+
+        shooteTopMotor.restoreFactoryDefaults();
+        shooteBottomMotor.restoreFactoryDefaults();
+
+        m_pidTopController = shooteTopMotor.getPIDController();
+        m_encoderTop = shooteTopMotor.getEncoder();
+
+        shooteTopMotor.setInverted(true);
+
+        m_pidBottomController = shooteBottomMotor.getPIDController();
+        m_encoderBotom = shooteBottomMotor.getEncoder();
 
         // PID coefficients
         kP = 6e-5;
@@ -39,12 +52,19 @@ public class ShooterSubsystem extends SubsystemBase {
         maxRPM = 5700;
 
         // set PID coefficients
-        m_pidController.setP(kP);
-        m_pidController.setI(kI);
-        m_pidController.setD(kD);
-        m_pidController.setIZone(kIz);
-        m_pidController.setFF(kFF);
-        m_pidController.setOutputRange(kMinOutput, kMaxOutput);
+        m_pidTopController.setP(kP);
+        m_pidTopController.setI(kI);
+        m_pidTopController.setD(kD);
+        m_pidTopController.setIZone(kIz);
+        m_pidTopController.setFF(kFF);
+        m_pidTopController.setOutputRange(kMinOutput, kMaxOutput);
+
+        m_pidBottomController.setP(kP);
+        m_pidBottomController.setI(kI);
+        m_pidBottomController.setD(kD);
+        m_pidBottomController.setIZone(kIz);
+        m_pidBottomController.setFF(kFF);
+        m_pidBottomController.setOutputRange(kMinOutput, kMaxOutput);
 
         // display PID coefficients on SmartDashboard
         SmartDashboard.putNumber("P Gain", kP);
@@ -60,7 +80,8 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void stopMotor() {
-        shooterMotor.set(0);
+        shooteTopMotor.set(0);
+        shooteBottomMotor.set(0);
     }
 
     public void setMotorToRPM(double rpm) {
@@ -71,11 +92,16 @@ public class ShooterSubsystem extends SubsystemBase {
             rpm = -1 * maxRPM;
         }
         SmartDashboard.putNumber("SetPoint", rpm);
-        m_pidController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
+        m_pidTopController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
     }
 
     public void setMotorToPercent(double speed) {
-        shooterMotor.set(speed);
+        speed = SmartDashboard.getNumber("Shoot Speed", .11);
+        if (speed > 1) {
+            speed = 1;
+        }
+        shooteTopMotor.set(speed);
+        shooteBottomMotor.set(speed);
     }
 
     public double getRPM() {
@@ -96,34 +122,34 @@ public class ShooterSubsystem extends SubsystemBase {
         // if PID coefficients on SmartDashboard have changed, write new values to
         // controller
         if ((p != kP)) {
-            m_pidController.setP(p);
+            m_pidTopController.setP(p);
             kP = p;
         }
         if ((i != kI)) {
-            m_pidController.setI(i);
+            m_pidTopController.setI(i);
             kI = i;
         }
         if ((d != kD)) {
-            m_pidController.setD(d);
+            m_pidTopController.setD(d);
             kD = d;
         }
         if ((iz != kIz)) {
-            m_pidController.setIZone(iz);
+            m_pidTopController.setIZone(iz);
             kIz = iz;
         }
         if ((ff != kFF)) {
-            m_pidController.setFF(ff);
+            m_pidTopController.setFF(ff);
             kFF = ff;
         }
         if ((max != kMaxOutput) || (min != kMinOutput)) {
-            m_pidController.setOutputRange(min, max);
+            m_pidTopController.setOutputRange(min, max);
             kMinOutput = min;
             kMaxOutput = max;
         }
 
-        movingAverageVelocity = filter.calculate(m_encoder.getVelocity());
+        movingAverageVelocity = filter.calculate(m_encoderTop.getVelocity());
         SmartDashboard.putNumber("Shooter Speed", movingAverageVelocity);
-        SmartDashboard.putNumber("Shooter Speed Direct", m_encoder.getVelocity());
+        SmartDashboard.putNumber("Shooter Speed Direct", m_encoderTop.getVelocity());
     }
 
 }
