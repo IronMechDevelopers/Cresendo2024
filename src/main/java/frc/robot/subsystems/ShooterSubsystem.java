@@ -25,7 +25,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public ShooterSubsystem() {
 
-        SmartDashboard.putNumber("Shoot Speed", .11);
+        SmartDashboard.putNumber("Shoot Speed", .90);
 
         this.shooteTopMotor = new CANSparkMax(MotorIds.kTopShooterMotor, MotorType.kBrushless);
         this.shooteBottomMotor = new CANSparkMax(MotorIds.kBottomShooterMotor, MotorType.kBrushless);
@@ -42,7 +42,7 @@ public class ShooterSubsystem extends SubsystemBase {
         m_encoderBotom = shooteBottomMotor.getEncoder();
 
         // PID coefficients
-        kP = 6e-5;
+        kP = 6e-4;
         kI = 0;
         kD = 0;
         kIz = 0;
@@ -93,10 +93,11 @@ public class ShooterSubsystem extends SubsystemBase {
         }
         SmartDashboard.putNumber("SetPoint", rpm);
         m_pidTopController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
+        m_pidBottomController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
     }
 
     public void setMotorToPercent(double speed) {
-        speed = SmartDashboard.getNumber("Shoot Speed", .11);
+        speed = SmartDashboard.getNumber("Shoot Speed", .90);
         if (speed > 1) {
             speed = 1;
         }

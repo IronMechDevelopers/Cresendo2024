@@ -56,6 +56,8 @@ public class RobotContainer {
     configureButtonBindings();
     SmartDashboard.putData("RUN INtake", new DrivingIntake(m_StagingSubsytem));
 
+    m_StagingSubsytem.setColor(0, 255, 0);
+
     // Configure default commands
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.

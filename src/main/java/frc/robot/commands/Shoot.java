@@ -13,7 +13,7 @@ public class Shoot extends SequentialCommandGroup {
         addCommands(
                 new ParallelRaceGroup(
                         new ShootWarmpUpCommand(shooterSubsystem, .15),
-                        new WaitCommand(1.75)
+                        new WaitCommand(.50)
                                 .andThen(new IntakeCommand(stagingSubsytem, Constants.SpeedConstants.InTakeSpeed))
                                 .withTimeout(5)));
     }

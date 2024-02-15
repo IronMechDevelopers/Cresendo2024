@@ -20,6 +20,7 @@ public class IntakeCommand extends Command {
 
     @Override
     public void initialize() {
+        m_stagingSubsytem.setColor(255,255,0);
     }
 
     // Runs the commands given and it runs every .2 seconds.
@@ -33,6 +34,7 @@ public class IntakeCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         m_stagingSubsytem.stopMotor();
+        m_stagingSubsytem.setColor(0,0,255);
 
     }
 
