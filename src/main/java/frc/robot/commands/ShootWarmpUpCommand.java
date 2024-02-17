@@ -11,7 +11,7 @@ public class ShootWarmpUpCommand extends Command {
     private double percent;
 
 
-    public ShootWarmpUpCommand(ShooterSubsystem shooterSubsystem, double percent) {
+    public ShootWarmpUpCommand(ShooterSubsystem shooterSubsystem) {
         super();
         this.m_shooterSubsystem = shooterSubsystem;
         this.percent = percent;

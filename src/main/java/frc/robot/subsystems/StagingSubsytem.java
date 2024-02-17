@@ -22,8 +22,9 @@ public class StagingSubsytem extends SubsystemBase {
 
     // .4-3.1 V between 80cm - 10cm
     private final AnalogInput rangeFinder = new AnalogInput(0);
+
     // line break sensor code
-    private final DigitalInput laser = new DigitalInput(1);
+    //private final DigitalInput laser = new DigitalInput(1);
 
     public StagingSubsytem() {
 
@@ -47,20 +48,30 @@ public class StagingSubsytem extends SubsystemBase {
         m_led.start();
     }
 
-    public void setColor(int red, int blue, int green)
-    {
+    public void setColor(int red, int blue, int green) {
         for (int i = 0; i < m_ledBuffer.getLength(); i++) {
             // Sets the specified LED to the RGB values for red
             m_ledBuffer.setRGB(i, red, green, blue);
-         }
-         
-         m_led.setData(m_ledBuffer);
+        }
+
+        m_led.setData(m_ledBuffer);
     }
 
     public boolean isNoteInside() {
-        return rangeFinder.getValue() > 1000;
+
+        if (rangeFinder.getValue() > 1000) {
+             System.out.println("NoteInside");
+            return (true);
+        } else {
+            System.out.println("NoNoteInside");
+            System.out.println(rangeFinder.getValue());
+            return (false);
+            
+        }
+
         // line break sensor code
         // return laser.getValue () > 0;
+
     }
 
     public void stopMotor() {
@@ -72,16 +83,22 @@ public class StagingSubsytem extends SubsystemBase {
     public void setMotor(double speed) {
         bottomIntakeMotor.set(speed);
         topIntakeMotor.set(speed);
-        conveyorMotor.set(speed > 0 ? .75 : -.75);
+        conveyorMotor.set(SmartDashboard.getNumber("Conveyor Speed", 1.0));
+        
 
     }
+
+    
 
     @Override
     public void periodic() {
         super.periodic();
         SmartDashboard.putBoolean("isNoteInside", isNoteInside());
         SmartDashboard.putNumber("Range Finder", rangeFinder.getValue());
-        SmartDashboard.putBoolean("BREAK SENSOR", laser.get());
+        //SmartDashboard.putBoolean("BREAK SENSOR", laser.get());
+        SmartDashboard.putNumber("Conveyor Speed", 1.0);
+        // System. out. println("periodic trace");
+
     }
 
 }
