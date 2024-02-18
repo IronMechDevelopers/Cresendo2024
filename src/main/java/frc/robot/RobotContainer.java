@@ -72,6 +72,7 @@ public class RobotContainer {
         private final JoystickButton aButton = new JoystickButton(copilotXbox, Button.kA.value);
         private final JoystickButton rightBumperButton = new JoystickButton(copilotXbox, Button.kRightBumper.value);
         private final JoystickButton leftBumperButton = new JoystickButton(copilotXbox, Button.kLeftBumper.value);
+        private final JoystickButton speedChangeButton = new JoystickButton(driverRightStick, 2);
 
         /**
          * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -135,18 +136,20 @@ public class RobotContainer {
 
                 rightBumperButton.toggleOnTrue(new ShootWithSpeed(m_ShooterSubsystem, "Fast Speed"));
 
-                leftBumperButton.toggleOnTrue(new ShootWithSpeed(m_ShooterSubsystem, "slow speed"));
+                leftBumperButton.toggleOnTrue(new ShootWithSpeed(m_ShooterSubsystem, "Slow Speed"));
 
                 xButton.toggleOnTrue(new DrivingIntake(m_StagingSubsytem));
                 aButton.toggleOnTrue(new IntakeCommand(m_StagingSubsytem, Constants.SpeedConstants.InTakeSpeed));
                 bButton.toggleOnTrue(new IntakeCommand(m_StagingSubsytem, Constants.SpeedConstants.ConveyorDown));
 
+                speedChangeButton.onTrue(Commands.runOnce(() -> m_robotDrive.switchMaxSpeed()));
+
                 SmartDashboard.putData("Invert Field Orientation", new InvertFieldRelative(m_robotDrive));
                 SmartDashboard.putBoolean("Field Orientation:", m_robotDrive.getFieldOrientation());
 
-                SmartDashboard.putData("2 Note Auto", new TwoNoteAuto(m_StagingSubsytem, m_ShooterSubsystem,
+                SmartDashboard.putData("2 Note Auto_test", new TwoNoteAuto(m_StagingSubsytem, m_ShooterSubsystem,
                                 m_robotDrive));
-                SmartDashboard.putData("Follow Path", PathFollowing());
+                SmartDashboard.putData("Follow Path_test", PathFollowing());
 
         }
 

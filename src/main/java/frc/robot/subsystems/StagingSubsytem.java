@@ -91,8 +91,8 @@ public class StagingSubsytem extends SubsystemBase {
     @Override
     public void periodic() {
         super.periodic();
-        SmartDashboard.putBoolean("isNoteInside", isNoteInside());
-        SmartDashboard.putNumber("Range Finder", rangeFinder.getValue());
-        SmartDashboard.putNumber("Conveyor Speed", 1.0);
+        // SmartDashboard.putBoolean("isNoteInside", isNoteInside());
+        // SmartDashboard.putNumber("Range Finder", rangeFinder.getValue());
+        // SmartDashboard.putNumber("Conveyor Speed", 1.0);
     }
 }

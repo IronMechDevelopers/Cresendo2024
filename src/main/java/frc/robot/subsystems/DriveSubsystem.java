@@ -79,6 +79,8 @@ public class DriveSubsystem extends SubsystemBase {
   private final SwerveDrivePoseEstimator poseEstimator;
   private final MAXSwerveModule[] swerveModules;
 
+  private boolean isFullSpeed = true;
+
   /**
    * Standard deviations of model states. Increase these numbers to trust your
    * model's state estimates less. This
@@ -191,11 +193,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("angle", m_gyro.getAngle(IMUAxis.kZ));
     Pose2d pose = getPose();
-    SmartDashboard.putNumber("x", pose.getX());
-    SmartDashboard.putNumber("y", pose.getY());
-    SmartDashboard.putNumber("pose Angle", pose.getRotation().getDegrees());
 
     // Update the odometry in the periodic block
     m_odometry.update(
@@ -296,9 +294,16 @@ public class DriveSubsystem extends SubsystemBase {
       m_currentRotation = rot;
     }
 
+    double maxSpeed = 0;
+    if (isFullSpeed) {
+      maxSpeed = DriveConstants.kMaxSpeedMetersPerSecond;
+    } else {
+      maxSpeed = DriveConstants.kHalfSpeedMetersPerSecond;
+    }
+
     // Convert the commanded speeds into the correct units for the drivetrain
-    double xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
-    double ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
+    double xSpeedDelivered = xSpeedCommanded * maxSpeed;
+    double ySpeedDelivered = ySpeedCommanded * maxSpeed;
     double rotDelivered = m_currentRotation * DriveConstants.kMaxAngularSpeed;
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
@@ -307,7 +312,7 @@ public class DriveSubsystem extends SubsystemBase {
                 Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)))
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+        swerveModuleStates, maxSpeed);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
@@ -407,5 +412,10 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public boolean getFieldOrientation() {
     return fieldOrientation;
+  }
+
+  public void switchMaxSpeed() {
+    System.out.println("Switching Max Speed");
+    isFullSpeed = !isFullSpeed;
   }
 }
