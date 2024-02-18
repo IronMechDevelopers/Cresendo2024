@@ -25,7 +25,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public ShooterSubsystem() {
 
-        SmartDashboard.putNumber("Shoot Speed", .90);
+        SmartDashboard.putNumber("Shoot Speed", .50);
 
         this.shooteTopMotor = new CANSparkMax(MotorIds.kTopShooterMotor, MotorType.kBrushless);
         this.shooteBottomMotor = new CANSparkMax(MotorIds.kBottomShooterMotor, MotorType.kBrushless);

@@ -60,6 +60,7 @@ public class RobotContainer {
         private final JoystickButton yButton = new JoystickButton(copilotXbox, Button.kY.value);
         private final JoystickButton xButton = new JoystickButton(copilotXbox, Button.kX.value);
         private final JoystickButton bButton = new JoystickButton(copilotXbox, Button.kB.value);
+        private final JoystickButton aButton = new JoystickButton(copilotXbox, Button.kA.value);
 
         /**
          * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -118,8 +119,8 @@ public class RobotContainer {
                 new JoystickButton(driverRightStick, 1).toggleOnTrue(
                                 new IntakeCommand(m_StagingSubsytem, Constants.SpeedConstants.InTakeSpeed));
                 yButton.toggleOnTrue(new ShootWarmpUpCommand(m_ShooterSubsystem));
-                xButton.toggleOnTrue(new IntakeCommand(m_StagingSubsytem, Constants.SpeedConstants.InTakeSpeed)
-                                .withTimeout(0.50));
+                xButton.toggleOnTrue(new DrivingIntake(m_StagingSubsytem));
+                aButton.toggleOnTrue(new IntakeCommand(m_StagingSubsytem, Constants.SpeedConstants.InTakeSpeed));
                 bButton.toggleOnTrue(new IntakeCommand(m_StagingSubsytem, Constants.SpeedConstants.ConveyorDown));
 
                 SmartDashboard.putData("Invert Field Orientation", new InvertFieldRelative(m_robotDrive));
