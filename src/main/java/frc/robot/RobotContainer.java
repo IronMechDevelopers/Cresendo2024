@@ -28,6 +28,7 @@ import frc.robot.commands.DrivingIntake;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.InvertFieldRelative;
 import frc.robot.commands.ShootWarmpUpCommand;
+import frc.robot.commands.TestingSubsystemsCommand;
 import frc.robot.commands.TwoNoteAuto;
 import frc.robot.commands.ZeroGyro;
 import frc.robot.subsystems.DriveSubsystem;
@@ -125,7 +126,7 @@ public class RobotContainer {
 
                 SmartDashboard.putData("Invert Field Orientation", new InvertFieldRelative(m_robotDrive));
                 SmartDashboard.putBoolean("Field Orientation:", m_robotDrive.getFieldOrientation());
-
+                SmartDashboard.putData("Daniel Only", new TestingSubsystemsCommand(m_robotDrive, m_StagingSubsytem, m_ShooterSubsystem));
                 SmartDashboard.putData("2 Note Auto", new TwoNoteAuto(m_StagingSubsytem, m_ShooterSubsystem,
                                 m_robotDrive));
 
