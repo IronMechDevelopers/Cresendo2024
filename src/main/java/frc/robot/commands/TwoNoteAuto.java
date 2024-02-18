@@ -25,7 +25,7 @@ public class TwoNoteAuto extends SequentialCommandGroup {
                                                                                 .withTimeout(.75))),
                                 new ParallelRaceGroup(getDriveBackwardCommand().withTimeout(1.5),
                                                 new DrivingIntake(stagingSubsytem)),
-                                new ParallelRaceGroup(getDriveFowardCommand().withTimeout(1.5),
+                                new ParallelRaceGroup(getDriveFowardCommand().withTimeout(1.75),
                                                 new ShootWarmpUpCommand(shooterSubsystem)),
                                 new ParallelRaceGroup(
                                                 new ShootWarmpUpCommand(shooterSubsystem), new WaitCommand(.25)
