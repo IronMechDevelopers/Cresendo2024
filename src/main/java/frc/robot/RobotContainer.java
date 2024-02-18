@@ -147,7 +147,7 @@ public class RobotContainer {
                 SmartDashboard.putData("Invert Field Orientation", new InvertFieldRelative(m_robotDrive));
                 SmartDashboard.putBoolean("Field Orientation:", m_robotDrive.getFieldOrientation());
 
-                SmartDashboard.putData("2 Note Auto_test", new TwoNoteAuto(m_StagingSubsytem, m_ShooterSubsystem,
+                SmartDashboard.putData("2 Note Auto", new TwoNoteAuto(m_StagingSubsytem, m_ShooterSubsystem,
                                 m_robotDrive));
                 SmartDashboard.putData("Follow Path_test", PathFollowing());
 
