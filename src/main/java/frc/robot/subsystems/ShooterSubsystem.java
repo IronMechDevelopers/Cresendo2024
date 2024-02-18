@@ -97,7 +97,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void setMotorToPercent(double speed) {
-        speed = SmartDashboard.getNumber("Shoot Speed", .90);
+        // speed = SmartDashboard.getNumber("Shoot Speed", .90);
         if (speed > 1) {
             speed = 1;
         }

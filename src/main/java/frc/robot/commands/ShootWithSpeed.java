@@ -1,15 +1,17 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class ShootWarmpUpCommand extends Command {
+public class ShootWithSpeed extends Command {
     private ShooterSubsystem m_shooterSubsystem;
-    private double percent;
+    private String speedType;
 
-    public ShootWarmpUpCommand(ShooterSubsystem shooterSubsystem) {
+    public ShootWithSpeed(ShooterSubsystem shooterSubsystem, String speedType) {
         super();
         this.m_shooterSubsystem = shooterSubsystem;
+        this.speedType = speedType;
 
         addRequirements(m_shooterSubsystem);
 
@@ -22,6 +24,7 @@ public class ShootWarmpUpCommand extends Command {
     // Runs the commands given and it runs every .2 seconds.
     @Override
     public void execute() {
+        double percent = SmartDashboard.getNumber(speedType, .25);
         m_shooterSubsystem.setMotorToPercent(percent);
         // m_shooterSubsystem.setMotorToRPM(4500.0);
     }

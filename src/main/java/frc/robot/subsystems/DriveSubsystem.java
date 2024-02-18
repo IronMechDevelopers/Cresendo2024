@@ -4,6 +4,15 @@
 
 package frc.robot.subsystems;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Optional;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,14 +21,21 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.MotorIds;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.Vector;
+import com.pathplanner.lib.auto.AutoBuilder;
 
 public class DriveSubsystem extends SubsystemBase {
   // Create MAXSwerveModules
@@ -55,7 +71,31 @@ public class DriveSubsystem extends SubsystemBase {
 
   private SlewRateLimiter m_magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
   private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
+
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
+  private final Field2d field2d = new Field2d();
+  private final AprilTagFieldLayout aprilTagFieldLayout;
+  private volatile Pose2d visionPose2d;
+  private final SwerveDrivePoseEstimator poseEstimator;
+  private final MAXSwerveModule[] swerveModules;
+
+  /**
+   * Standard deviations of model states. Increase these numbers to trust your
+   * model's state estimates less. This
+   * matrix is in the form [x, y, theta]ᵀ, with units in meters and radians, then
+   * meters.
+   */
+  private static final Vector<N3> stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
+
+  /**
+   * Standard deviations of the vision measurements. Increase these numbers to
+   * trust global measurements from vision
+   * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and
+   * radians.
+   */
+  private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(1.5, 1.5, 1.5);
+
+  private SwerveDriveKinematics kinematics = DriveConstants.kDriveKinematics;
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
@@ -70,6 +110,83 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+    AprilTagFieldLayout layout;
+
+    try {
+      layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
+      Optional<Alliance> alliance = DriverStation.getAlliance();
+      layout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
+    } catch (IOException e) {
+      DriverStation.reportError("Failed to load AprilTagFieldLayout", e.getStackTrace());
+      layout = null;
+    }
+
+    this.aprilTagFieldLayout = layout;
+
+    swerveModules = new MAXSwerveModule[] { m_frontLeft, m_frontRight, m_rearLeft, m_rearRight };
+
+    poseEstimator = new SwerveDrivePoseEstimator(
+        DriveConstants.kDriveKinematics,
+        getGyroscopeRotation(),
+        getModulePositions(),
+        new Pose2d(),
+        stateStdDevs,
+        visionMeasurementStdDevs);
+
+    AutoBuilder.configureHolonomic(
+        this::getCurrentPose,
+        this::setCurrentPose,
+        this::getSpeeds,
+        this::driveRobotRelative,
+        Constants.DriveConstants.pathFollowerConfig,
+        () -> {
+          return false;
+        },
+        this);
+
+  }
+
+  public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
+    ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
+
+    SwerveModuleState[] targetStates = kinematics.toSwerveModuleStates(targetSpeeds);
+    setStates(targetStates);
+  }
+
+  public void setStates(SwerveModuleState[] targetStates) {
+    SwerveDriveKinematics.desaturateWheelSpeeds(targetStates, Constants.AutoConstants.kMaxSpeedMetersPerSecond);
+
+    for (int i = 0; i < swerveModules.length; i++) {
+      swerveModules[i].setDesiredState(targetStates[i]);
+    }
+  }
+
+  public Pose2d getCurrentPose() {
+    return poseEstimator.getEstimatedPosition();
+  }
+
+  /**
+   * Resets the current pose to the specified pose. This should ONLY be called
+   * when the robot's position on the field is known, like at the beginning of
+   * a match.
+   * 
+   * @param newPose new pose
+   */
+  public void setCurrentPose(Pose2d newPose) {
+    poseEstimator.resetPosition(
+        getGyroscopeRotation(),
+        getModulePositions(),
+        newPose);
+  }
+
+  /**
+   * Gets the current drivetrain position, as reported by the modules themselves.
+   * 
+   * @return current drivetrain state. Array orders are frontLeft, frontRight,
+   *         backLeft, backRight
+   */
+  public SwerveModulePosition[] getModulePositions() {
+    return Arrays.stream(swerveModules).map(module -> module.getPosition()).toArray(SwerveModulePosition[]::new);
   }
 
   @Override
@@ -243,6 +360,14 @@ public class DriveSubsystem extends SubsystemBase {
     return Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)).getDegrees();
   }
 
+  public Rotation2d getGyroscopeRotation() {
+    return Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ));
+
+    // We have to invert the angle of the NavX so that rotating the robot
+    // counter-clockwise makes the angle increase.
+    // return Rotation2d.fromDegrees(360.0 - navx.getYaw());
+  }
+
   /**
    * Returns the turn rate of the robot.
    *
@@ -250,6 +375,21 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public double getTurnRate() {
     return m_gyro.getRate(IMUAxis.kZ) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+  }
+
+  public ChassisSpeeds getSpeeds() {
+    return kinematics.toChassisSpeeds(getModuleStates());
+  }
+
+  /**
+   * Gets the current drivetrain state (velocity, and angle), as reported by the
+   * modules themselves.
+   * 
+   * @return current drivetrain state. Array orders are frontLeft, frontRight,
+   *         backLeft, backRight
+   */
+  private SwerveModuleState[] getModuleStates() {
+    return Arrays.stream(swerveModules).map(module -> module.getState()).toArray(SwerveModuleState[]::new);
   }
 
   /**
