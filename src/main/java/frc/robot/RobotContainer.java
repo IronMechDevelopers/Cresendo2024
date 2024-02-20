@@ -58,7 +58,6 @@ public class RobotContainer {
         private final JoystickButton left4Button = new JoystickButton(driverLeftStick, 4);
         private final JoystickButton left2Button = new JoystickButton(driverLeftStick, 2);
 
-        private final JoystickButton yButton = new JoystickButton(copilotXbox, Button.kY.value);
         private final JoystickButton xButton = new JoystickButton(copilotXbox, Button.kX.value);
         private final JoystickButton bButton = new JoystickButton(copilotXbox, Button.kB.value);
         private final JoystickButton aButton = new JoystickButton(copilotXbox, Button.kA.value);

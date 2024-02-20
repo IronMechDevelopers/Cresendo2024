@@ -9,11 +9,8 @@ import frc.robot.subsystems.StagingSubsytem;
 
 public class TwoNoteAuto extends SequentialCommandGroup {
 
-        private DriveSubsystem driveSubsystem;
-
         public TwoNoteAuto(StagingSubsytem stagingSubsytem, ShooterSubsystem shooterSubsystem,
                         DriveSubsystem driveSubsystem) {
-                this.driveSubsystem = driveSubsystem;
                 addCommands(
                                 new ParallelRaceGroup(
                                                 shooterSubsystem.setMotorToPercentCommand(
