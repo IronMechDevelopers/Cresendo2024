@@ -32,6 +32,8 @@ import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.MotorIds;
 import frc.utils.SwerveUtils;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.Vector;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -416,5 +418,39 @@ public class DriveSubsystem extends SubsystemBase {
   public void switchMaxSpeed() {
     System.out.println("Switching Max Speed");
     isFullSpeed = !isFullSpeed;
+  }
+
+  /**
+   * @return
+   */
+  public Command zeroGyroCommand() {
+    return Commands.runOnce(() -> zeroHeading(), this);
+  }
+
+  public Command setXCommand() {
+    return Commands.run(() -> setX(), this);
+  }
+
+  public Command switchMaxSpeedCommand() {
+    return Commands.runOnce(() -> switchMaxSpeed());
+  }
+
+  public Command invertFieldRelativeComand() {
+    return Commands.runOnce(() -> invertFieldOrientation(), this);
+  }
+
+  // public Command driveBackwardCommand() {
+  // return Commands.startEnd(() -> drive(-.25, 0, 0, false),
+  // () -> drive(0, 0, 0, false), this);
+  // }
+
+  // public Command driveSidewaysCommand() {
+  // return Commands.startEnd(() -> drive(0, .25, 0, false),
+  // () -> drive(0, 0, 0, false), this);
+  // }
+
+  public Command driveCommand(double x, double y, double rot) {
+    return Commands.startEnd(() -> drive(x, y, rot, false),
+        () -> drive(0, 0, 0, false), this);
   }
 }

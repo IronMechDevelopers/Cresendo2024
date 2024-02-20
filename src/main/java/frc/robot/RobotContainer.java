@@ -16,18 +16,11 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.DrivingIntake;
-import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.InvertFieldRelative;
-import frc.robot.commands.ShootWarmpUpCommand;
-import frc.robot.commands.ShootWithSpeed;
 import frc.robot.commands.TwoNoteAuto;
-import frc.robot.commands.ZeroGyro;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StagingSubsytem;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -39,6 +32,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -55,14 +49,21 @@ public class RobotContainer {
         private static final Joystick driverLeftStick = new Joystick(0);
         private static final Joystick driverRightStick = new Joystick(1);
         private static final XboxController copilotXbox = new XboxController(2);
+
+        private final JoystickButton right1Button = new JoystickButton(driverRightStick, 1);
+        private final JoystickButton right3Button = new JoystickButton(driverRightStick, 3);
+        private final JoystickButton right2Button = new JoystickButton(driverRightStick, 2);
+
+        private final JoystickButton left1Button = new JoystickButton(driverLeftStick, 1);
+        private final JoystickButton left4Button = new JoystickButton(driverLeftStick, 4);
+        private final JoystickButton left2Button = new JoystickButton(driverLeftStick, 2);
+
         private final JoystickButton yButton = new JoystickButton(copilotXbox, Button.kY.value);
         private final JoystickButton xButton = new JoystickButton(copilotXbox, Button.kX.value);
         private final JoystickButton bButton = new JoystickButton(copilotXbox, Button.kB.value);
         private final JoystickButton aButton = new JoystickButton(copilotXbox, Button.kA.value);
         private final JoystickButton rightBumperButton = new JoystickButton(copilotXbox, Button.kRightBumper.value);
         private final JoystickButton leftBumperButton = new JoystickButton(copilotXbox, Button.kLeftBumper.value);
-        private final JoystickButton speedChangeButton = new JoystickButton(driverRightStick, 2);
-        private final JoystickButton setXButton = new JoystickButton(driverLeftStick, 2);
 
         /**
          * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -78,13 +79,12 @@ public class RobotContainer {
                 CvSource outputStream = CameraServer.putVideo("Shooting", 640, 480);
 
                 DataLogManager.start();
+                DriverStation.startDataLog(DataLogManager.getLog());
+
                 // Configure the button bindings
                 configureButtonBindings();
-                SmartDashboard.putData("RUN INtake", new DrivingIntake(m_StagingSubsytem));
                 SmartDashboard.putNumber("Fast Speed", .5);
                 SmartDashboard.putNumber("Slow Speed", .18);
-
-                m_StagingSubsytem.setColor(0, 255, 0);
 
                 // Configure default commands
                 m_robotDrive.setDefaultCommand(
@@ -112,32 +112,22 @@ public class RobotContainer {
          * {@link JoystickButton}.
          */
         private void configureButtonBindings() {
-                new JoystickButton(driverRightStick, 3)
-                                .whileTrue(new RunCommand(
-                                                () -> m_robotDrive.setX(),
-                                                m_robotDrive));
-                new JoystickButton(driverRightStick, 3).onTrue(new ZeroGyro(m_robotDrive));
-                new JoystickButton(driverLeftStick, 1).toggleOnTrue(new DrivingIntake(m_StagingSubsytem));
-                new JoystickButton(driverLeftStick, 4)
-                                .whileTrue(new IntakeCommand(m_StagingSubsytem, Constants.SpeedConstants.OuttakeSpeed));
-                new JoystickButton(driverRightStick, 1).toggleOnTrue(
-                                new IntakeCommand(m_StagingSubsytem, Constants.SpeedConstants.InTakeSpeed));
-                yButton.toggleOnTrue(new ShootWarmpUpCommand(m_ShooterSubsystem));
+                right3Button.onTrue(m_robotDrive.zeroGyroCommand());
+                left1Button.toggleOnTrue(m_StagingSubsytem.drivingIntakeCommand());
 
-                rightBumperButton.toggleOnTrue(new ShootWithSpeed(m_ShooterSubsystem, "Fast Speed"));
+                left4Button.whileTrue(m_StagingSubsytem.runOuttakeCommand());
+                right1Button.toggleOnTrue(m_StagingSubsytem.runIntakeCommand());
 
-                leftBumperButton.toggleOnTrue(new ShootWithSpeed(m_ShooterSubsystem, "Slow Speed"));
+                rightBumperButton.toggleOnTrue(m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"));
+                leftBumperButton.toggleOnTrue(m_ShooterSubsystem.setMotorToPercentCommand("Slow Speed"));
+                xButton.toggleOnTrue(m_StagingSubsytem.drivingIntakeCommand());
+                aButton.toggleOnTrue(m_StagingSubsytem.runIntakeCommand());
+                bButton.toggleOnTrue(m_StagingSubsytem.runOuttakeCommand());
+                right2Button.onTrue(m_robotDrive.switchMaxSpeedCommand());
+                left2Button.whileTrue(m_robotDrive.setXCommand());
 
-                xButton.toggleOnTrue(new DrivingIntake(m_StagingSubsytem));
-                aButton.toggleOnTrue(new IntakeCommand(m_StagingSubsytem, Constants.SpeedConstants.InTakeSpeed));
-                bButton.toggleOnTrue(new IntakeCommand(m_StagingSubsytem, Constants.SpeedConstants.ConveyorDown));
-
-                speedChangeButton.onTrue(Commands.runOnce(() -> m_robotDrive.switchMaxSpeed()));
-                setXButton.whileTrue(Commands.run(() -> m_robotDrive.setX(), m_robotDrive));
-
-                SmartDashboard.putData("Invert Field Orientation", new InvertFieldRelative(m_robotDrive));
+                SmartDashboard.putData("Invert Field Orientation", m_robotDrive.invertFieldRelativeComand());
                 SmartDashboard.putBoolean("Field Orientation:", m_robotDrive.getFieldOrientation());
-
                 SmartDashboard.putData("2 Note Auto", new TwoNoteAuto(m_StagingSubsytem, m_ShooterSubsystem,
                                 m_robotDrive));
                 SmartDashboard.putData("Follow Path_test", PathFollowing());

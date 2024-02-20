@@ -6,6 +6,8 @@ import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorIds;
 
@@ -108,44 +110,17 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // read PID coefficients from SmartDashboard
-        // double p = SmartDashboard.getNumber("P Gain", 0);
-        // double i = SmartDashboard.getNumber("I Gain", 0);
-        // double d = SmartDashboard.getNumber("D Gain", 0);
-        // double iz = SmartDashboard.getNumber("I Zone", 0);
-        // double ff = SmartDashboard.getNumber("Feed Forward", 0);
-        // double max = SmartDashboard.getNumber("Max Output", 0);
-        // double min = SmartDashboard.getNumber("Min Output", 0);
-
-        // if PID coefficients on SmartDashboard have changed, write new values to
-        // controller
-        // if ((p != kP)) {
-        // m_pidTopController.setP(p);
-        // kP = p;
-        // }
-        // if ((i != kI)) {
-        // m_pidTopController.setI(i);
-        // kI = i;
-        // }
-        // if ((d != kD)) {
-        // m_pidTopController.setD(d);
-        // kD = d;
-        // }
-        // if ((iz != kIz)) {
-        // m_pidTopController.setIZone(iz);
-        // kIz = iz;
-        // }
-        // if ((ff != kFF)) {
-        // m_pidTopController.setFF(ff);
-        // kFF = ff;
-        // }
-        // if ((max != kMaxOutput) || (min != kMinOutput)) {
-        // m_pidTopController.setOutputRange(min, max);
-        // kMinOutput = min;
-        // kMaxOutput = max;
-        // }
 
         movingAverageVelocity = filter.calculate(m_encoderTop.getVelocity());
+    }
+
+    public Command setMotorToPercentCommand(double percent) {
+        return Commands.startEnd(() -> setMotorToPercent(percent), () -> setMotorToPercent(0));
+    }
+
+    public Command setMotorToPercentCommand(String strength) {
+        double percent = SmartDashboard.getNumber(strength, .20);
+        return Commands.startEnd(() -> setMotorToPercent(percent), () -> setMotorToPercent(0));
     }
 
 }
