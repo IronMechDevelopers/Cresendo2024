@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -28,13 +31,14 @@ public final class Constants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
     public static final double kMaxSpeedMetersPerSecond = 4.8;
+    public static final double kHalfSpeedMetersPerSecond = 2.4;
+
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 1.2; // radians per second
     public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
     public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
 
-    
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(25.5);
     // Distance between centers of right and left wheels on robot
@@ -53,6 +57,14 @@ public final class Constants {
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
     public static final boolean kGyroReversed = false;
+
+    public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(
+        new PIDConstants(5.0, 0, 0), // Translation constants
+        new PIDConstants(5.0, 0, 0), // Rotation constants
+        AutoConstants.kMaxSpeedMetersPerSecond,
+        new Translation2d(kWheelBase / 2, kTrackWidth / 2).getNorm(), // Drive base radius (distance from center to
+                                                                      // furthest module)
+        new ReplanningConfig());
   }
 
   public static final class MotorIds {
@@ -127,9 +139,8 @@ public final class Constants {
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
     public static final int kDrivingMotorCurrentLimit = 50; // amps
-    public static final int kTurningMotorCurrentLimit = 20; // amps 
+    public static final int kTurningMotorCurrentLimit = 20; // amps
 
-    
   }
 
   public static final class OIConstants {
@@ -154,11 +165,11 @@ public final class Constants {
 
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
-  } 
+  }
 
-  public static final class SpeedConstants { 
-  public static final double InTakeSpeed = 0.5; 
-  public static final double OuttakeSpeed = -0.5;
-  public static final double ConveyorDown = -0.75;
+  public static final class SpeedConstants {
+    public static final double IntakeSpeed = 0.5;
+    public static final double OuttakeSpeed = -0.5;
+    public static final double ConveyorDown = -0.75;
   }
 }
