@@ -56,11 +56,11 @@ public class StagingSubsytem extends SubsystemBase {
     }
 
     public Command runIntakeCommand() {
-        return Commands.startEnd(() -> setMotor(Constants.SpeedConstants.IntakeSpeed), () -> setMotor(0), this);
+        return Commands.startEnd(() -> setMotor(Constants.SpeedConstants.IntakeSpeed), () -> stopMotor(), this);
     }
 
     public Command runOuttakeCommand() {
-        return Commands.startEnd(() -> setMotor(Constants.SpeedConstants.OuttakeSpeed), () -> setMotor(0), this);
+        return Commands.startEnd(() -> setMotor(Constants.SpeedConstants.OuttakeSpeed), () -> stopMotor(), this);
     }
 
     public Command drivingIntakeCommand() {

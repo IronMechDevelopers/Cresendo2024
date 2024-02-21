@@ -63,8 +63,14 @@ public class ShooterSubsystem extends SubsystemBase {
         if (speed > 1) {
             speed = 1;
         }
+
         shooteTopMotor.set(speed);
         shooteBottomMotor.set(speed);
+    }
+
+    public void setMotorToPercent(String strength) {
+        double percent = SmartDashboard.getNumber(strength, .20);
+        setMotorToPercent(percent);
     }
 
     public double getRPM() {
@@ -85,12 +91,12 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public Command setMotorToPercentCommand(double percent) {
+
         return Commands.startEnd(() -> setMotorToPercent(percent), () -> setMotorToPercent(0));
     }
 
     public Command setMotorToPercentCommand(String strength) {
-        double percent = SmartDashboard.getNumber(strength, .20);
-        return Commands.startEnd(() -> setMotorToPercent(percent), () -> setMotorToPercent(0));
+        return Commands.startEnd(() -> setMotorToPercent(strength), () -> setMotorToPercent(0));
     }
 
 }

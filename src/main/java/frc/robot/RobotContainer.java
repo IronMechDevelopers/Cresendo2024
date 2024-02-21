@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants.OIConstants;
@@ -21,12 +22,16 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StagingSubsytem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import java.util.List;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -51,8 +56,8 @@ public class RobotContainer {
         private static final XboxController copilotXbox = new XboxController(2);
 
         private final JoystickButton right1Button = new JoystickButton(driverRightStick, 1);
-        private final JoystickButton right3Button = new JoystickButton(driverRightStick, 3);
         private final JoystickButton right2Button = new JoystickButton(driverRightStick, 2);
+        private final JoystickButton right3Button = new JoystickButton(driverRightStick, 3);
 
         private final JoystickButton left1Button = new JoystickButton(driverLeftStick, 1);
         private final JoystickButton left4Button = new JoystickButton(driverLeftStick, 4);
@@ -64,10 +69,14 @@ public class RobotContainer {
         private final JoystickButton rightBumperButton = new JoystickButton(copilotXbox, Button.kRightBumper.value);
         private final JoystickButton leftBumperButton = new JoystickButton(copilotXbox, Button.kLeftBumper.value);
 
+        private final SendableChooser<Command> autoChooser;
+
         /**
          * The container for the robot. Contains subsystems, OI devices, and commands.
          */
         public RobotContainer() {
+
+                autoChooser = AutoBuilder.buildAutoChooser();
 
                 CameraServer.startAutomaticCapture();
 
@@ -79,6 +88,19 @@ public class RobotContainer {
 
                 DataLogManager.start();
                 DriverStation.startDataLog(DataLogManager.getLog());
+
+                NamedCommands.registerCommand("intake", m_StagingSubsytem.drivingIntakeCommand());
+                NamedCommands.registerCommand("shootHigh", Commands.race(
+                                m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"),
+                                new WaitCommand(.2).andThen(m_StagingSubsytem.runIntakeCommand().withTimeout(.75))));
+
+                autoChooser.addOption("2 Note Left", new PathPlannerAuto("2NoteLeftAuto"));
+
+                autoChooser.addOption("Drive Forward", m_robotDrive.driveCommand(.25, 0, 0).withTimeout(2));
+                autoChooser.addOption("2 Note Center", new TwoNoteAuto(m_StagingSubsytem, m_ShooterSubsystem,
+                                m_robotDrive));
+
+                SmartDashboard.putData("Auto", autoChooser);
 
                 // Configure the button bindings
                 configureButtonBindings();
@@ -131,6 +153,9 @@ public class RobotContainer {
                                 m_robotDrive));
                 SmartDashboard.putData("Follow Path_test", PathFollowing());
 
+                SmartDashboard.putData("3 Note left Auto", new PathPlannerAuto("3NoteLeftAuto"));
+                SmartDashboard.putData("Simple Test", new PathPlannerAuto("Simple"));
+
         }
 
         /**
@@ -139,8 +164,8 @@ public class RobotContainer {
          * @return the command to run in autonomous
          */
         public Command getAutonomousCommand() {
-                return new TwoNoteAuto(m_StagingSubsytem, m_ShooterSubsystem,
-                                m_robotDrive);
+                return autoChooser.getSelected();
+
         }
 
         private PathPlannerPath getPath() {

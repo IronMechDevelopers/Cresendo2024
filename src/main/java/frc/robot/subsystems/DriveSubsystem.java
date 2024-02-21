@@ -22,12 +22,16 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.MotorIds;
@@ -99,6 +103,12 @@ public class DriveSubsystem extends SubsystemBase {
   private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(1.5, 1.5, 1.5);
 
   private SwerveDriveKinematics kinematics = DriveConstants.kDriveKinematics;
+
+  StructPublisher<Pose2d> myPosePublisher = NetworkTableInstance.getDefault()
+      .getStructTopic("MyPose", Pose2d.struct).publish();
+
+  StructArrayPublisher<SwerveModuleState> mySwerveStatesPublisher = NetworkTableInstance.getDefault()
+      .getStructArrayTopic("MyStates", SwerveModuleState.struct).publish();
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
@@ -194,17 +204,23 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    Pose2d pose = getPose();
+    poseEstimator.update(getGyroscopeRotation(), getModulePositions());
 
-    // Update the odometry in the periodic block
-    m_odometry.update(
-        Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)),
-        new SwerveModulePosition[] {
-            m_frontLeft.getPosition(),
-            m_frontRight.getPosition(),
-            m_rearLeft.getPosition(),
-            m_rearRight.getPosition()
-        });
+    Pose2d pose = poseEstimator.getEstimatedPosition();
+
+    SmartDashboard.putString("Pose", getFomattedPose());
+    field2d.setRobotPose(getCurrentPose());
+
+    myPosePublisher.set(pose);
+    mySwerveStatesPublisher.set(getModuleStates());
+  }
+
+  private String getFomattedPose() {
+    Pose2d pose = getCurrentPose();
+    return String.format("(%.2f, %.2f) %.2f degrees",
+        pose.getX(),
+        pose.getY(),
+        pose.getRotation().getDegrees());
   }
 
   /**
@@ -416,7 +432,6 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void switchMaxSpeed() {
-    System.out.println("Switching Max Speed");
     isFullSpeed = !isFullSpeed;
   }
 
@@ -424,6 +439,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return
    */
   public Command zeroGyroCommand() {
+
     return Commands.runOnce(() -> zeroHeading(), this);
   }
 
