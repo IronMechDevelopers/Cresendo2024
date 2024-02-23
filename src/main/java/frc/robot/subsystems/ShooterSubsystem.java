@@ -1,11 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.filter.LinearFilter;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -18,19 +14,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private CANSparkMax shooteTopMotor;
     private CANSparkMax shooteBottomMotor;
-    private RelativeEncoder m_encoderTop;
-    private RelativeEncoder m_encoderBottom;
-
     public double maxRPM;
-    private LinearFilter topFilter;
-    private LinearFilter bottomFilter;
-    private LinearFilter averageFilter;
     private double movingAverageVelocity;
-
-    private ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
-    private GenericEntry topEntry = shooterTab.add("Top Speed", "Nothing").getEntry();
-    private GenericEntry bottomEntry = shooterTab.add("Bottom Speed", "Nothing").getEntry();
-    private GenericEntry averageEntry = shooterTab.add("Both", "Nothing").getEntry();
 
     public ShooterSubsystem() {
 
@@ -40,17 +25,17 @@ public class ShooterSubsystem extends SubsystemBase {
         shooteTopMotor.restoreFactoryDefaults();
         shooteBottomMotor.restoreFactoryDefaults();
 
-        m_encoderTop = shooteTopMotor.getEncoder();
+        shooteTopMotor.getEncoder();
 
         shooteTopMotor.setInverted(true);
 
-        m_encoderBottom = shooteBottomMotor.getEncoder();
+        shooteBottomMotor.getEncoder();
 
         maxRPM = 5700;
 
-        topFilter = LinearFilter.movingAverage(5);
-        bottomFilter = LinearFilter.movingAverage(5);
-        averageFilter = LinearFilter.movingAverage(5);
+        LinearFilter.movingAverage(5);
+        LinearFilter.movingAverage(5);
+        LinearFilter.movingAverage(5);
         movingAverageVelocity = 0;
     }
 
