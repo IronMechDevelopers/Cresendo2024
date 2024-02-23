@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.2729361177511764,
-      "y": 5.500416234123768
+      "x": 0.7638410433099965,
+      "y": 4.5686658623267675
     },
-    "rotation": 180.0
+    "rotation": 120.86925882100695
   },
   "command": {
     "type": "sequential",
@@ -18,7 +18,7 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -28,34 +28,41 @@
                 }
               },
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "getCenterNoteFromCenter"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "SetUpFarRight"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "PickUpFarRight"
+                      }
+                    }
+                  ]
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "shootHigh"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "intake"
+                  "name": "WarmUpShooter"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "getLeftNoteFromCenter"
+                  "pathName": "ScoreRightFromFarRight"
                 }
               }
             ]

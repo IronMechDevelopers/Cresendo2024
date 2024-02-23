@@ -8,9 +8,6 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -27,15 +24,9 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-import java.util.List;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -89,16 +80,29 @@ public class RobotContainer {
                 DataLogManager.start();
                 DriverStation.startDataLog(DataLogManager.getLog());
 
-                NamedCommands.registerCommand("intake", m_StagingSubsytem.drivingIntakeCommand());
+                NamedCommands.registerCommand("intake", m_StagingSubsytem.drivingIntakeCommand().withTimeout(5));
                 NamedCommands.registerCommand("shootHigh", Commands.race(
                                 m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"),
-                                new WaitCommand(.2).andThen(m_StagingSubsytem.runIntakeCommand().withTimeout(.75))));
+                                new WaitCommand(.25).andThen(m_StagingSubsytem.runIntakeCommand().withTimeout(1))));
+                NamedCommands.registerCommand("WarmUpShooter",
+                                m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"));
 
-                autoChooser.addOption("2 Note Left", new PathPlannerAuto("2NoteLeftAuto"));
+                autoChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
+                autoChooser.addOption("Taxi", m_robotDrive.driveCommand(-.25, 0, 0).withTimeout(2));
+                autoChooser.addOption("Center-No Move", Commands.race(
+                                m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"),
+                                new WaitCommand(.25).andThen(m_StagingSubsytem.runIntakeCommand().withTimeout(1))));
+                autoChooser.addOption("Center-Center", new PathPlannerAuto("Center-Center"));
+                autoChooser.addOption("Center-Center-Amp", new PathPlannerAuto("Center-Center-Amp"));
+                autoChooser.addOption("Amp-No Move", new WaitCommand(15));
+                autoChooser.addOption("Amp-Amp", new WaitCommand(15));
+                autoChooser.addOption("Amp-Amp-Cross field", new WaitCommand(15));
+                autoChooser.addOption("Troll", new WaitCommand(15));
 
                 autoChooser.addOption("Drive Forward", m_robotDrive.driveCommand(.25, 0, 0).withTimeout(2));
-                autoChooser.addOption("2 Note Center", new TwoNoteAuto(m_StagingSubsytem, m_ShooterSubsystem,
-                                m_robotDrive));
+                autoChooser.addOption("2 Note Center", new PathPlannerAuto("2NoteCenter"));
+                autoChooser.addOption("2 Note Right Far Right", new PathPlannerAuto("2NoteRightFarRight"));
+                autoChooser.addOption("3 Note Center Left", new PathPlannerAuto("3NoteCenterLeft"));
 
                 SmartDashboard.putData("Auto", autoChooser);
 
@@ -119,7 +123,7 @@ public class RobotContainer {
                                                                                 OIConstants.kDriveDeadband),
                                                                 -MathUtil.applyDeadband(driverRightStick.getX(),
                                                                                 OIConstants.kDriveDeadband),
-                                                                true),
+                                                                false),
                                                 m_robotDrive));
         }
 
@@ -133,28 +137,29 @@ public class RobotContainer {
          * {@link JoystickButton}.
          */
         private void configureButtonBindings() {
-                right3Button.onTrue(m_robotDrive.zeroGyroCommand());
+                ;
                 left1Button.toggleOnTrue(m_StagingSubsytem.drivingIntakeCommand());
-
+                left2Button.whileTrue(m_robotDrive.setXCommand());
                 left4Button.whileTrue(m_StagingSubsytem.runOuttakeCommand());
+
                 right1Button.toggleOnTrue(m_StagingSubsytem.runIntakeCommand());
+                right2Button.onTrue(m_robotDrive.switchMaxSpeedCommand());
+                right3Button.onTrue(m_robotDrive.zeroGyroCommand());
 
                 rightBumperButton.toggleOnTrue(m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"));
                 leftBumperButton.toggleOnTrue(m_ShooterSubsystem.setMotorToPercentCommand("Slow Speed"));
                 xButton.toggleOnTrue(m_StagingSubsytem.drivingIntakeCommand());
                 aButton.toggleOnTrue(m_StagingSubsytem.runIntakeCommand());
                 bButton.toggleOnTrue(m_StagingSubsytem.runOuttakeCommand());
-                right2Button.onTrue(m_robotDrive.switchMaxSpeedCommand());
-                left2Button.whileTrue(m_robotDrive.setXCommand());
 
                 SmartDashboard.putData("Invert Field Orientation", m_robotDrive.invertFieldRelativeComand());
                 SmartDashboard.putBoolean("Field Orientation:", m_robotDrive.getFieldOrientation());
                 SmartDashboard.putData("2 Note Auto", new TwoNoteAuto(m_StagingSubsytem, m_ShooterSubsystem,
                                 m_robotDrive));
-                SmartDashboard.putData("Follow Path_test", PathFollowing());
 
                 SmartDashboard.putData("3 Note left Auto", new PathPlannerAuto("3NoteLeftAuto"));
                 SmartDashboard.putData("Simple Test", new PathPlannerAuto("Simple"));
+                SmartDashboard.putData("3NoteCenterLeft", new PathPlannerAuto("3NoteCenterLeft"));
 
         }
 
@@ -165,39 +170,5 @@ public class RobotContainer {
          */
         public Command getAutonomousCommand() {
                 return autoChooser.getSelected();
-
-        }
-
-        private PathPlannerPath getPath() {
-                // Create a list of bezier points from poses. Each pose represents one waypoint.
-                // The rotation component of the pose should be the direction of travel. Do not
-                // use holonomic rotation.
-                List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
-                                new Pose2d(1.0, 1.0, Rotation2d.fromDegrees(0)),
-                                new Pose2d(3.0, 1.0, Rotation2d.fromDegrees(0)),
-                                new Pose2d(5.0, 3.0, Rotation2d.fromDegrees(90)));
-
-                // Create the path using the bezier points created above
-                PathPlannerPath path = new PathPlannerPath(
-                                bezierPoints,
-                                new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI), // The constraints for this
-                                // path. If using a
-                                // differential drivetrain, the
-                                // angular constraints have no
-                                // effect.
-                                new GoalEndState(0.0, Rotation2d.fromDegrees(-90)) // Goal end state. You can set a
-                                                                                   // holonomic rotation here. If using
-                                                                                   // a differential drivetrain, the
-                                                                                   // rotation will have no effect.
-                );
-
-                // Prevent the path from being flipped if the coordinates are already correct
-                path.preventFlipping = true;
-                return path;
-        }
-
-        private Command PathFollowing() {
-                PathPlannerPath path = getPath();
-                return AutoBuilder.followPath(path);
         }
 }

@@ -69,7 +69,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void setMotorToPercent(String strength) {
-        double percent = SmartDashboard.getNumber(strength, .20);
+        double percent = SmartDashboard.getNumber(strength, .45);
         setMotorToPercent(percent);
     }
 
@@ -80,13 +80,14 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
-        double a = topFilter.calculate(m_encoderTop.getVelocity());
-        double b = bottomFilter.calculate(m_encoderBottom.getVelocity());
-        double c = averageFilter.calculate((m_encoderTop.getVelocity() + m_encoderBottom.getVelocity()) / 2.0);
+        // double a = topFilter.calculate(m_encoderTop.getVelocity());
+        // double b = bottomFilter.calculate(m_encoderBottom.getVelocity());
+        // double c = averageFilter.calculate((m_encoderTop.getVelocity() +
+        // m_encoderBottom.getVelocity()) / 2.0);
 
-        topEntry.setDouble(a);
-        bottomEntry.setDouble(b);
-        averageEntry.setDouble(c);
+        // topEntry.setDouble(a);
+        // bottomEntry.setDouble(b);
+        // averageEntry.setDouble(c);
 
     }
 

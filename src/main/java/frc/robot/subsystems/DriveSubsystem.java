@@ -202,6 +202,17 @@ public class DriveSubsystem extends SubsystemBase {
     return Arrays.stream(swerveModules).map(module -> module.getPosition()).toArray(SwerveModulePosition[]::new);
   }
 
+  /**
+   * Gets the current drivetrain state (velocity, and angle), as reported by the
+   * modules themselves.
+   * 
+   * @return current drivetrain state. Array orders are frontLeft, frontRight,
+   *         backLeft, backRight
+   */
+  private SwerveModuleState[] getModuleStates() {
+    return Arrays.stream(swerveModules).map(module -> module.getState()).toArray(SwerveModuleState[]::new);
+  }
+
   @Override
   public void periodic() {
     poseEstimator.update(getGyroscopeRotation(), getModulePositions());
@@ -213,6 +224,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     myPosePublisher.set(pose);
     mySwerveStatesPublisher.set(getModuleStates());
+    // SmartDashboard.putData("Current Pose", pose);
   }
 
   private String getFomattedPose() {
@@ -221,32 +233,6 @@ public class DriveSubsystem extends SubsystemBase {
         pose.getX(),
         pose.getY(),
         pose.getRotation().getDegrees());
-  }
-
-  /**
-   * Returns the currently-estimated pose of the robot.
-   *
-   * @return The pose.
-   */
-  public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
-  }
-
-  /**
-   * Resets the odometry to the specified pose.
-   *
-   * @param pose The pose to which to set the odometry.
-   */
-  public void resetOdometry(Pose2d pose) {
-    m_odometry.resetPosition(
-        Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)),
-        new SwerveModulePosition[] {
-            m_frontLeft.getPosition(),
-            m_frontRight.getPosition(),
-            m_rearLeft.getPosition(),
-            m_rearRight.getPosition()
-        },
-        pose);
   }
 
   /**
@@ -404,17 +390,6 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Gets the current drivetrain state (velocity, and angle), as reported by the
-   * modules themselves.
-   * 
-   * @return current drivetrain state. Array orders are frontLeft, frontRight,
-   *         backLeft, backRight
-   */
-  private SwerveModuleState[] getModuleStates() {
-    return Arrays.stream(swerveModules).map(module -> module.getState()).toArray(SwerveModuleState[]::new);
-  }
-
-  /**
    * Inverts field relatives value
    *
    */
@@ -455,18 +430,8 @@ public class DriveSubsystem extends SubsystemBase {
     return Commands.runOnce(() -> invertFieldOrientation(), this);
   }
 
-  // public Command driveBackwardCommand() {
-  // return Commands.startEnd(() -> drive(-.25, 0, 0, false),
-  // () -> drive(0, 0, 0, false), this);
-  // }
-
-  // public Command driveSidewaysCommand() {
-  // return Commands.startEnd(() -> drive(0, .25, 0, false),
-  // () -> drive(0, 0, 0, false), this);
-  // }
-
   public Command driveCommand(double x, double y, double rot) {
-    return Commands.startEnd(() -> drive(x, y, rot, false),
-        () -> drive(0, 0, 0, false), this);
+    return Commands.startEnd(() -> drive(x, y, rot, true),
+        () -> drive(0, 0, 0, true), this);
   }
 }
