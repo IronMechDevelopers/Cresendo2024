@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.9692171909596348,
-        "y": 7.0591559806856985
+        "x": 0.7745472368785649,
+        "y": 6.523946334856054
       },
       "isLocked": false,
       "linkedName": "ShootAmp"
     },
     {
       "anchor": {
-        "x": 0.9202250790865221,
-        "y": 7.053851876011834
+        "x": 1.4960384792093113,
+        "y": 7.1496969970042885
       },
       "prevControl": {
-        "x": 0.9198056785870525,
-        "y": 6.939494771903054
+        "x": 1.2507702462708128,
+        "y": 7.002670582209515
       },
       "nextControl": {
-        "x": 0.9206444795859916,
-        "y": 7.168208980120613
+        "x": 1.9144285906831613,
+        "y": 7.400501584857337
       },
       "isLocked": false,
       "linkedName": null
@@ -36,8 +36,8 @@
         "y": 7.315144885344918
       },
       "prevControl": {
-        "x": 1.9916123985592074,
-        "y": 7.329478114768953
+        "x": 2.4577684250617162,
+        "y": 7.315144885344918
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,13 +55,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 176.29321817122852,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Amp",
   "previewStartingState": {
-    "rotation": -117.9231181563758,
+    "rotation": -126.04497422961914,
     "velocity": 0
   },
   "useDefaultConstraints": true
