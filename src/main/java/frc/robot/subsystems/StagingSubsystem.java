@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.MotorIds;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -20,6 +22,9 @@ public class StagingSubsystem extends SubsystemBase {
     // .4-3.1 V between 80cm - 10cm
     private final AnalogInput rangeFinder = new AnalogInput(0);
 
+    private AddressableLED m_led;
+    private AddressableLEDBuffer m_ledBuffer;
+
     public StagingSubsystem() {
 
         this.bottomIntakeMotor = new CANSparkMax(MotorIds.kBottomIntakeMotorCanId, MotorType.kBrushed);
@@ -28,11 +33,45 @@ public class StagingSubsystem extends SubsystemBase {
 
         bottomIntakeMotor.setInverted(true);
         topIntakeMotor.setInverted(true);
+
+        // PWM port 9
+        // Must be a PWM header, not MXP or DIO
+        m_led = new AddressableLED(9);
+
+        // Reuse buffer
+        // Default to a length of 60, start empty output
+        // Length is expensive to set, so only set it once, then just update data
+        m_ledBuffer = new AddressableLEDBuffer(36);
+        m_led.setLength(m_ledBuffer.getLength());
+
+        // Set the data
+        m_led.setData(m_ledBuffer);
+        m_led.start();
+
+        for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+            // Sets the specified LED to the RGB values for red
+            m_ledBuffer.setRGB(i, 0, 255, 0);
+        }
+
+        m_led.setData(m_ledBuffer);
+
+    }
+
+    private void setColor(int red, int blue, int green) {
+        for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+            // Sets the specified LED to the RGB values for red
+            m_ledBuffer.setRGB(i, red, blue, green);
+        }
+
+        m_led.setData(m_ledBuffer);
     }
 
     public boolean isNoteInside() {
         boolean noteInside = rangeFinder.getValue() > 1000;
         SmartDashboard.putBoolean("Note Inside", noteInside);
+        if (noteInside) {
+            setColor(0, 0, 255);
+        }
         return noteInside;
     }
 
@@ -69,5 +108,9 @@ public class StagingSubsystem extends SubsystemBase {
         return Commands.sequence(runIntakeCommand()
                 .until(() -> isNoteInside()), runOuttakeCommand().withTimeout(.25));
 
+    }
+
+    public Command changeColorCommmand(int red, int blue, int green) {
+        return Commands.runOnce(() -> setColor(red, blue, green));
     }
 }
