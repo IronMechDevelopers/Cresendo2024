@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-public class StagingSubsytem extends SubsystemBase {
+public class StagingSubsystem extends SubsystemBase {
 
     private CANSparkMax bottomIntakeMotor;
     private CANSparkMax topIntakeMotor;
@@ -20,7 +20,7 @@ public class StagingSubsytem extends SubsystemBase {
     // .4-3.1 V between 80cm - 10cm
     private final AnalogInput rangeFinder = new AnalogInput(0);
 
-    public StagingSubsytem() {
+    public StagingSubsystem() {
 
         this.bottomIntakeMotor = new CANSparkMax(MotorIds.kBottomIntakeMotorCanId, MotorType.kBrushed);
         this.topIntakeMotor = new CANSparkMax(MotorIds.kTopIntakeMotor, MotorType.kBrushed);

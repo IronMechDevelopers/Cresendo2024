@@ -17,7 +17,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.TwoNoteAuto;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.StagingSubsytem;
+import frc.robot.subsystems.StagingSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -40,7 +40,7 @@ public class RobotContainer {
 
         // The robot's subsystems
         private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-        private final StagingSubsytem m_StagingSubsytem = new StagingSubsytem();
+        private final StagingSubsystem m_StagingSubsystem = new StagingSubsystem();
         private final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
         private static final Joystick driverLeftStick = new Joystick(0);
         private static final Joystick driverRightStick = new Joystick(1);
@@ -80,10 +80,10 @@ public class RobotContainer {
                 DataLogManager.start();
                 DriverStation.startDataLog(DataLogManager.getLog());
 
-                NamedCommands.registerCommand("intake", m_StagingSubsytem.drivingIntakeCommand().withTimeout(5));
+                NamedCommands.registerCommand("intake", m_StagingSubsystem.drivingIntakeCommand().withTimeout(5));
                 NamedCommands.registerCommand("shootHigh", Commands.race(
                                 m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"),
-                                new WaitCommand(.25).andThen(m_StagingSubsytem.runIntakeCommand().withTimeout(1))));
+                                new WaitCommand(.25).andThen(m_StagingSubsystem.runIntakeCommand().withTimeout(1))));
                 NamedCommands.registerCommand("WarmUpShooter",
                                 m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"));
 
@@ -91,13 +91,13 @@ public class RobotContainer {
                 autoChooser.addOption("Taxi", m_robotDrive.driveCommand(-.25, 0, 0).withTimeout(2));
                 autoChooser.addOption("Center-No Move", Commands.race(
                                 m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"),
-                                new WaitCommand(.25).andThen(m_StagingSubsytem.runIntakeCommand().withTimeout(1))));
+                                new WaitCommand(.25).andThen(m_StagingSubsystem.runIntakeCommand().withTimeout(1))));
                 autoChooser.addOption("Center-Center", new PathPlannerAuto("Center-Center"));
                 autoChooser.addOption("Center-Wait-Center", new PathPlannerAuto("Center-Wait-Center"));
                 autoChooser.addOption("Center-Center-Amp", new PathPlannerAuto("Center-Center-Amp"));
                 autoChooser.addOption("Amp-No Move", Commands.race(
                                 m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"),
-                                new WaitCommand(.25).andThen(m_StagingSubsytem.runIntakeCommand().withTimeout(1))));
+                                new WaitCommand(.25).andThen(m_StagingSubsystem.runIntakeCommand().withTimeout(1))));
                 autoChooser.addOption("Amp-Amp", new PathPlannerAuto("Amp-Amp"));
                 autoChooser.addOption("Amp-Amp-Cross field", new PathPlannerAuto("Amp-Amp-Cross field"));
                 autoChooser.addOption("Troll", new PathPlannerAuto("Troll"));
@@ -141,24 +141,23 @@ public class RobotContainer {
          * {@link JoystickButton}.
          */
         private void configureButtonBindings() {
-                
-                left1Button.toggleOnTrue(m_StagingSubsytem.drivingIntakeCommand());
-                left2Button.whileTrue(m_robotDrive.setXCommand());
-                left4Button.whileTrue(m_StagingSubsytem.runOuttakeCommand());
 
-                right1Button.toggleOnTrue(m_StagingSubsytem.runIntakeCommand());
+                left1Button.toggleOnTrue(m_StagingSubsystem.drivingIntakeCommand());
+                left2Button.whileTrue(m_robotDrive.setXCommand());
+                left4Button.whileTrue(m_StagingSubsystem.runOuttakeCommand());
+
+                right1Button.toggleOnTrue(m_StagingSubsystem.runIntakeCommand());
                 right2Button.onTrue(m_robotDrive.switchMaxSpeedCommand());
                 right3Button.onTrue(m_robotDrive.zeroGyroCommand());
 
                 rightBumperButton.toggleOnTrue(m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"));
                 leftBumperButton.toggleOnTrue(m_ShooterSubsystem.setMotorToPercentCommand("Slow Speed"));
-                xButton.toggleOnTrue(m_StagingSubsytem.drivingIntakeCommand());
-                aButton.toggleOnTrue(m_StagingSubsytem.runIntakeCommand());
-                bButton.toggleOnTrue(m_StagingSubsytem.runOuttakeCommand());
+                xButton.toggleOnTrue(m_StagingSubsystem.drivingIntakeCommand());
+                aButton.toggleOnTrue(m_StagingSubsystem.runIntakeCommand());
+                bButton.toggleOnTrue(m_StagingSubsystem.runOuttakeCommand());
 
                 SmartDashboard.putData("Invert Field Orientation", m_robotDrive.invertFieldRelativeComand());
-                
-                
+
         }
 
         /**
