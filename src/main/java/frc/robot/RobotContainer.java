@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.TestingSubsystemsCommand;
-import frc.robot.commands.TwoNoteAuto;
+import frc.robot.subsystems.AmpFlopper;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -25,9 +25,9 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -46,6 +46,7 @@ public class RobotContainer {
         private final StagingSubsystem m_StagingSubsystem = new StagingSubsystem();
         private final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
         private final ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
+        private final AmpFlopper m_AmpFlopper = new AmpFlopper();
 
         private static final Joystick driverLeftStick = new Joystick(0);
         private static final Joystick driverRightStick = new Joystick(1);
@@ -67,14 +68,12 @@ public class RobotContainer {
         private final Trigger leftTigger = new Trigger(() -> copilotXbox.getRawAxis(2) > .5);
         private final Trigger rightTigger = new Trigger(() -> copilotXbox.getRawAxis(3) > .5);
 
-        private final SendableChooser<Command> autoChooser;
+        private final SendableChooser<Command> auto = new SendableChooser<>();
 
         /**
          * The container for the robot. Contains subsystems, OI devices, and commands.
          */
         public RobotContainer() {
-
-                autoChooser = AutoBuilder.buildAutoChooser();
 
                 CameraServer.startAutomaticCapture();
 
@@ -94,32 +93,27 @@ public class RobotContainer {
                 NamedCommands.registerCommand("WarmUpShooter",
                                 m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"));
 
-                autoChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
-                autoChooser.addOption("Taxi", m_robotDrive.driveCommand(-.25, 0, 0).withTimeout(2));
-                autoChooser.addOption("Center-No Move", Commands.race(
+                auto.setDefaultOption("Do Nothing", new WaitCommand(15));
+                auto.addOption("Taxi", m_robotDrive.driveCommand(-.25, 0, 0).withTimeout(2));
+                auto.addOption("Center-No Move", Commands.race(
                                 m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"),
                                 new WaitCommand(.25).andThen(m_StagingSubsystem.runIntakeCommand().withTimeout(1))));
-                autoChooser.addOption("Center-Center", new PathPlannerAuto("Center-Center"));
-                autoChooser.addOption("Center-Wait-Center", new PathPlannerAuto("Center-Wait-Center"));
-                autoChooser.addOption("Center-Center-Amp", new PathPlannerAuto("Center-Center-Amp"));
-                autoChooser.addOption("Amp-No Move", Commands.race(
+                auto.addOption("Center-Center", new PathPlannerAuto("Center-Center"));
+                auto.addOption("Center-Wait-Center", new PathPlannerAuto("Center-Wait-Center"));
+                auto.addOption("Center-Center-Amp", new PathPlannerAuto("Center-Center-Amp"));
+                auto.addOption("Amp-No Move", Commands.race(
                                 m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"),
                                 new WaitCommand(.25).andThen(m_StagingSubsystem.runIntakeCommand().withTimeout(1))));
-                autoChooser.addOption("Amp-Amp", new PathPlannerAuto("Amp-Amp"));
-                autoChooser.addOption("Amp-Amp-Cross field", new PathPlannerAuto("Amp-Amp-Cross field"));
-                autoChooser.addOption("Troll", new PathPlannerAuto("Troll"));
-                autoChooser.addOption("Source-Cross field", new PathPlannerAuto("Source-Cross field"));
+                auto.addOption("Amp-Amp", new PathPlannerAuto("Amp-Amp"));
+                auto.addOption("Amp-Amp-Cross field", new PathPlannerAuto("Amp-Amp-Cross field"));
+                auto.addOption("Troll", new PathPlannerAuto("Troll"));
+                auto.addOption("Source-Cross field", new PathPlannerAuto("Source-Cross field"));
 
-                autoChooser.addOption("Drive Forward", m_robotDrive.driveCommand(.25, 0, 0).withTimeout(2));
-                autoChooser.addOption("2 Note Center", new PathPlannerAuto("2NoteCenter"));
-                autoChooser.addOption("2 Note Right Far Right", new PathPlannerAuto("2NoteRightFarRight"));
-                autoChooser.addOption("3 Note Center Left", new PathPlannerAuto("3NoteCenterLeft"));
-
-                SmartDashboard.putData("Auto", autoChooser);
+                SmartDashboard.putData("Autonomous Command", auto);
 
                 // Configure the button bindings
                 configureButtonBindings();
-                SmartDashboard.putNumber("Fast Speed", .5);
+                SmartDashboard.putNumber("Fast Speed", .47);
                 SmartDashboard.putNumber("Slow Speed", .18);
 
                 // Configure default commands
@@ -164,8 +158,8 @@ public class RobotContainer {
                 xButton.toggleOnTrue(m_StagingSubsystem.drivingIntakeCommand());
                 aButton.toggleOnTrue(m_StagingSubsystem.runIntakeCommand());
                 bButton.toggleOnTrue(m_StagingSubsystem.runOuttakeCommand());
-                leftTigger.whileTrue(m_ClimberSubsystem.climberUpCommand());
-                rightTigger.whileTrue(m_ClimberSubsystem.climberDownCommand());
+                leftTigger.whileTrue(m_AmpFlopper.ampFlopperUpCommand());
+                rightTigger.whileTrue(m_AmpFlopper.ampFlopperDownCommand());
 
                 SmartDashboard.putData("Invert Field Orientation", m_robotDrive.invertFieldRelativeComand());
                 SmartDashboard.putData("DANIEL USE ONLY",
@@ -179,6 +173,6 @@ public class RobotContainer {
          * @return the command to run in autonomous
          */
         public Command getAutonomousCommand() {
-                return autoChooser.getSelected();
+                return auto.getSelected();
         }
 }

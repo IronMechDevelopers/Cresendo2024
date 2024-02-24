@@ -19,7 +19,7 @@ public class ClimberSubsystem extends SubsystemBase {
   /** Creates a new ClimberSubsystem. */
   public ClimberSubsystem() {
     super();
-    this.climberMotor = new CANSparkMax(MotorIds.kBClimberMotorCanId, MotorType.kBrushed);
+    this.climberMotor = new CANSparkMax(MotorIds.kClimberMotorCanId, MotorType.kBrushed);
 
   }
 

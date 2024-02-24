@@ -86,7 +86,8 @@ public final class Constants {
     public static final int kTopShooterMotor = 60;
     public static final int kBottomShooterMotor = 61;
 
-    public static final int kBClimberMotorCanId = 70;
+    public static final int kClimberMotorCanId = 70;
+    public static final int kAmpFlopperMotorCanId = 71;
   }
 
   public static final class ClimberConstants {
