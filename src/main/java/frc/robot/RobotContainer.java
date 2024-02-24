@@ -14,7 +14,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.TestingSubsystemsCommand;
 import frc.robot.commands.TwoNoteAuto;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StagingSubsystem;
@@ -23,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -42,6 +45,8 @@ public class RobotContainer {
         private final DriveSubsystem m_robotDrive = new DriveSubsystem();
         private final StagingSubsystem m_StagingSubsystem = new StagingSubsystem();
         private final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
+        private final ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
+
         private static final Joystick driverLeftStick = new Joystick(0);
         private static final Joystick driverRightStick = new Joystick(1);
         private static final XboxController copilotXbox = new XboxController(2);
@@ -59,6 +64,8 @@ public class RobotContainer {
         private final JoystickButton aButton = new JoystickButton(copilotXbox, Button.kA.value);
         private final JoystickButton rightBumperButton = new JoystickButton(copilotXbox, Button.kRightBumper.value);
         private final JoystickButton leftBumperButton = new JoystickButton(copilotXbox, Button.kLeftBumper.value);
+        private final Trigger leftTigger = new Trigger(() -> copilotXbox.getRawAxis(2) > .5);
+        private final Trigger rightTigger = new Trigger(() -> copilotXbox.getRawAxis(3) > .5);
 
         private final SendableChooser<Command> autoChooser;
 
@@ -150,13 +157,19 @@ public class RobotContainer {
                 right2Button.onTrue(m_robotDrive.switchMaxSpeedCommand());
                 right3Button.onTrue(m_robotDrive.zeroGyroCommand());
 
-                rightBumperButton.toggleOnTrue(m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"));
-                leftBumperButton.toggleOnTrue(m_ShooterSubsystem.setMotorToPercentCommand("Slow Speed"));
+                rightBumperButton.toggleOnTrue(m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed")
+                                .finallyDo(() -> m_StagingSubsystem.changeColorCommmand(255, 0, 0)));
+                leftBumperButton.toggleOnTrue(m_ShooterSubsystem.setMotorToPercentCommand("Slow Speed")
+                                .finallyDo(() -> m_StagingSubsystem.changeColorCommmand(255, 0, 0)));
                 xButton.toggleOnTrue(m_StagingSubsystem.drivingIntakeCommand());
                 aButton.toggleOnTrue(m_StagingSubsystem.runIntakeCommand());
                 bButton.toggleOnTrue(m_StagingSubsystem.runOuttakeCommand());
+                leftTigger.whileTrue(m_ClimberSubsystem.climberUpCommand());
+                rightTigger.whileTrue(m_ClimberSubsystem.climberDownCommand());
 
                 SmartDashboard.putData("Invert Field Orientation", m_robotDrive.invertFieldRelativeComand());
+                SmartDashboard.putData("DANIEL USE ONLY",
+                                new TestingSubsystemsCommand(m_robotDrive, m_StagingSubsystem, m_ShooterSubsystem));
 
         }
 

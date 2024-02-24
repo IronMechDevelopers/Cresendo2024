@@ -85,6 +85,13 @@ public final class Constants {
 
     public static final int kTopShooterMotor = 60;
     public static final int kBottomShooterMotor = 61;
+
+    public static final int kBClimberMotorCanId = 70;
+  }
+
+  public static final class ClimberConstants {
+    public static final double climberSpeedUp = .25;
+    public static final double climberSpeedDown = -.25;
   }
 
   public static final class ModuleConstants {
