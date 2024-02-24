@@ -218,16 +218,16 @@ public class DriveSubsystem extends SubsystemBase {
     poseEstimator.update(getGyroscopeRotation(), getModulePositions());
 
     Pose2d pose = poseEstimator.getEstimatedPosition();
-
-    SmartDashboard.putString("Pose", getFomattedPose());
+    SmartDashboard.putBoolean("is Inverted", fieldOrientation);
+    SmartDashboard.putString("Pose", getFormattedPose());
     field2d.setRobotPose(getCurrentPose());
 
     myPosePublisher.set(pose);
     mySwerveStatesPublisher.set(getModuleStates());
-    // SmartDashboard.putData("Current Pose", pose);
+
   }
 
-  private String getFomattedPose() {
+  private String getFormattedPose() {
     Pose2d pose = getCurrentPose();
     return String.format("(%.2f, %.2f) %.2f degrees",
         pose.getX(),

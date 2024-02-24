@@ -101,6 +101,7 @@ public class RobotContainer {
                 autoChooser.addOption("Amp-Amp", new PathPlannerAuto("Amp-Amp"));
                 autoChooser.addOption("Amp-Amp-Cross field", new PathPlannerAuto("Amp-Amp-Cross field"));
                 autoChooser.addOption("Troll", new PathPlannerAuto("Troll"));
+                autoChooser.addOption("Source-Cross field", new PathPlannerAuto("Source-Cross field"));
 
                 autoChooser.addOption("Drive Forward", m_robotDrive.driveCommand(.25, 0, 0).withTimeout(2));
                 autoChooser.addOption("2 Note Center", new PathPlannerAuto("2NoteCenter"));
@@ -140,7 +141,7 @@ public class RobotContainer {
          * {@link JoystickButton}.
          */
         private void configureButtonBindings() {
-                ;
+                
                 left1Button.toggleOnTrue(m_StagingSubsytem.drivingIntakeCommand());
                 left2Button.whileTrue(m_robotDrive.setXCommand());
                 left4Button.whileTrue(m_StagingSubsytem.runOuttakeCommand());
@@ -156,14 +157,8 @@ public class RobotContainer {
                 bButton.toggleOnTrue(m_StagingSubsytem.runOuttakeCommand());
 
                 SmartDashboard.putData("Invert Field Orientation", m_robotDrive.invertFieldRelativeComand());
-                SmartDashboard.putBoolean("Field Orientation:", m_robotDrive.getFieldOrientation());
-                SmartDashboard.putData("2 Note Auto", new TwoNoteAuto(m_StagingSubsytem, m_ShooterSubsystem,
-                                m_robotDrive));
-
-                SmartDashboard.putData("3 Note left Auto", new PathPlannerAuto("3NoteLeftAuto"));
-                SmartDashboard.putData("Simple Test", new PathPlannerAuto("Simple"));
-                SmartDashboard.putData("3NoteCenterLeft", new PathPlannerAuto("3NoteCenterLeft"));
-
+                
+                
         }
 
         /**
