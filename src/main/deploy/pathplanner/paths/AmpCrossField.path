@@ -3,44 +3,44 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.25,
-        "y": 5.518492149846847
+        "x": 0.7908616101323114,
+        "y": 6.501901075140534
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.15,
-        "y": 5.518492149846847
+        "x": 1.7908616101323114,
+        "y": 6.501901075140534
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ShootAmp"
     },
     {
       "anchor": {
-        "x": 3.436627273632858,
-        "y": 5.518492149846847
+        "x": 2.9368375782206115,
+        "y": 7.607786654967249
       },
       "prevControl": {
-        "x": 3.598389783318025,
-        "y": 5.518492149846847
+        "x": 1.854840714100621,
+        "y": 7.627990839946326
       },
       "nextControl": {
-        "x": 3.016627273632858,
-        "y": 5.518492149846847
+        "x": 2.965931702924894,
+        "y": 7.607243378829561
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.25,
-        "y": 5.52
+        "x": 7.812483964614394,
+        "y": 7.452955385708751
       },
       "prevControl": {
-        "x": 1.3499999999999999,
-        "y": 5.52
+        "x": 6.812483964614394,
+        "y": 7.452955385708751
       },
       "nextControl": null,
-      "isLocked": true,
+      "isLocked": false,
       "linkedName": null
     }
   ],
@@ -55,13 +55,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": -178.76186234149353,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Amp",
   "previewStartingState": {
-    "rotation": 180.0,
+    "rotation": -114.61758099275393,
     "velocity": 0
   },
   "useDefaultConstraints": true

@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7638410433099965,
-      "y": 4.5686658623267675
+      "x": 0.6783821995674296,
+      "y": 6.515465006940115
     },
-    "rotation": 120.86925882100695
+    "rotation": -121.46669164122154
   },
   "command": {
     "type": "sequential",
@@ -34,13 +34,13 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "SetUpFarRight"
+                        "pathName": "SetUpAmp"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "PickUpFarRight"
+                        "pathName": "PickUpAmp"
                       }
                     }
                   ]
@@ -50,19 +50,19 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ScoreAmpFromAmp"
+                }
+              },
               {
                 "type": "named",
                 "data": {
                   "name": "WarmUpShooter"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "ScoreRightFromFarRight"
                 }
               }
             ]
