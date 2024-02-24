@@ -93,11 +93,14 @@ public class RobotContainer {
                                 m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"),
                                 new WaitCommand(.25).andThen(m_StagingSubsytem.runIntakeCommand().withTimeout(1))));
                 autoChooser.addOption("Center-Center", new PathPlannerAuto("Center-Center"));
+                autoChooser.addOption("Center-Wait-Center", new PathPlannerAuto("Center-Wait-Center"));
                 autoChooser.addOption("Center-Center-Amp", new PathPlannerAuto("Center-Center-Amp"));
-                autoChooser.addOption("Amp-No Move", new WaitCommand(15));
-                autoChooser.addOption("Amp-Amp", new WaitCommand(15));
-                autoChooser.addOption("Amp-Amp-Cross field", new WaitCommand(15));
-                autoChooser.addOption("Troll", new WaitCommand(15));
+                autoChooser.addOption("Amp-No Move", Commands.race(
+                                m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"),
+                                new WaitCommand(.25).andThen(m_StagingSubsytem.runIntakeCommand().withTimeout(1))));
+                autoChooser.addOption("Amp-Amp", new PathPlannerAuto("Amp-Amp"));
+                autoChooser.addOption("Amp-Amp-Cross field", new PathPlannerAuto("Amp-Amp-Cross field"));
+                autoChooser.addOption("Troll", new PathPlannerAuto("Troll"));
 
                 autoChooser.addOption("Drive Forward", m_robotDrive.driveCommand(.25, 0, 0).withTimeout(2));
                 autoChooser.addOption("2 Note Center", new PathPlannerAuto("2NoteCenter"));

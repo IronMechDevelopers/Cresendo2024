@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,6 +18,8 @@ public class ShooterSubsystem extends SubsystemBase {
     private CANSparkMax shooteBottomMotor;
     public double maxRPM;
     private double movingAverageVelocity;
+    private RelativeEncoder m_encoderTop;
+    private RelativeEncoder m_encoderBottom;
 
     public ShooterSubsystem() {
 
@@ -25,23 +29,16 @@ public class ShooterSubsystem extends SubsystemBase {
         shooteTopMotor.restoreFactoryDefaults();
         shooteBottomMotor.restoreFactoryDefaults();
 
-        shooteTopMotor.getEncoder();
+        m_encoderTop = shooteTopMotor.getEncoder();
+        m_encoderBottom = shooteBottomMotor.getEncoder();
 
         shooteTopMotor.setInverted(true);
 
-        shooteBottomMotor.getEncoder();
-
         maxRPM = 5700;
-
-        LinearFilter.movingAverage(5);
-        LinearFilter.movingAverage(5);
-        LinearFilter.movingAverage(5);
-        movingAverageVelocity = 0;
     }
 
     public void stopMotor() {
-        shooteTopMotor.set(0);
-        shooteBottomMotor.set(0);
+        setMotorToPercent(0);
     }
 
     public void setMotorToPercent(double speed) {
@@ -51,6 +48,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
         shooteTopMotor.set(speed);
         shooteBottomMotor.set(speed);
+        SmartDashboard.putNumber("Shooter Percent", speed);
     }
 
     public void setMotorToPercent(String strength) {
@@ -64,15 +62,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-
-        // double a = topFilter.calculate(m_encoderTop.getVelocity());
-        // double b = bottomFilter.calculate(m_encoderBottom.getVelocity());
-        // double c = averageFilter.calculate((m_encoderTop.getVelocity() +
-        // m_encoderBottom.getVelocity()) / 2.0);
-
-        // topEntry.setDouble(a);
-        // bottomEntry.setDouble(b);
-        // averageEntry.setDouble(c);
+        SmartDashboard.putNumber("Top Shooter Velocity", m_encoderTop.getVelocity());
+        SmartDashboard.putNumber("Bottom Shooter Velocity", m_encoderTop.getVelocity());
 
     }
 

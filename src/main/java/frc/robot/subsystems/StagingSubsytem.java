@@ -31,7 +31,9 @@ public class StagingSubsytem extends SubsystemBase {
     }
 
     public boolean isNoteInside() {
-        return rangeFinder.getValue() > 1000;
+        boolean noteInside = rangeFinder.getValue() > 1000;
+        SmartDashboard.putBoolean("Note Inside", noteInside);
+        return noteInside;
     }
 
     public void stopMotor() {
