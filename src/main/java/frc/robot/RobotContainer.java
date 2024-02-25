@@ -28,6 +28,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import javax.xml.transform.Source;
+
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -89,9 +91,10 @@ public class RobotContainer {
                 NamedCommands.registerCommand("intake", m_StagingSubsystem.drivingIntakeCommand().withTimeout(5));
                 NamedCommands.registerCommand("shootHigh", Commands.race(
                                 m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"),
-                                new WaitCommand(.25).andThen(m_StagingSubsystem.runIntakeCommand().withTimeout(1))));
+                                m_StagingSubsystem.runIntakeCommand().withTimeout(1)));
                 NamedCommands.registerCommand("WarmUpShooter",
-                                m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"));
+                                m_ShooterSubsystem.warmUpMotorToPercentCommand("Fast Speed"));
+                NamedCommands.registerCommand("ArmDown", m_AmpFlopper.ampFlopperDownCommand().withTimeout(1));
 
                 auto.setDefaultOption("Do Nothing", new WaitCommand(15));
                 auto.addOption("Taxi Forward", new PathPlannerAuto("Taxi Forward"));
@@ -100,11 +103,13 @@ public class RobotContainer {
                 auto.addOption("Center-Center", new PathPlannerAuto("Center-Center"));
                 auto.addOption("Center-Wait-Center", new PathPlannerAuto("Center-Wait-Center"));
                 auto.addOption("Center-Center-Amp", new PathPlannerAuto("Center-Center-Amp"));
+                auto.addOption("Center-Center-Amp-2", new PathPlannerAuto("Copy of Center-Center-Amp"));
                 auto.addOption("Amp-No Move", new PathPlannerAuto("Amp-No Move"));
                 auto.addOption("Amp-Amp", new PathPlannerAuto("Amp-Amp"));
                 auto.addOption("Amp-Amp-Cross field", new PathPlannerAuto("Amp-Amp-Cross field"));
-                auto.addOption("Troll", new PathPlannerAuto("Troll"));
+                auto.addOption("Source-No Move", new PathPlannerAuto("Source-No Move"));
                 auto.addOption("Source-Cross field", new PathPlannerAuto("Source-Cross field"));
+                auto.addOption("Troll", new PathPlannerAuto("Troll"));
 
                 SmartDashboard.putData("Autonomous Command", auto);
 
@@ -161,7 +166,13 @@ public class RobotContainer {
                 SmartDashboard.putData("Invert Field Orientation", m_robotDrive.invertFieldRelativeComand());
                 SmartDashboard.putData("DANIEL USE ONLY",
                                 new TestingSubsystemsCommand(m_robotDrive, m_StagingSubsystem, m_ShooterSubsystem));
+                SmartDashboard.putData("Start Match", getStartCommand());
 
+        }
+
+        private Command getStartCommand() {
+                return Commands.parallel(m_ShooterSubsystem.warmUpMotorToPercentCommand("Fast Speed"),
+                                m_AmpFlopper.ampFlopperDownCommand()).withTimeout(.25);
         }
 
         /**
@@ -170,6 +181,6 @@ public class RobotContainer {
          * @return the command to run in autonomous
          */
         public Command getAutonomousCommand() {
-                return auto.getSelected();
+                return Commands.sequence(getStartCommand().withTimeout(.25), auto.getSelected());
         }
 }

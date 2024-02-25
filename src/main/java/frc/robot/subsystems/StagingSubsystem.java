@@ -71,6 +71,7 @@ public class StagingSubsystem extends SubsystemBase {
     public boolean isNoteInside() {
         boolean noteInside = rangeFinder.getValue() > 1000;
         SmartDashboard.putBoolean("Note Inside", noteInside);
+        SmartDashboard.putNumber("Range Finder", rangeFinder.getValue());
         if (noteInside) {
             setColor(0, 0, 255);
         }
@@ -99,6 +100,7 @@ public class StagingSubsystem extends SubsystemBase {
     public void periodic() {
         super.periodic();
         SmartDashboard.putNumber("StagingSubsystem Percentage", currentPercentage);
+
     }
 
     public Command runIntakeCommand() {

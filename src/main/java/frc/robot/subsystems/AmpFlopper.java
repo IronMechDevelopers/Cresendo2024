@@ -42,10 +42,18 @@ public class AmpFlopper extends SubsystemBase {
   }
 
   public Command ampFlopperUpCommand() {
-    return Commands.startEnd(() -> setMotor(.25), () -> stopMotor(), this);
+    return Commands.startEnd(() -> setMotor(.5), () -> stopMotor(), this);
+  }
+
+  public Command ampFlopperDownCommand(double speed) {
+    return Commands.startEnd(() -> setMotor(speed), () -> stopMotor(), this);
+  }
+
+  public Command ampFlopperUpCommand(double speed) {
+    return Commands.startEnd(() -> setMotor(speed), () -> stopMotor(), this);
   }
 
   public Command ampFlopperDownCommand() {
-    return Commands.startEnd(() -> setMotor(-.25), () -> stopMotor(), this);
+    return Commands.startEnd(() -> setMotor(-.5), () -> stopMotor(), this);
   }
 }

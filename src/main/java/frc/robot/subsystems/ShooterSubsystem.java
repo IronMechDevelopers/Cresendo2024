@@ -75,4 +75,8 @@ public class ShooterSubsystem extends SubsystemBase {
         return Commands.startEnd(() -> setMotorToPercent(strength), () -> setMotorToPercent(0), this);
     }
 
+    public Command warmUpMotorToPercentCommand(String strength) {
+        return Commands.runOnce(() -> setMotorToPercent(strength), this);
+    }
+
 }
