@@ -16,32 +16,32 @@
     },
     {
       "anchor": {
-        "x": 1.4960384792093113,
-        "y": 7.1496969970042885
+        "x": 0.8414523615199191,
+        "y": 7.2
       },
       "prevControl": {
-        "x": 1.2507702462708128,
-        "y": 7.002670582209515
+        "x": 0.5556569133443006,
+        "y": 7.190292552432529
       },
       "nextControl": {
-        "x": 1.9144285906831613,
-        "y": 7.400501584857337
+        "x": 1.3069947685544878,
+        "y": 7.2158128078511075
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.3632641298677206,
-        "y": 7.315144885344918
+        "x": 2.336540673387719,
+        "y": 7.058322570995633
       },
       "prevControl": {
-        "x": 2.4577684250617162,
-        "y": 7.315144885344918
+        "x": 2.431044968581715,
+        "y": 7.058322570995633
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "SetUpLeft"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -56,7 +56,7 @@
   "goalEndState": {
     "velocity": 0,
     "rotation": 180.0,
-    "rotateFast": false
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "Amp",

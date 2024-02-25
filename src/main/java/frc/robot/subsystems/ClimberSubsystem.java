@@ -4,14 +4,10 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ClimberConstants;
-import frc.robot.Constants.MotorIds;
 
 public class ClimberSubsystem extends SubsystemBase {
   private CANSparkMax climberMotor;
@@ -19,16 +15,17 @@ public class ClimberSubsystem extends SubsystemBase {
   /** Creates a new ClimberSubsystem. */
   public ClimberSubsystem() {
     super();
-    this.climberMotor = new CANSparkMax(MotorIds.kClimberMotorCanId, MotorType.kBrushed);
+    // this.climberMotor = new CANSparkMax(MotorIds.kClimberMotorCanId,
+    // MotorType.kBrushed);
 
   }
 
   public void setMotor(double speed) {
-    this.climberMotor.set(speed);
+    // this.climberMotor.set(speed);
   }
 
   public void stopMotor() {
-    setMotor(0);
+    // setMotor(0);
   }
 
   @Override
@@ -37,10 +34,14 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   public Command climberUpCommand() {
-    return Commands.startEnd(() -> setMotor(ClimberConstants.climberSpeedUp), () -> stopMotor(), this);
+    // return Commands.startEnd(() -> setMotor(ClimberConstants.climberSpeedUp), ()
+    // -> stopMotor(), this);
+    return null;
   }
 
   public Command climberDownCommand() {
-    return Commands.startEnd(() -> setMotor(ClimberConstants.climberSpeedDown), () -> stopMotor(), this);
+    // return Commands.startEnd(() -> setMotor(ClimberConstants.climberSpeedDown),
+    // () -> stopMotor(), this);
+    return null;
   }
 }

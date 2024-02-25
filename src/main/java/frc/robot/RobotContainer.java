@@ -181,6 +181,6 @@ public class RobotContainer {
          * @return the command to run in autonomous
          */
         public Command getAutonomousCommand() {
-                return Commands.sequence(getStartCommand().withTimeout(.25), auto.getSelected());
+                return Commands.sequence(getStartCommand(), new WaitCommand(.50), auto.getSelected());
         }
 }
