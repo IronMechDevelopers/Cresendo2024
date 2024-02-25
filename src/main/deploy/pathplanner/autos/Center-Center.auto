@@ -51,6 +51,12 @@
                 "data": {
                   "name": "WarmUpShooter"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
               }
             ]
           }

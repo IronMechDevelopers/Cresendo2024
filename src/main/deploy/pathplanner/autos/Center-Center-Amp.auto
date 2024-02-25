@@ -28,22 +28,9 @@
                 }
               },
               {
-                "type": "sequential",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "SetUpCenter"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "PickUpCenter"
-                      }
-                    }
-                  ]
+                  "pathName": "Copy of SetUpCenter"
                 }
               }
             ]
@@ -63,6 +50,12 @@
                 "type": "named",
                 "data": {
                   "name": "WarmUpShooter"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
                 }
               }
             ]
@@ -85,22 +78,9 @@
                 }
               },
               {
-                "type": "sequential",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "SetUpAmp"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "PickUpAmp"
-                      }
-                    }
-                  ]
+                  "pathName": "Copy of SetUpAmp"
                 }
               }
             ]
@@ -120,6 +100,12 @@
                 "type": "named",
                 "data": {
                   "name": "WarmUpShooter"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
                 }
               }
             ]

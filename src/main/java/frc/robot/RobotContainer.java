@@ -103,7 +103,6 @@ public class RobotContainer {
                 auto.addOption("Center-Center", new PathPlannerAuto("Center-Center"));
                 auto.addOption("Center-Wait-Center", new PathPlannerAuto("Center-Wait-Center"));
                 auto.addOption("Center-Center-Amp", new PathPlannerAuto("Center-Center-Amp"));
-                auto.addOption("Center-Center-Amp-2", new PathPlannerAuto("Copy of Center-Center-Amp"));
                 auto.addOption("Amp-No Move", new PathPlannerAuto("Amp-No Move"));
                 auto.addOption("Amp-Amp", new PathPlannerAuto("Amp-Amp"));
                 auto.addOption("Amp-Amp-Cross field", new PathPlannerAuto("Amp-Amp-Cross field"));

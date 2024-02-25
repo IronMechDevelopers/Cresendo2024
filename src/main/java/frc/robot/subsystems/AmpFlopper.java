@@ -22,7 +22,7 @@ public class AmpFlopper extends SubsystemBase {
     super();
     this.ampFlopperMotor = new CANSparkMax(MotorIds.kAmpFlopperMotorCanId, MotorType.kBrushed);
     currentPercentage = 0;
-    ampFlopperMotor.setInverted(true);
+    // ampFlopperMotor.setInverted(true);
   }
 
   @Override
