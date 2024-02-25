@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
-import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -63,7 +62,7 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Top Shooter Velocity", m_encoderTop.getVelocity());
-        SmartDashboard.putNumber("Bottom Shooter Velocity", m_encoderTop.getVelocity());
+        SmartDashboard.putNumber("Bottom Shooter Velocity", m_encoderBottom.getVelocity());
 
     }
 

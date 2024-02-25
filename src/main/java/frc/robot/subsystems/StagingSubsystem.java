@@ -18,6 +18,7 @@ public class StagingSubsystem extends SubsystemBase {
     private CANSparkMax bottomIntakeMotor;
     private CANSparkMax topIntakeMotor;
     private CANSparkMax conveyorMotor;
+    private double currentPercentage;
 
     // .4-3.1 V between 80cm - 10cm
     private final AnalogInput rangeFinder = new AnalogInput(0);
@@ -33,6 +34,7 @@ public class StagingSubsystem extends SubsystemBase {
 
         bottomIntakeMotor.setInverted(true);
         topIntakeMotor.setInverted(true);
+        currentPercentage = 0;
 
         // PWM port 9
         // Must be a PWM header, not MXP or DIO
@@ -79,11 +81,13 @@ public class StagingSubsystem extends SubsystemBase {
         bottomIntakeMotor.set(0);
         topIntakeMotor.set(0);
         conveyorMotor.set(0);
+        currentPercentage = 0;
     }
 
     public void setMotor(double speed) {
         bottomIntakeMotor.set(speed);
         topIntakeMotor.set(speed);
+        currentPercentage = speed;
         if (speed < 0) {
             conveyorMotor.set(-1 * SmartDashboard.getNumber("Conveyor Speed", 1.0));
         } else {
@@ -94,6 +98,7 @@ public class StagingSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         super.periodic();
+        SmartDashboard.putNumber("StagingSubsystem Percentage", currentPercentage);
     }
 
     public Command runIntakeCommand() {
