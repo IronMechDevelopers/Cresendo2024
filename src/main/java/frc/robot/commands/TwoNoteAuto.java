@@ -5,11 +5,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.StagingSubsytem;
+import frc.robot.subsystems.StagingSubsystem;
 
 public class TwoNoteAuto extends SequentialCommandGroup {
 
-        public TwoNoteAuto(StagingSubsytem stagingSubsytem, ShooterSubsystem shooterSubsystem,
+        public TwoNoteAuto(StagingSubsystem stagingSubsytem, ShooterSubsystem shooterSubsystem,
                         DriveSubsystem driveSubsystem) {
                 addCommands(
                                 new ParallelRaceGroup(
