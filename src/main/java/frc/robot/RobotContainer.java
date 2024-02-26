@@ -18,6 +18,7 @@ import frc.robot.commands.TestingSubsystemsCommand;
 import frc.robot.subsystems.AmpFlopper;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.PowerDistributionModule;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StagingSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,10 +26,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
-import javax.xml.transform.Source;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -49,6 +47,7 @@ public class RobotContainer {
         private final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
         private final ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
         private final AmpFlopper m_AmpFlopper = new AmpFlopper();
+        private final PowerDistributionModule powerDistributionModule = new PowerDistributionModule();
 
         private static final Joystick driverLeftStick = new Joystick(0);
         private static final Joystick driverRightStick = new Joystick(1);
@@ -67,8 +66,8 @@ public class RobotContainer {
         private final JoystickButton aButton = new JoystickButton(copilotXbox, Button.kA.value);
         private final JoystickButton rightBumperButton = new JoystickButton(copilotXbox, Button.kRightBumper.value);
         private final JoystickButton leftBumperButton = new JoystickButton(copilotXbox, Button.kLeftBumper.value);
-        private final Trigger leftTigger = new Trigger(() -> copilotXbox.getRawAxis(2) > .5);
-        private final Trigger rightTigger = new Trigger(() -> copilotXbox.getRawAxis(3) > .5);
+        private final Trigger leftTigger = new Trigger(() -> copilotXbox.getLeftTriggerAxis() > .5);
+        private final Trigger rightTigger = new Trigger(() -> copilotXbox.getRightTriggerAxis() > .5);
 
         private final SendableChooser<Command> auto = new SendableChooser<>();
 
