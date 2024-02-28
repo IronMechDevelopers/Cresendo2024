@@ -57,6 +57,9 @@ public class RobotContainer {
         private final JoystickButton right1Button = new JoystickButton(driverRightStick, 1);
         private final JoystickButton right2Button = new JoystickButton(driverRightStick, 2);
         private final JoystickButton right3Button = new JoystickButton(driverRightStick, 3);
+        private final JoystickButton right4Button = new JoystickButton(driverLeftStick, 4); 
+        private final JoystickButton right5Button = new JoystickButton(driverLeftStick, 5); 
+
 
         private final JoystickButton left1Button = new JoystickButton(driverLeftStick, 1);
         private final JoystickButton left4Button = new JoystickButton(driverLeftStick, 4);
@@ -151,6 +154,11 @@ public class RobotContainer {
                 right1Button.toggleOnTrue(m_StagingSubsystem.runIntakeCommand());
                 right2Button.onTrue(m_robotDrive.switchMaxSpeedCommand());
                 right3Button.onTrue(m_robotDrive.zeroGyroCommand());
+                right4Button.toggleOnTrue(m_ClimberSubsystem.climberUpCommand());
+                right5Button.toggleOnTrue(m_ClimberSubsystem.climberDownCommand());
+
+
+
 
                 rightBumperButton.toggleOnTrue(m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed")
                                 .finallyDo(() -> m_StagingSubsystem.changeColorCommmand(255, 0, 0)));
@@ -160,7 +168,10 @@ public class RobotContainer {
                 aButton.toggleOnTrue(m_StagingSubsystem.runIntakeCommand());
                 bButton.toggleOnTrue(m_StagingSubsystem.runOuttakeCommand());
                 leftTigger.whileTrue(m_AmpFlopper.ampFlopperUpCommand());
-                rightTigger.whileTrue(m_AmpFlopper.ampFlopperDownCommand());
+                rightTigger.whileTrue(m_AmpFlopper.ampFlopperDownCommand()); 
+
+
+
 
                 SmartDashboard.putData("Invert Field Orientation", m_robotDrive.invertFieldRelativeComand());
                 SmartDashboard.putData("DANIEL USE ONLY",
