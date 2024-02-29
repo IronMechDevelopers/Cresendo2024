@@ -53,23 +53,25 @@ public class RobotContainer {
         private static final Joystick driverRightStick = new Joystick(1);
         private static final XboxController copilotXbox = new XboxController(2);
 
+        private final JoystickButton left1Button = new JoystickButton(driverLeftStick, 1);
+        private final JoystickButton left2Button = new JoystickButton(driverLeftStick, 2);
+
         private final JoystickButton right1Button = new JoystickButton(driverRightStick, 1);
         private final JoystickButton right2Button = new JoystickButton(driverRightStick, 2);
         private final JoystickButton right3Button = new JoystickButton(driverRightStick, 3);
-
-        private final JoystickButton left1Button = new JoystickButton(driverLeftStick, 1);
-        private final JoystickButton left4Button = new JoystickButton(driverLeftStick, 4);
-        private final JoystickButton left2Button = new JoystickButton(driverLeftStick, 2);
+        private final JoystickButton right4Button = new JoystickButton(driverRightStick, 4);
+        private final JoystickButton right6Button = new JoystickButton(driverRightStick, 6);
 
         private final JoystickButton xButton = new JoystickButton(copilotXbox, Button.kX.value);
         private final JoystickButton bButton = new JoystickButton(copilotXbox, Button.kB.value);
         private final JoystickButton aButton = new JoystickButton(copilotXbox, Button.kA.value);
+        private final JoystickButton yButton = new JoystickButton(copilotXbox, Button.kY.value);
         private final JoystickButton rightBumperButton = new JoystickButton(copilotXbox, Button.kRightBumper.value);
         private final JoystickButton leftBumperButton = new JoystickButton(copilotXbox, Button.kLeftBumper.value);
         private final Trigger leftTigger = new Trigger(() -> copilotXbox.getLeftTriggerAxis() > .5);
         private final Trigger rightTigger = new Trigger(() -> copilotXbox.getRightTriggerAxis() > .5);
 
-        private final SendableChooser<Command> auto = new SendableChooser<>();
+        private SendableChooser<Command> auto = new SendableChooser<>();
 
         /**
          * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -95,25 +97,9 @@ public class RobotContainer {
                                 m_ShooterSubsystem.warmUpMotorToPercentCommand("Fast Speed"));
                 NamedCommands.registerCommand("ArmDown", m_AmpFlopper.ampFlopperDownCommand().withTimeout(1));
 
-                auto.setDefaultOption("Do Nothing", new WaitCommand(15));
-                auto.addOption("Taxi Forward", new PathPlannerAuto("Taxi Forward"));
-                auto.addOption("Taxi Backward", new PathPlannerAuto("Taxi Backward"));
-                auto.addOption("Center-No Move", new PathPlannerAuto("Center-No Move"));
-                auto.addOption("Center-Center", new PathPlannerAuto("Center-Center"));
-                auto.addOption("Center-Wait-Center", new PathPlannerAuto("Center-Wait-Center"));
-                auto.addOption("Center-Center-Amp", new PathPlannerAuto("Center-Center-Amp"));
-                auto.addOption("Amp-No Move", new PathPlannerAuto("Amp-No Move"));
-                auto.addOption("Amp-Amp", new PathPlannerAuto("Amp-Amp"));
-                auto.addOption("Amp-Amp-Cross field", new PathPlannerAuto("Amp-Amp-Cross field"));
-                auto.addOption("Source-No Move", new PathPlannerAuto("Source-No Move"));
-                auto.addOption("Source-Cross field", new PathPlannerAuto("Source-Cross field"));
-                auto.addOption("Troll", new PathPlannerAuto("Troll"));
-
-                SmartDashboard.putData("Autonomous Command", auto);
-
                 // Configure the button bindings
                 configureButtonBindings();
-                SmartDashboard.putNumber("Fast Speed", .47);
+                SmartDashboard.putNumber("Fast Speed", .5);
                 SmartDashboard.putNumber("Slow Speed", .18);
 
                 // Configure default commands
@@ -143,13 +129,14 @@ public class RobotContainer {
          */
         private void configureButtonBindings() {
 
-                left1Button.toggleOnTrue(m_StagingSubsystem.drivingIntakeCommand());
+                left1Button.whileTrue(m_ClimberSubsystem.climberUpCommand());
                 left2Button.whileTrue(m_robotDrive.setXCommand());
-                left4Button.whileTrue(m_StagingSubsystem.runOuttakeCommand());
 
-                right1Button.toggleOnTrue(m_StagingSubsystem.runIntakeCommand());
+                right1Button.whileTrue(m_ClimberSubsystem.climberUpCommand());
                 right2Button.onTrue(m_robotDrive.switchMaxSpeedCommand());
                 right3Button.onTrue(m_robotDrive.zeroGyroCommand());
+                right4Button.whileTrue(m_ClimberSubsystem.climberDownCommand());
+                right6Button.whileTrue(m_ClimberSubsystem.climberUpCommand());
 
                 rightBumperButton.toggleOnTrue(m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed")
                                 .finallyDo(() -> m_StagingSubsystem.changeColorCommmand(255, 0, 0)));
@@ -158,6 +145,7 @@ public class RobotContainer {
                 xButton.toggleOnTrue(m_StagingSubsystem.drivingIntakeCommand());
                 aButton.toggleOnTrue(m_StagingSubsystem.runIntakeCommand());
                 bButton.toggleOnTrue(m_StagingSubsystem.runOuttakeCommand());
+                yButton.whileTrue(m_ClimberSubsystem.climberUpCommand());
                 leftTigger.whileTrue(m_AmpFlopper.ampFlopperUpCommand());
                 rightTigger.whileTrue(m_AmpFlopper.ampFlopperDownCommand());
 
@@ -166,6 +154,28 @@ public class RobotContainer {
                                 new TestingSubsystemsCommand(m_robotDrive, m_StagingSubsystem, m_ShooterSubsystem));
                 SmartDashboard.putData("Start Match", getStartCommand());
 
+                // SmartDashboard.putData("Reset Autos:", Commands.runOnce(() -> createAuto()));
+
+                createAuto();
+
+        }
+
+        public void createAuto() {
+                auto = new SendableChooser<>();
+                auto.setDefaultOption("Do Nothing", new WaitCommand(15));
+                auto.addOption("Taxi Forward", new PathPlannerAuto("Taxi Forward"));
+                auto.addOption("Taxi Backward", new PathPlannerAuto("Taxi Backward"));
+                auto.addOption("Center-No Move", new PathPlannerAuto("Center-No Move"));
+                auto.addOption("Center-Center", new PathPlannerAuto("Center-Center"));
+                auto.addOption("Center-Center-Amp", new PathPlannerAuto("Center-Center-Amp"));
+                auto.addOption("Amp-No Move", new PathPlannerAuto("Amp-No Move"));
+                auto.addOption("Amp-Amp", new PathPlannerAuto("Amp-Amp"));
+                auto.addOption("Amp-Amp-Cross field", new PathPlannerAuto("Amp-Amp-Cross field"));
+                auto.addOption("Source-No Move", new PathPlannerAuto("Source-No Move"));
+                auto.addOption("Source-Cross field", new PathPlannerAuto("Source-Cross field"));
+                auto.addOption("Troll", new PathPlannerAuto("Troll"));
+
+                SmartDashboard.putData("Autonomous Command", auto);
         }
 
         private Command getStartCommand() {
@@ -179,6 +189,8 @@ public class RobotContainer {
          * @return the command to run in autonomous
          */
         public Command getAutonomousCommand() {
-                return Commands.sequence(getStartCommand(), new WaitCommand(.50), auto.getSelected());
+                Command command = Commands.sequence(getStartCommand(), new WaitCommand(.5), auto.getSelected());
+                createAuto();
+                return command;
         }
 }

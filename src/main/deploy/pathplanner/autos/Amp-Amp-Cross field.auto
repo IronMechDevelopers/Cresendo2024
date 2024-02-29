@@ -28,22 +28,9 @@
                 }
               },
               {
-                "type": "sequential",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "SetUpAmpFromAmp"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "PickUpAmp"
-                      }
-                    }
-                  ]
+                  "pathName": "AmpFromAmp"
                 }
               }
             ]

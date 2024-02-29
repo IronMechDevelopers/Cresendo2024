@@ -80,7 +80,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Copy of SetUpAmp"
+                  "pathName": "SetUpAmpFromCenter"
                 }
               }
             ]
@@ -115,6 +115,12 @@
           "type": "named",
           "data": {
             "name": "shootHigh"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "endCenter"
           }
         }
       ]

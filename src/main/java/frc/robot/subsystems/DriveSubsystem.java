@@ -227,8 +227,10 @@ public class DriveSubsystem extends SubsystemBase {
     poseEstimator.update(getGyroscopeRotation(), getModulePositions());
 
     Pose2d pose = poseEstimator.getEstimatedPosition();
-    SmartDashboard.putBoolean("is Inverted", fieldOrientation);
+    SmartDashboard.putBoolean("is field orientation", fieldOrientation);
     SmartDashboard.putString("Pose", getFormattedPose());
+    SmartDashboard.putNumber("gyro angle", Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)).getDegrees());
+    SmartDashboard.putNumber("pose angle",  getCurrentPose().getRotation().getDegrees());
     field2d.setRobotPose(getCurrentPose());
 
     myPosePublisher.set(pose);

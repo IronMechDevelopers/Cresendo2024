@@ -3,45 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2146308261366525,
-        "y": 5.6
+        "x": 1.194227838455677,
+        "y": 5.604688690627381
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.198316452882906,
-        "y": 5.622045259715519
-      },
-      "isLocked": false,
-      "linkedName": "ShootCenter"
-    },
-    {
-      "anchor": {
-        "x": 1.4037930664709368,
-        "y": 7.118064342593147
-      },
-      "prevControl": {
-        "x": 1.1189964291856718,
-        "y": 7.0922932710751825
-      },
-      "nextControl": {
-        "x": 1.9611849831849182,
-        "y": 7.16850239230503
+        "x": 1.7893617443484888,
+        "y": 5.624330073660147
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.8299266021019784,
-        "y": 7.107177008471664
+        "x": 2.2362980188582924,
+        "y": 6.883254238322203
       },
       "prevControl": {
-        "x": 3.924430897295974,
-        "y": 7.107177008471664
+        "x": 1.3804263314677057,
+        "y": 6.567008369915944
+      },
+      "nextControl": {
+        "x": 3.092169706248877,
+        "y": 7.199500106728462
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.6500282521092,
+        "y": 7.049414752168966
+      },
+      "prevControl": {
+        "x": 3.8144546872120686,
+        "y": 7.036908402156266
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "PickUpLeft"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -54,7 +54,7 @@
     "maxAngularAcceleration": 360.0
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 1.0,
     "rotation": 180.0,
     "rotateFast": false
   },
