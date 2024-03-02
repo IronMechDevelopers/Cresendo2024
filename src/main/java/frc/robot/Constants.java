@@ -59,7 +59,7 @@ public final class Constants {
     public static final boolean kGyroReversed = false;
 
     public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(
-        new PIDConstants(2.5, 0, 0), // Translation constants
+        new PIDConstants(5.0 , 0, 0), // Translation constants
         new PIDConstants(5.0, 0, 0), // Rotation constants
         AutoConstants.kMaxSpeedMetersPerSecond,
         new Translation2d(kWheelBase / 2, kTrackWidth / 2).getNorm(), // Drive base radius (distance from center to

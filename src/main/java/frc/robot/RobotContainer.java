@@ -129,7 +129,7 @@ public class RobotContainer {
          */
         private void configureButtonBindings() {
 
-                left1Button.whileTrue(m_ClimberSubsystem.climberUpCommand());
+                left1Button.whileTrue(m_ShooterSubsystem.setMotorToInvesePercentCommand());
                 left2Button.whileTrue(m_robotDrive.setXCommand());
 
                 right1Button.whileTrue(m_ClimberSubsystem.climberUpCommand());
@@ -169,11 +169,13 @@ public class RobotContainer {
                 auto.addOption("Center-Center", new PathPlannerAuto("Center-Center"));
                 auto.addOption("Center-Center-Amp", new PathPlannerAuto("Center-Center-Amp"));
                 auto.addOption("Amp-No Move", new PathPlannerAuto("Amp-No Move"));
+                auto.addOption("Amp-Wait-Taxi", new PathPlannerAuto("Amp-Wait-Taxi"));
                 auto.addOption("Amp-Amp", new PathPlannerAuto("Amp-Amp"));
                 auto.addOption("Amp-Amp-Cross field", new PathPlannerAuto("Amp-Amp-Cross field"));
                 auto.addOption("Source-No Move", new PathPlannerAuto("Source-No Move"));
                 auto.addOption("Source-Cross field", new PathPlannerAuto("Source-Cross field"));
                 auto.addOption("Troll", new PathPlannerAuto("Troll"));
+                
 
                 SmartDashboard.putData("Autonomous Command", auto);
         }
