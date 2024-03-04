@@ -28,22 +28,9 @@
                 }
               },
               {
-                "type": "sequential",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "SetUpAmp"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "PickUpAmp"
-                      }
-                    }
-                  ]
+                  "pathName": "AmpFromAmp"
                 }
               }
             ]
@@ -56,7 +43,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "ScoreAmpFromAmp"
+                  "pathName": "AmpScoreAmp"
                 }
               },
               {

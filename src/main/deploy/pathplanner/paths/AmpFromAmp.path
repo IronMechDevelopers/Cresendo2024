@@ -3,45 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2146308261366525,
-        "y": 5.6
+        "x": 0.7908616101323114,
+        "y": 6.501901075140534
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.198316452882906,
-        "y": 5.622045259715519
+        "x": 0.7745472368785649,
+        "y": 6.523946334856054
       },
       "isLocked": false,
-      "linkedName": "ShootCenter"
+      "linkedName": "ShootAmp"
     },
     {
       "anchor": {
-        "x": 1.4960384792093113,
-        "y": 7.1496969970042885
+        "x": 1.7690532286701828,
+        "y": 7.016831930416313
       },
       "prevControl": {
-        "x": 1.2507702462708128,
-        "y": 7.002670582209515
+        "x": 1.4832577804945641,
+        "y": 7.007124482848842
       },
       "nextControl": {
-        "x": 1.9144285906831613,
-        "y": 7.400501584857337
+        "x": 2.234595635704752,
+        "y": 7.03264473826742
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.3412519197893786,
-        "y": 7.199501601821832
+        "x": 3.8821462155791955,
+        "y": 7.216208710910069
       },
       "prevControl": {
-        "x": 2.4357562149833742,
-        "y": 7.199501601821832
+        "x": 3.9766505107731906,
+        "y": 7.216208710910069
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "SetUpLeft"
+      "linkedName": "PickUpLeft"
     }
   ],
   "rotationTargets": [],
@@ -56,12 +56,12 @@
   "goalEndState": {
     "velocity": 0,
     "rotation": 180.0,
-    "rotateFast": false
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": "Center",
+  "folder": "Amp",
   "previewStartingState": {
-    "rotation": 180.0,
+    "rotation": -126.04497422961914,
     "velocity": 0
   },
   "useDefaultConstraints": true

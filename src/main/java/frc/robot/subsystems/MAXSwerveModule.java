@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -29,6 +30,9 @@ public class MAXSwerveModule {
 
   private double m_chassisAngularOffset = 0;
   private SwerveModuleState m_desiredState = new SwerveModuleState(0.0, new Rotation2d());
+
+  private final int drivingCANId;
+  private final int turningCANId;
 
   /**
    * Constructs a MAXSwerveModule and configures the driving and turning motor,
@@ -111,6 +115,9 @@ public class MAXSwerveModule {
     m_chassisAngularOffset = chassisAngularOffset;
     m_desiredState.angle = new Rotation2d(m_turningEncoder.getPosition());
     m_drivingEncoder.setPosition(0);
+
+    this.drivingCANId = drivingCANId;
+    this.turningCANId = turningCANId;
   }
 
   /**
@@ -172,5 +179,10 @@ public class MAXSwerveModule {
   private void stop() {
     m_drivingSparkMax.set(0);
     m_turningSparkMax.set(0);
+  }
+
+  public void putSmartDashboard() {
+    SmartDashboard.putNumber(drivingCANId + " Actual Speed", m_drivingEncoder.getVelocity());
+    SmartDashboard.putNumber(turningCANId + " Actual Angle", Math.toDegrees(m_turningEncoder.getPosition()));
   }
 }

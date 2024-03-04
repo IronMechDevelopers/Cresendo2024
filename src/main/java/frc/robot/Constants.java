@@ -17,7 +17,7 @@ import edu.wpi.first.math.util.Units;
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
- * constants. This class should not be used for any other purpose. All constants
+ * constants. This class should not bef used for any other purpose. All constants
  * should be declared
  * globally (i.e. public static). Do not put anything functional in this class.
  *
@@ -59,7 +59,7 @@ public final class Constants {
     public static final boolean kGyroReversed = false;
 
     public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(
-        new PIDConstants(5.0, 0, 0), // Translation constants
+        new PIDConstants(5.0 , 0, 0), // Translation constants
         new PIDConstants(5.0, 0, 0), // Rotation constants
         AutoConstants.kMaxSpeedMetersPerSecond,
         new Translation2d(kWheelBase / 2, kTrackWidth / 2).getNorm(), // Drive base radius (distance from center to
@@ -86,13 +86,13 @@ public final class Constants {
     public static final int kTopShooterMotor = 60;
     public static final int kBottomShooterMotor = 61;
 
-    public static final int kClimberMotorCanId = 18;
+    public static final int kClimberMotorCanId = 35;
     public static final int kAmpFlopperMotorCanId = 19;
   }
 
   public static final class ClimberConstants {
-    public static final double climberSpeedUp = .25;
-    public static final double climberSpeedDown = -.25;
+    public static final double climberSpeedUp = 1;
+    public static final double climberSpeedDown = -1;
   }
 
   public static final class ModuleConstants {
@@ -102,7 +102,7 @@ public final class Constants {
     // will result in a
     // robot that drives faster).
 
-    public static final int kDrivingMotorPinionTeeth = 13;
+    public static final int kDrivingMotorPinionTeeth = 14;
 
     // Invert the turning encoder, since the output shaft rotates in the opposite
     // direction of

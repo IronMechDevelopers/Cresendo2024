@@ -6,42 +6,49 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ClimberConstants;
+import frc.robot.Constants.MotorIds;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class ClimberSubsystem extends SubsystemBase {
   private CANSparkMax climberMotor;
+  private double currentPercentage;
 
   /** Creates a new ClimberSubsystem. */
   public ClimberSubsystem() {
     super();
-    // this.climberMotor = new CANSparkMax(MotorIds.kClimberMotorCanId,
-    // MotorType.kBrushed);
+    this.climberMotor = new CANSparkMax(MotorIds.kClimberMotorCanId,
+        MotorType.kBrushed);
+    currentPercentage = 0;
 
   }
 
   public void setMotor(double speed) {
-    // this.climberMotor.set(speed);
+    this.climberMotor.set(speed);
+    currentPercentage = speed;
   }
 
   public void stopMotor() {
-    // setMotor(0);
+    setMotor(0);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("ClimberSubsystem Percentage", currentPercentage);
   }
 
   public Command climberUpCommand() {
-    // return Commands.startEnd(() -> setMotor(ClimberConstants.climberSpeedUp), ()
-    // -> stopMotor(), this);
-    return null;
+    return Commands.startEnd(() -> setMotor(ClimberConstants.climberSpeedUp), ()
+    -> stopMotor(), this);
   }
 
   public Command climberDownCommand() {
-    // return Commands.startEnd(() -> setMotor(ClimberConstants.climberSpeedDown),
-    // () -> stopMotor(), this);
-    return null;
+    return Commands.startEnd(() -> setMotor(ClimberConstants.climberSpeedDown),
+    () -> stopMotor(), this);
   }
 }
