@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.TestingSubsystemsCommand;
+import frc.robot.commands.TurnOffFieldOrientCommand;
+import frc.robot.commands.VibrateController;
 import frc.robot.subsystems.AmpFlopper;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -55,6 +57,7 @@ public class RobotContainer {
 
         private final JoystickButton left1Button = new JoystickButton(driverLeftStick, 1);
         private final JoystickButton left2Button = new JoystickButton(driverLeftStick, 2);
+        private final JoystickButton left3Button = new JoystickButton(driverLeftStick, 3);
 
         private final JoystickButton right1Button = new JoystickButton(driverRightStick, 1);
         private final JoystickButton right2Button = new JoystickButton(driverRightStick, 2);
@@ -68,8 +71,10 @@ public class RobotContainer {
         private final JoystickButton yButton = new JoystickButton(copilotXbox, Button.kY.value);
         private final JoystickButton rightBumperButton = new JoystickButton(copilotXbox, Button.kRightBumper.value);
         private final JoystickButton leftBumperButton = new JoystickButton(copilotXbox, Button.kLeftBumper.value);
-        private final Trigger leftTigger = new Trigger(() -> copilotXbox.getLeftTriggerAxis() > .5);
-        private final Trigger rightTigger = new Trigger(() -> copilotXbox.getRightTriggerAxis() > .5);
+        private final Trigger leftTigger = new Trigger(() -> copilotXbox.getLeftTriggerAxis() > .5 && copilotXbox.getRightTriggerAxis() < .15);
+        private final Trigger rightTigger = new Trigger(() -> copilotXbox.getRightTriggerAxis() > .5 && copilotXbox.getLeftTriggerAxis() < .15);
+        private final Trigger bothTigger = new Trigger(() -> copilotXbox.getRightTriggerAxis() > .5 && copilotXbox.getLeftTriggerAxis() > .5);
+        private final Trigger noteInsideTrigger = new Trigger(() -> m_StagingSubsystem.isNoteInside());
 
         private SendableChooser<Command> auto = new SendableChooser<>();
 
@@ -131,6 +136,7 @@ public class RobotContainer {
 
                 left1Button.whileTrue(m_ShooterSubsystem.setMotorToInvesePercentCommand());
                 left2Button.whileTrue(m_robotDrive.setXCommand());
+                left3Button.whileTrue(new TurnOffFieldOrientCommand(m_robotDrive));
 
                 right1Button.whileTrue(m_ClimberSubsystem.climberUpCommand());
                 right2Button.onTrue(m_robotDrive.switchMaxSpeedCommand());
@@ -138,16 +144,18 @@ public class RobotContainer {
                 right4Button.whileTrue(m_ClimberSubsystem.climberDownCommand());
                 right6Button.whileTrue(m_ClimberSubsystem.climberUpCommand());
 
-                rightBumperButton.toggleOnTrue(m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed")
-                                .finallyDo(() -> m_StagingSubsystem.changeColorCommmand(255, 0, 0)));
-                leftBumperButton.toggleOnTrue(m_ShooterSubsystem.setMotorToPercentCommand("Slow Speed")
-                                .finallyDo(() -> m_StagingSubsystem.changeColorCommmand(255, 0, 0)));
+                rightBumperButton.toggleOnTrue(m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"));
+                leftBumperButton.toggleOnTrue(m_ShooterSubsystem.setMotorToPercentCommand("Slow Speed"));
                 xButton.toggleOnTrue(m_StagingSubsystem.drivingIntakeCommand());
                 aButton.toggleOnTrue(m_StagingSubsystem.runIntakeCommand());
                 bButton.toggleOnTrue(m_StagingSubsystem.runOuttakeCommand());
                 yButton.whileTrue(m_ClimberSubsystem.climberUpCommand());
                 leftTigger.whileTrue(m_AmpFlopper.ampFlopperUpCommand());
                 rightTigger.whileTrue(m_AmpFlopper.ampFlopperDownCommand());
+                bothTigger.whileTrue(m_ShooterSubsystem.setMotorToPercentCommand(-.5));
+
+
+                noteInsideTrigger.onTrue(new VibrateController(copilotXbox).withTimeout(2));
 
                 SmartDashboard.putData("Invert Field Orientation", m_robotDrive.invertFieldRelativeComand());
                 SmartDashboard.putData("DANIEL USE ONLY",

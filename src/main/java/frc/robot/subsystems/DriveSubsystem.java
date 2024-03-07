@@ -323,7 +323,7 @@ public class DriveSubsystem extends SubsystemBase {
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldOrientation
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
-                Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)))
+                Rotation2d.fromDegrees(poseEstimator.getEstimatedPosition().getRotation().getDegrees()))
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, maxSpeed);
@@ -406,6 +406,11 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void invertFieldOrientation() {
     fieldOrientation = !fieldOrientation;
+  }
+
+  public void setFieldOrientation(boolean fieldOrientation)
+  {
+    this.fieldOrientation = fieldOrientation;
   }
 
   /**
