@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -25,8 +26,10 @@ public class VibrateController extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (RobotState.isTeleop()) {
     controller.setRumble(RumbleType.kLeftRumble, 1);
     controller.setRumble(RumbleType.kRightRumble, 1);
+    }
   }
 
   // Called once the command ends or is interrupted.

@@ -25,9 +25,9 @@ public class TurnOffFieldOrientCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (RobotState.isTeleop()) {
-      m_robotDrive.setFieldOrientation(false);
-    }
+
+    m_robotDrive.setFieldOrientation(false);
+
   }
 
   // Called once the command ends or is interrupted.

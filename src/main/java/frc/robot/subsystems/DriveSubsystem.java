@@ -258,7 +258,11 @@ public class DriveSubsystem extends SubsystemBase {
    * @param rateLimit        Whether to enable rate limiting for smoother control.
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean rateLimit) {
-
+    // if (DriverStation.getAlliance().get() == Alliance.Red) {
+    //   {
+    //     xSpeed=-1*xSpeed;
+    //   }
+    
     double xSpeedCommanded;
     double ySpeedCommanded;
 
@@ -323,7 +327,7 @@ public class DriveSubsystem extends SubsystemBase {
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldOrientation
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
-                Rotation2d.fromDegrees(poseEstimator.getEstimatedPosition().getRotation().getDegrees()))
+                Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)))
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, maxSpeed);

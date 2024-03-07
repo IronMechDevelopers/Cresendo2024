@@ -21,10 +21,8 @@ public class StagingSubsystem extends SubsystemBase {
     private double currentPercentage;
 
     // .4-3.1 V between 80cm - 10cm
-    private final AnalogInput rangeFinder = new AnalogInput(0);
-
-    private AddressableLED m_led;
-    private AddressableLEDBuffer m_ledBuffer;
+    private final AnalogInput lowerIntakeSensor = new AnalogInput(1);
+    private final AnalogInput upperIntakeSensor = new AnalogInput(0);
 
     public StagingSubsystem() {
 
@@ -36,46 +34,23 @@ public class StagingSubsystem extends SubsystemBase {
         topIntakeMotor.setInverted(true);
         currentPercentage = 0;
 
-        // PWM port 9
-        // Must be a PWM header, not MXP or DIO
-        m_led = new AddressableLED(9);
-
-        // Reuse buffer
-        // Default to a length of 60, start empty output
-        // Length is expensive to set, so only set it once, then just update data
-        m_ledBuffer = new AddressableLEDBuffer(36);
-        m_led.setLength(m_ledBuffer.getLength());
-
-        // Set the data
-        m_led.setData(m_ledBuffer);
-        m_led.start();
-
-        for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-            // Sets the specified LED to the RGB values for red
-            m_ledBuffer.setRGB(i, 0, 255, 0);
-        }
-
-        m_led.setData(m_ledBuffer);
-
     }
 
-    private void setColor(int red, int blue, int green) {
-        for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-            // Sets the specified LED to the RGB values for red
-            m_ledBuffer.setRGB(i, red, blue, green);
-        }
+    public boolean isNoteAtUpperSensor() {
+        boolean noteInside = upperIntakeSensor.getValue() > 1000;
+        SmartDashboard.putNumber("Upper Sensor", upperIntakeSensor.getValue());
+        return noteInside;
+    }
 
-        m_led.setData(m_ledBuffer);
+    public boolean isNoteAtLowerSensor() {
+        boolean noteInside = upperIntakeSensor.getValue() > 1000;
+        SmartDashboard.putNumber("Lower Sensor", lowerIntakeSensor.getValue());
+        return noteInside;
     }
 
     public boolean isNoteInside() {
-        boolean noteInside = rangeFinder.getValue() > 1000;
-        SmartDashboard.putBoolean("Note Inside", noteInside);
-        SmartDashboard.putNumber("Range Finder", rangeFinder.getValue());
-        if (noteInside) {
-            setColor(0, 0, 255);
-        }
-        return noteInside;
+        
+        return isNoteAtUpperSensor() || isNoteAtLowerSensor();
     }
 
     public void stopMotor() {
@@ -99,6 +74,7 @@ public class StagingSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         super.periodic();
+        SmartDashboard.putBoolean("isNoteInside", isNoteInside());
         SmartDashboard.putNumber("StagingSubsystem Percentage", currentPercentage);
 
     }
@@ -113,11 +89,8 @@ public class StagingSubsystem extends SubsystemBase {
 
     public Command drivingIntakeCommand() {
         return Commands.sequence(runIntakeCommand()
-                .until(() -> isNoteInside()), runOuttakeCommand().withTimeout(.25));
+                .until(() -> isNoteAtUpperSensor()), runOuttakeCommand().withTimeout(.25));
 
     }
 
-    public Command changeColorCommmand(int red, int blue, int green) {
-        return Commands.runOnce(() -> setColor(red, blue, green));
-    }
 }
