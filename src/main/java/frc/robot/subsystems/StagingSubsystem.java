@@ -7,8 +7,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.MotorIds;
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -19,12 +17,15 @@ public class StagingSubsystem extends SubsystemBase {
     private CANSparkMax topIntakeMotor;
     private CANSparkMax conveyorMotor;
     private double currentPercentage;
+    private StagingState stagingState;
+
+    public enum StagingState {
+        EMPTY, NOTE_INSIDE, DRIVING_INTAKE, ASK_FOR_NOTE
+    };
 
     // .4-3.1 V between 80cm - 10cm
-    private final AnalogInput rangeFinder = new AnalogInput(0);
-
-    private AddressableLED m_led;
-    private AddressableLEDBuffer m_ledBuffer;
+    private final AnalogInput lowerIntakeSensor = new AnalogInput(2);
+    private final AnalogInput upperIntakeSensor = new AnalogInput(0);
 
     public StagingSubsystem() {
 
@@ -35,47 +36,28 @@ public class StagingSubsystem extends SubsystemBase {
         bottomIntakeMotor.setInverted(true);
         topIntakeMotor.setInverted(true);
         currentPercentage = 0;
-
-        // PWM port 9
-        // Must be a PWM header, not MXP or DIO
-        m_led = new AddressableLED(9);
-
-        // Reuse buffer
-        // Default to a length of 60, start empty output
-        // Length is expensive to set, so only set it once, then just update data
-        m_ledBuffer = new AddressableLEDBuffer(36);
-        m_led.setLength(m_ledBuffer.getLength());
-
-        // Set the data
-        m_led.setData(m_ledBuffer);
-        m_led.start();
-
-        for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-            // Sets the specified LED to the RGB values for red
-            m_ledBuffer.setRGB(i, 0, 255, 0);
-        }
-
-        m_led.setData(m_ledBuffer);
-
+        stagingState = StagingState.EMPTY;
     }
 
-    private void setColor(int red, int blue, int green) {
-        for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-            // Sets the specified LED to the RGB values for red
-            m_ledBuffer.setRGB(i, red, blue, green);
-        }
+    public boolean isNoteAtUpperSensor() {
+        boolean noteInside = upperIntakeSensor.getValue() > 1000;
+        
+        return noteInside;
+    }
 
-        m_led.setData(m_ledBuffer);
+    public boolean isNoteAtLowerSensor() {
+        boolean noteInside = lowerIntakeSensor.getValue() > 1400;
+        
+        return noteInside;
     }
 
     public boolean isNoteInside() {
-        boolean noteInside = rangeFinder.getValue() > 1000;
-        SmartDashboard.putBoolean("Note Inside", noteInside);
-        SmartDashboard.putNumber("Range Finder", rangeFinder.getValue());
-        if (noteInside) {
-            setColor(0, 0, 255);
+        boolean ans = isNoteAtUpperSensor() || isNoteAtLowerSensor();
+        if (ans) {
+            stagingState = StagingState.NOTE_INSIDE;
+
         }
-        return noteInside;
+        return ans;
     }
 
     public void stopMotor() {
@@ -96,9 +78,20 @@ public class StagingSubsystem extends SubsystemBase {
         }
     }
 
+    public StagingState getState() {
+        return stagingState;
+    }
+
+    public void setState(StagingState stagingState) {
+        this.stagingState = stagingState;
+    }
+
     @Override
     public void periodic() {
         super.periodic();
+        SmartDashboard.putNumber("Upper Sensor", upperIntakeSensor.getValue());
+        SmartDashboard.putNumber("Lower Sensor", lowerIntakeSensor.getValue());
+        SmartDashboard.putBoolean("isNoteInside", isNoteInside());
         SmartDashboard.putNumber("StagingSubsystem Percentage", currentPercentage);
 
     }
@@ -111,13 +104,19 @@ public class StagingSubsystem extends SubsystemBase {
         return Commands.startEnd(() -> setMotor(Constants.SpeedConstants.OuttakeSpeed), () -> stopMotor(), this);
     }
 
+    public Command setStagingStateToDrivingIntake() {
+        return Commands.runOnce(() -> setState(StagingState.DRIVING_INTAKE), this);
+
+    }
+
     public Command drivingIntakeCommand() {
-        return Commands.sequence(runIntakeCommand()
-                .until(() -> isNoteInside()), runOuttakeCommand().withTimeout(.25));
+        return Commands.sequence(setStagingStateToDrivingIntake(), runIntakeCommand()
+                .until(() -> isNoteAtUpperSensor()), runOuttakeCommand().withTimeout(.25));
 
     }
 
-    public Command changeColorCommmand(int red, int blue, int green) {
-        return Commands.runOnce(() -> setColor(red, blue, green));
+    public Command askForNote() {
+        return Commands.startEnd(() -> setState(StagingState.ASK_FOR_NOTE), () -> setState(StagingState.EMPTY), this);
     }
+
 }
