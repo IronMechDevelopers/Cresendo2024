@@ -18,6 +18,7 @@ import frc.robot.commands.TestingSubsystemsCommand;
 import frc.robot.commands.TurnOffFieldOrientCommand;
 import frc.robot.commands.VibrateController;
 import frc.robot.subsystems.AmpFlopper;
+import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.PowerDistributionModule;
@@ -30,10 +31,13 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import java.util.Optional;
+
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -51,6 +55,9 @@ public class RobotContainer {
         private final AmpFlopper m_AmpFlopper = new AmpFlopper();
         private final PowerDistributionModule powerDistributionModule = new PowerDistributionModule();
 
+        private final Blinkin blinkn = new Blinkin(m_StagingSubsystem);
+        
+
         private static final Joystick driverLeftStick = new Joystick(0);
         private static final Joystick driverRightStick = new Joystick(1);
         private static final XboxController copilotXbox = new XboxController(2);
@@ -58,6 +65,7 @@ public class RobotContainer {
         private final JoystickButton left1Button = new JoystickButton(driverLeftStick, 1);
         private final JoystickButton left2Button = new JoystickButton(driverLeftStick, 2);
         private final JoystickButton left3Button = new JoystickButton(driverLeftStick, 3);
+        private final JoystickButton left4Button = new JoystickButton(driverLeftStick, 4);
 
         private final JoystickButton right1Button = new JoystickButton(driverRightStick, 1);
         private final JoystickButton right2Button = new JoystickButton(driverRightStick, 2);
@@ -78,7 +86,7 @@ public class RobotContainer {
                         () -> copilotXbox.getRightTriggerAxis() > .5 && copilotXbox.getLeftTriggerAxis() < .15);
         private final Trigger bothTigger = new Trigger(
                         () -> copilotXbox.getRightTriggerAxis() > .5 && copilotXbox.getLeftTriggerAxis() > .5);
-                        
+
         private final Trigger noteInsideTrigger = new Trigger(() -> m_StagingSubsystem.isNoteAtLowerSensor());
 
         private SendableChooser<Command> auto = new SendableChooser<>();
@@ -87,6 +95,8 @@ public class RobotContainer {
          * The container for the robot. Contains subsystems, OI devices, and commands.
          */
         public RobotContainer() {
+
+                blinkn.aqua();
 
                 CameraServer.startAutomaticCapture();
 
@@ -125,7 +135,7 @@ public class RobotContainer {
                                                                 -MathUtil.applyDeadband(driverRightStick.getX(),
                                                                                 OIConstants.kDriveDeadband),
                                                                 false),
-                                                m_robotDrive));
+                                                m_robotDrive));                               
         }
 
         /**
@@ -141,6 +151,7 @@ public class RobotContainer {
 
                 left1Button.whileTrue(m_ShooterSubsystem.setMotorToInvesePercentCommand());
                 left2Button.whileTrue(m_robotDrive.setXCommand());
+                left3Button.whileTrue(m_StagingSubsystem.askForNote());
 
                 right1Button.whileTrue(new TurnOffFieldOrientCommand(m_robotDrive));
                 right2Button.onTrue(m_robotDrive.switchMaxSpeedCommand());
@@ -202,6 +213,12 @@ public class RobotContainer {
          * @return the command to run in autonomous
          */
         public Command getAutonomousCommand() {
+                Optional<Alliance> alliance = DriverStation.getAlliance();
+                if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
+                        m_robotDrive.setFlipped(true);
+                } else {
+                        m_robotDrive.setFlipped(false);
+                }
                 Command command = Commands.sequence(getStartCommand(), new WaitCommand(.5), auto.getSelected());
                 createAuto();
                 return command;

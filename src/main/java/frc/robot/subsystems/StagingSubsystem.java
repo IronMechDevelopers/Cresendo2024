@@ -7,8 +7,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.MotorIds;
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -19,9 +17,14 @@ public class StagingSubsystem extends SubsystemBase {
     private CANSparkMax topIntakeMotor;
     private CANSparkMax conveyorMotor;
     private double currentPercentage;
+    private StagingState stagingState;
+
+    public enum StagingState {
+        EMPTY, NOTE_INSIDE, DRIVING_INTAKE, ASK_FOR_NOTE
+    };
 
     // .4-3.1 V between 80cm - 10cm
-    private final AnalogInput lowerIntakeSensor = new AnalogInput(1);
+    private final AnalogInput lowerIntakeSensor = new AnalogInput(2);
     private final AnalogInput upperIntakeSensor = new AnalogInput(0);
 
     public StagingSubsystem() {
@@ -33,24 +36,28 @@ public class StagingSubsystem extends SubsystemBase {
         bottomIntakeMotor.setInverted(true);
         topIntakeMotor.setInverted(true);
         currentPercentage = 0;
-
+        stagingState = StagingState.EMPTY;
     }
 
     public boolean isNoteAtUpperSensor() {
         boolean noteInside = upperIntakeSensor.getValue() > 1000;
-        SmartDashboard.putNumber("Upper Sensor", upperIntakeSensor.getValue());
+        
         return noteInside;
     }
 
     public boolean isNoteAtLowerSensor() {
-        boolean noteInside = upperIntakeSensor.getValue() > 1000;
-        SmartDashboard.putNumber("Lower Sensor", lowerIntakeSensor.getValue());
+        boolean noteInside = lowerIntakeSensor.getValue() > 1400;
+        
         return noteInside;
     }
 
     public boolean isNoteInside() {
-        
-        return isNoteAtUpperSensor() || isNoteAtLowerSensor();
+        boolean ans = isNoteAtUpperSensor() || isNoteAtLowerSensor();
+        if (ans) {
+            stagingState = StagingState.NOTE_INSIDE;
+
+        }
+        return ans;
     }
 
     public void stopMotor() {
@@ -71,9 +78,19 @@ public class StagingSubsystem extends SubsystemBase {
         }
     }
 
+    public StagingState getState() {
+        return stagingState;
+    }
+
+    public void setState(StagingState stagingState) {
+        this.stagingState = stagingState;
+    }
+
     @Override
     public void periodic() {
         super.periodic();
+        SmartDashboard.putNumber("Upper Sensor", upperIntakeSensor.getValue());
+        SmartDashboard.putNumber("Lower Sensor", lowerIntakeSensor.getValue());
         SmartDashboard.putBoolean("isNoteInside", isNoteInside());
         SmartDashboard.putNumber("StagingSubsystem Percentage", currentPercentage);
 
@@ -87,10 +104,19 @@ public class StagingSubsystem extends SubsystemBase {
         return Commands.startEnd(() -> setMotor(Constants.SpeedConstants.OuttakeSpeed), () -> stopMotor(), this);
     }
 
+    public Command setStagingStateToDrivingIntake() {
+        return Commands.runOnce(() -> setState(StagingState.DRIVING_INTAKE), this);
+
+    }
+
     public Command drivingIntakeCommand() {
-        return Commands.sequence(runIntakeCommand()
+        return Commands.sequence(setStagingStateToDrivingIntake(), runIntakeCommand()
                 .until(() -> isNoteAtUpperSensor()), runOuttakeCommand().withTimeout(.25));
 
+    }
+
+    public Command askForNote() {
+        return Commands.startEnd(() -> setState(StagingState.ASK_FOR_NOTE), () -> setState(StagingState.EMPTY), this);
     }
 
 }

@@ -85,6 +85,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final MAXSwerveModule[] swerveModules;
 
   private boolean isFullSpeed = true;
+  private boolean isFlipped;
 
   /**
    * Standard deviations of model states. Increase these numbers to trust your
@@ -124,6 +125,7 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     AprilTagFieldLayout layout;
+    isFlipped = false;
 
     try {
       layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
@@ -229,8 +231,9 @@ public class DriveSubsystem extends SubsystemBase {
     Pose2d pose = poseEstimator.getEstimatedPosition();
     SmartDashboard.putBoolean("is field orientation", fieldOrientation);
     SmartDashboard.putString("Pose", getFormattedPose());
-    SmartDashboard.putNumber("gyro angle", Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)).getDegrees());
-    SmartDashboard.putNumber("pose angle",  getCurrentPose().getRotation().getDegrees());
+    SmartDashboard.putNumber("gyro angle", m_gyro.getAngle(IMUAxis.kZ));
+    SmartDashboard.putNumber("pose angle", getCurrentPose().getRotation().getDegrees());
+    SmartDashboard.putBoolean("isFlipped", getFlipped());
     field2d.setRobotPose(getCurrentPose());
 
     myPosePublisher.set(pose);
@@ -258,11 +261,6 @@ public class DriveSubsystem extends SubsystemBase {
    * @param rateLimit        Whether to enable rate limiting for smoother control.
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean rateLimit) {
-    // if (DriverStation.getAlliance().get() == Alliance.Red) {
-    //   {
-    //     xSpeed=-1*xSpeed;
-    //   }
-    
     double xSpeedCommanded;
     double ySpeedCommanded;
 
@@ -324,10 +322,13 @@ public class DriveSubsystem extends SubsystemBase {
     double ySpeedDelivered = ySpeedCommanded * maxSpeed;
     double rotDelivered = m_currentRotation * DriveConstants.kMaxAngularSpeed;
 
+    double poseAngle = getCurrentPose().getRotation().getDegrees();
+    double gyroAngel = m_gyro.getAngle( IMUAxis.kZ);
+
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldOrientation
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
-                Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)))
+                Rotation2d.fromDegrees((isFlipped ? 180 : 0) + poseAngle))
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, maxSpeed);
@@ -371,7 +372,10 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
+    System.out.println("ZERO");
     m_gyro.reset();
+    Pose2d pose = poseEstimator.getEstimatedPosition();
+    poseEstimator.resetPosition(getGyroscopeRotation(), getModulePositions(), pose);
   }
 
   /**
@@ -380,7 +384,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
-    return Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)).getDegrees();
+    return m_gyro.getAngle(IMUAxis.kZ);
   }
 
   public Rotation2d getGyroscopeRotation() {
@@ -412,8 +416,7 @@ public class DriveSubsystem extends SubsystemBase {
     fieldOrientation = !fieldOrientation;
   }
 
-  public void setFieldOrientation(boolean fieldOrientation)
-  {
+  public void setFieldOrientation(boolean fieldOrientation) {
     this.fieldOrientation = fieldOrientation;
   }
 
@@ -453,5 +456,13 @@ public class DriveSubsystem extends SubsystemBase {
   public Command driveCommand(double x, double y, double rot) {
     return Commands.startEnd(() -> drive(x, y, rot, true),
         () -> drive(0, 0, 0, true), this);
+  }
+
+  public void setFlipped(boolean bool) {
+    isFlipped = bool;
+  }
+
+  public boolean getFlipped() {
+    return isFlipped;
   }
 }
