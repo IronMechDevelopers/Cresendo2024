@@ -52,7 +52,7 @@ public class Blinkin extends SubsystemBase {
 
   public void set(double value) {
     if (GlobalConstants.kUseLEDLights) {
-      System.out.println("USING BLINKIN " + value);
+      //System.out.println("USING BLINKIN " + value);
       blinkinController.set(value);
       currentColor = value;
     }
@@ -139,14 +139,16 @@ public class Blinkin extends SubsystemBase {
     useReturnToRobotStateTimer = false;
     useFlashColor = false;
     if (stagingSubsystem.getState() == StagingState.DRIVING_INTAKE) {
-      aqua();
+      red();
     } else if (stagingSubsystem.getState() == StagingState.NOTE_INSIDE) {
       green();
-      flashColorAtRate(0.1, 0.75);
+      flashColorAtRate(5.0, 0.35);
     } else if (stagingSubsystem.getState() == StagingState.ASK_FOR_NOTE) {
       rainbowTwinkle();
+    } else if (stagingSubsystem.getState() == StagingState.EMPTY) {
+      aqua();
     } else {
-      // neutral();
+     System.out.println("Invalid logic - this line should not be hit");
     }
   }
 

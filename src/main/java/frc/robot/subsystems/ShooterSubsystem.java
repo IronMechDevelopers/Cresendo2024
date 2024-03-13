@@ -13,8 +13,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class ShooterSubsystem extends SubsystemBase {
 
-    private CANSparkMax shooteTopMotor;
-    private CANSparkMax shooteBottomMotor;
+    private CANSparkMax shooterTopMotor;
+    private CANSparkMax shooterBottomMotor;
     public double maxRPM;
     private double movingAverageVelocity;
     private RelativeEncoder m_encoderTop;
@@ -22,16 +22,16 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public ShooterSubsystem() {
 
-        this.shooteTopMotor = new CANSparkMax(MotorIds.kTopShooterMotor, MotorType.kBrushless);
-        this.shooteBottomMotor = new CANSparkMax(MotorIds.kBottomShooterMotor, MotorType.kBrushless);
+        this.shooterTopMotor = new CANSparkMax(MotorIds.kTopShooterMotor, MotorType.kBrushless);
+        this.shooterBottomMotor = new CANSparkMax(MotorIds.kBottomShooterMotor, MotorType.kBrushless);
 
-        shooteTopMotor.restoreFactoryDefaults();
-        shooteBottomMotor.restoreFactoryDefaults();
+        shooterTopMotor.restoreFactoryDefaults();
+        shooterBottomMotor.restoreFactoryDefaults();
 
-        m_encoderTop = shooteTopMotor.getEncoder();
-        m_encoderBottom = shooteBottomMotor.getEncoder();
+        m_encoderTop = shooterTopMotor.getEncoder();
+        m_encoderBottom = shooterBottomMotor.getEncoder();
 
-        shooteTopMotor.setInverted(true);
+        shooterTopMotor.setInverted(true);
 
         maxRPM = 5700;
     }
@@ -45,13 +45,13 @@ public class ShooterSubsystem extends SubsystemBase {
             speed = 1;
         }
 
-        shooteTopMotor.set(speed);
-        shooteBottomMotor.set(speed);
+        shooterTopMotor.set(speed);
+        shooterBottomMotor.set(speed);
         SmartDashboard.putNumber("Shooter Percent", speed);
     }
 
     public void setMotorToPercent(String strength) {
-        double percent = SmartDashboard.getNumber(strength, .45);
+        double percent = SmartDashboard.getNumber(strength, 0.45);
         setMotorToPercent(percent);
     }
 

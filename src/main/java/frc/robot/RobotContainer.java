@@ -213,12 +213,12 @@ public class RobotContainer {
          * @return the command to run in autonomous
          */
         public Command getAutonomousCommand() {
-                Optional<Alliance> alliance = DriverStation.getAlliance();
-                if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
-                        m_robotDrive.setFlipped(true);
-                } else {
-                        m_robotDrive.setFlipped(false);
-                }
+                // Optional<Alliance> alliance = DriverStation.getAlliance();
+                // if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
+                //         m_robotDrive.setFlipped(true);
+                // } else {
+                //         m_robotDrive.setFlipped(false);
+                // }
                 Command command = Commands.sequence(getStartCommand(), new WaitCommand(.5), auto.getSelected());
                 createAuto();
                 return command;
