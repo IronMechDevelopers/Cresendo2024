@@ -41,21 +41,25 @@ public class StagingSubsystem extends SubsystemBase {
 
     public boolean isNoteAtUpperSensor() {
         boolean noteInside = upperIntakeSensor.getValue() > 1000;
-        
+
         return noteInside;
     }
 
     public boolean isNoteAtLowerSensor() {
-        boolean noteInside = lowerIntakeSensor.getValue() > 1400;
-        
+        boolean noteInside = lowerIntakeSensor.getValue() > 1300;
+
         return noteInside;
     }
 
     public boolean isNoteInside() {
-        boolean ans = isNoteAtUpperSensor() || isNoteAtLowerSensor();
+        // boolean ans = isNoteAtUpperSensor() || isNoteAtLowerSensor();
+        boolean ans = isNoteAtUpperSensor();
         if (ans) {
             stagingState = StagingState.NOTE_INSIDE;
-
+        } else if (bottomIntakeMotor.get() == 0) {
+            stagingState = StagingState.EMPTY;
+        } else {
+            stagingState = StagingState.DRIVING_INTAKE;
         }
         return ans;
     }
@@ -93,6 +97,15 @@ public class StagingSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Lower Sensor", lowerIntakeSensor.getValue());
         SmartDashboard.putBoolean("isNoteInside", isNoteInside());
         SmartDashboard.putNumber("StagingSubsystem Percentage", currentPercentage);
+        if (this.stagingState == StagingState.ASK_FOR_NOTE) {
+            SmartDashboard.putString("stagingState", "ASK_FOR_NOTE");
+        } else if (this.stagingState == StagingState.NOTE_INSIDE) {
+            SmartDashboard.putString("stagingState", "NOTE_INSIDE");
+        } else if (this.stagingState == StagingState.EMPTY) {
+            SmartDashboard.putString("stagingState", "EMPTY");
+        } else if (this.stagingState == StagingState.DRIVING_INTAKE) {
+            SmartDashboard.putString("stagingState", "DRIVING_INTAKE");
+        }
 
     }
 
@@ -105,7 +118,7 @@ public class StagingSubsystem extends SubsystemBase {
     }
 
     public Command setStagingStateToDrivingIntake() {
-        return Commands.runOnce(() -> setState(StagingState.DRIVING_INTAKE), this);
+        return Commands.runOnce(() -> setState(StagingState.DRIVING_INTAKE));
 
     }
 
