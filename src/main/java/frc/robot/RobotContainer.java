@@ -56,7 +56,6 @@ public class RobotContainer {
         private final PowerDistributionModule powerDistributionModule = new PowerDistributionModule();
 
         private final Blinkin blinkn = new Blinkin(m_StagingSubsystem);
-        
 
         private static final Joystick driverLeftStick = new Joystick(0);
         private static final Joystick driverRightStick = new Joystick(1);
@@ -87,7 +86,7 @@ public class RobotContainer {
         private final Trigger bothTigger = new Trigger(
                         () -> copilotXbox.getRightTriggerAxis() > .5 && copilotXbox.getLeftTriggerAxis() > .5);
 
-        private final Trigger noteInsideTrigger = new Trigger(() -> m_StagingSubsystem.isNoteAtLowerSensor());
+        private final Trigger noteInsideTrigger = new Trigger(() -> m_StagingSubsystem.isNoteAtUpperSensor());
 
         private SendableChooser<Command> auto = new SendableChooser<>();
 
@@ -135,7 +134,7 @@ public class RobotContainer {
                                                                 -MathUtil.applyDeadband(driverRightStick.getX(),
                                                                                 OIConstants.kDriveDeadband),
                                                                 false),
-                                                m_robotDrive));                               
+                                                m_robotDrive));
         }
 
         /**
@@ -184,7 +183,9 @@ public class RobotContainer {
 
         public void createAuto() {
                 auto = new SendableChooser<>();
-                auto.setDefaultOption("Do Nothing", new WaitCommand(15));
+
+                auto.setDefaultOption("Center-No Move", new PathPlannerAuto("Center-No Move"));
+                auto.addOption("Do Nothing", new WaitCommand(15));
                 auto.addOption("Taxi Forward", new PathPlannerAuto("Taxi Forward"));
                 auto.addOption("Taxi Backward", new PathPlannerAuto("Taxi Backward"));
                 auto.addOption("Center-No Move", new PathPlannerAuto("Center-No Move"));
@@ -215,9 +216,9 @@ public class RobotContainer {
         public Command getAutonomousCommand() {
                 // Optional<Alliance> alliance = DriverStation.getAlliance();
                 // if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
-                //         m_robotDrive.setFlipped(true);
+                // m_robotDrive.setFlipped(true);
                 // } else {
-                //         m_robotDrive.setFlipped(false);
+                // m_robotDrive.setFlipped(false);
                 // }
                 Command command = Commands.sequence(getStartCommand(), new WaitCommand(.5), auto.getSelected());
                 createAuto();
