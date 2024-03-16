@@ -112,6 +112,9 @@ public class RobotContainer {
                 NamedCommands.registerCommand("shootHigh", Commands.race(
                                 m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"),
                                 m_StagingSubsystem.runIntakeCommand().withTimeout(1)));
+                NamedCommands.registerCommand("shootLow", Commands.race(
+                                m_ShooterSubsystem.setMotorToPercentCommand("Slow Speed"),
+                                m_StagingSubsystem.runIntakeCommand().withTimeout(1)));
                 NamedCommands.registerCommand("WarmUpShooter",
                                 m_ShooterSubsystem.warmUpMotorToPercentCommand("Fast Speed"));
                 NamedCommands.registerCommand("ArmDown", m_AmpFlopper.ampFlopperDownCommand().withTimeout(1));
@@ -199,6 +202,7 @@ public class RobotContainer {
                 auto.addOption("Source-No Move", new PathPlannerAuto("Source-No Move"));
                 auto.addOption("Source-Cross field", new PathPlannerAuto("Source-Cross field"));
                 auto.addOption("Troll", new PathPlannerAuto("Troll"));
+                auto.addOption("Four-Note", new PathPlannerAuto("Four-Note"));
 
                 SmartDashboard.putData("Autonomous Command", auto);
         }

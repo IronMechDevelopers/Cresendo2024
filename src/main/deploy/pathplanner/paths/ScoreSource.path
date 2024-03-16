@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.187851014590918,
-        "y": 6.956582964091854
+        "x": 2.720799808767661,
+        "y": 4.1093096597266205
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.032042737349364,
-        "y": 6.860300102776132
+        "x": 1.883229146087922,
+        "y": 5.016673487050678
       },
       "isLocked": false,
-      "linkedName": "PickUpLeft"
+      "linkedName": "PickUpSource"
     },
     {
       "anchor": {
-        "x": 0.993122823408637,
-        "y": 5.61042590375622
+        "x": 1.101125177893738,
+        "y": 5.619373312888783
       },
       "prevControl": {
-        "x": 1.2959608822097541,
-        "y": 5.633312937030288
+        "x": 1.977294000884298,
+        "y": 4.9332978202993445
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ShootCenter"
     }
   ],
   "rotationTargets": [],
@@ -33,10 +33,10 @@
     {
       "name": "New Constraints Zone",
       "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 1.0,
+      "maxWaypointRelativePos": 0,
       "constraints": {
-        "maxVelocity": 4.0,
-        "maxAcceleration": 4.0,
+        "maxVelocity": 4.5,
+        "maxAcceleration": 4.5,
         "maxAngularVelocity": 360.0,
         "maxAngularAcceleration": 360.0
       }
