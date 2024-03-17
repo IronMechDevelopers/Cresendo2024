@@ -10,6 +10,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.BlinkinConstants;
 import frc.robot.Constants.GlobalConstants;
 import frc.robot.subsystems.StagingSubsystem.StagingState;
+
+import java.util.Optional;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Blinkin extends SubsystemBase {
@@ -29,9 +34,16 @@ public class Blinkin extends SubsystemBase {
   private StagingSubsystem stagingSubsystem;
 
   public static boolean isDisabled = false;
+  public static boolean isBlue = true;
 
   /** Creates a new Blinkin. */
   public Blinkin(StagingSubsystem stagingSubsystem) {
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+    if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
+      isBlue = false;
+    } else {
+      isBlue = true;
+    }
     blinkinController = new Spark(BlinkinConstants.kPwmPort);
 
     this.stagingSubsystem = stagingSubsystem;
@@ -93,6 +105,10 @@ public class Blinkin extends SubsystemBase {
   // Solid aqua color
   public void aqua() {
     set(0.81);
+  }
+
+  public void blue() {
+    set(0.87);
   }
 
   // Solid orange color
@@ -170,32 +186,17 @@ public class Blinkin extends SubsystemBase {
   @Override
   public void periodic() {
     if (GlobalConstants.kUseLEDLights) {
+      if (stagingSubsystem.isNoteAtLowerSensor() || stagingSubsystem.isNoteAtUpperSensor()) {
+        green();
+      } else {
+        if (isBlue) {
+          blue();
+        } else {
+          red();
+        }
+      }
       SmartDashboard.putNumber("current LED color set", currentColor);
       SmartDashboard.putNumber("current LED color blinkin", blinkinController.get());
-      SmartDashboard.putBoolean("isDisabled", isDisabled);
-      // blinkin.set(.15);
-      returnToRobotState();
-      // if (useReturnToRobotStateTimer) {
-      // currentTime = Timer.getFPGATimestamp();
-      // if (currentTime - initialTime > returnToRobotStateTimeLimit) {
-      // returnToRobotState();
-      // }
-      // }
-
-      // if (useFlashColor) {
-      // currentTime = Timer.getFPGATimestamp();
-      // if (currentTime - lastFlashTime > flashRate) {
-      // if (flashOn) {
-      // blinkin.neutral();
-      // lastFlashTime = Timer.getFPGATimestamp();
-      // flashOn = false;
-      // } else {
-      // blinkin.set(flashColor);
-      // lastFlashTime = Timer.getFPGATimestamp();
-      // flashOn = true;
-      // }
-      // }
-      // }
     }
   }
 }
