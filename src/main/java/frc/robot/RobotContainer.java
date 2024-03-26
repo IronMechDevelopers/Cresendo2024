@@ -76,6 +76,8 @@ public class RobotContainer {
         private final JoystickButton bButton = new JoystickButton(copilotXbox, Button.kB.value);
         private final JoystickButton aButton = new JoystickButton(copilotXbox, Button.kA.value);
         private final JoystickButton yButton = new JoystickButton(copilotXbox, Button.kY.value);
+
+        private final JoystickButton backButton = new JoystickButton(copilotXbox, Button.kBack.value);
         private final JoystickButton startButton = new JoystickButton(copilotXbox, Button.kStart.value);
         private final JoystickButton rightBumperButton = new JoystickButton(copilotXbox, Button.kRightBumper.value);
         private final JoystickButton leftBumperButton = new JoystickButton(copilotXbox, Button.kLeftBumper.value);
@@ -154,6 +156,7 @@ public class RobotContainer {
                 left1Button.whileTrue(m_ShooterSubsystem.setMotorToInvesePercentCommand());
                 left2Button.whileTrue(m_robotDrive.setXCommand());
                 left3Button.whileTrue(m_StagingSubsystem.askForNote());
+                
 
                 right1Button.whileTrue(new TurnOffFieldOrientCommand(m_robotDrive));
                 right2Button.onTrue(m_robotDrive.switchMaxSpeedCommand());
@@ -170,6 +173,7 @@ public class RobotContainer {
                 leftTigger.whileTrue(m_AmpFlopper.ampFlopperUpCommand());
                 rightTigger.whileTrue(m_AmpFlopper.ampFlopperDownCommand());
                 startButton.whileTrue(m_ShooterSubsystem.setMotorToPercentCommand(-.5));
+                backButton.whileTrue(m_ShooterSubsystem.setMotorToOneHundredPercentCommand());
 
                 noteInsideTrigger.onTrue(new VibrateController(copilotXbox).withTimeout(2));
 
@@ -191,7 +195,6 @@ public class RobotContainer {
                 auto.addOption("Do Nothing", new WaitCommand(15));
                 auto.addOption("Taxi Forward", new PathPlannerAuto("Taxi Forward"));
                 auto.addOption("Taxi Backward", new PathPlannerAuto("Taxi Backward"));
-                auto.addOption("Center-No Move", new PathPlannerAuto("Center-No Move"));
                 auto.addOption("Center-Center", new PathPlannerAuto("Center-Center"));
                 auto.addOption("Center-Center-Amp", new PathPlannerAuto("Center-Center-Amp"));
                 auto.addOption("Center-Center-Mid", new PathPlannerAuto("Center-Center-Mid"));
@@ -203,6 +206,9 @@ public class RobotContainer {
                 auto.addOption("Source-Cross field", new PathPlannerAuto("Source-Cross field"));
                 auto.addOption("Troll", new PathPlannerAuto("Troll"));
                 auto.addOption("Four-Note", new PathPlannerAuto("Four-Note"));
+                auto.addOption("Source-Center-1", new PathPlannerAuto("Source-Center-1"));
+                auto.addOption("Source-Center-2", new PathPlannerAuto("Source-Center-2"));
+                
 
                 SmartDashboard.putData("Autonomous Command", auto);
         }

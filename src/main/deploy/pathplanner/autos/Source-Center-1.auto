@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.2,
-      "y": 5.604688690627381
+      "x": 0.75,
+      "y": 4.5
     },
-    "rotation": 180.0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Copy of SetUpCenter"
+                  "pathName": "Source-Center-1"
                 }
               }
             ]
@@ -43,7 +43,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "ScoreCenter"
+                  "pathName": "Score-Center-1"
                 }
               },
               {
@@ -73,10 +73,29 @@
           "data": {
             "name": "shootHigh"
           }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Source-Center-2"
+                }
+              }
+            ]
+          }
         }
       ]
     }
   },
-  "folder": "Center",
+  "folder": "Source",
   "choreoAuto": false
 }
