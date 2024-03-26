@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.194227838455677,
-      "y": 5.604688690627381
+      "x": 0.7124337417866758,
+      "y": 4.534442645274179
     },
-    "rotation": 180.0
+    "rotation": 122.99515734504021
   },
   "command": {
     "type": "sequential",
@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Copy of SetUpCenter"
+                  "pathName": "New Path"
                 }
               }
             ]
@@ -41,21 +41,28 @@
           "data": {
             "commands": [
               {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "intake"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "WarmUpShooter"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
                 "type": "path",
                 "data": {
-                  "pathName": "ScoreCenter"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "WarmUpShooter"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intake"
+                  "pathName": "Score Source"
                 }
               }
             ]
@@ -66,16 +73,10 @@
           "data": {
             "name": "shootHigh"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "SetupMidFromCenter"
-          }
         }
       ]
     }
   },
-  "folder": "Center",
+  "folder": "Source",
   "choreoAuto": false
 }

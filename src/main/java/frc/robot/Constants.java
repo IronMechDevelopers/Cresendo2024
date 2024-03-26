@@ -178,7 +178,7 @@ public final class Constants {
   }
 
   public static final class SpeedConstants {
-    public static final double IntakeSpeed = 0.75;
+    public static final double IntakeSpeed = 1;
     public static final double OuttakeSpeed = -0.5;
     public static final double ConveyorDown = -0.75;
   }

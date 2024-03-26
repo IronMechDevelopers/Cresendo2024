@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.9643802613279245,
-        "y": 5.604408177259983
+        "x": 1.19,
+        "y": 5.6
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3484892349803075,
-        "y": 4.848936904209899
+        "x": 1.5741089736523828,
+        "y": 4.844528726949916
       },
       "isLocked": false,
       "linkedName": "ShootCenter"
@@ -32,12 +32,12 @@
     },
     {
       "anchor": {
-        "x": 2.848839231685816,
-        "y": 3.9836206441714364
+        "x": 2.9187161215927824,
+        "y": 4.147089017217251
       },
       "prevControl": {
-        "x": 2.656835696049672,
-        "y": 3.9370463248323215
+        "x": 2.7267125859566383,
+        "y": 4.100514697878136
       },
       "nextControl": null,
       "isLocked": false,
@@ -52,7 +52,7 @@
       "maxWaypointRelativePos": 2.0,
       "constraints": {
         "maxVelocity": 1.0,
-        "maxAcceleration": 1.0,
+        "maxAcceleration": 3.0,
         "maxAngularVelocity": 360.0,
         "maxAngularAcceleration": 360.0
       }

@@ -99,13 +99,13 @@ public class RobotContainer {
 
                 blinkn.aqua();
 
-                CameraServer.startAutomaticCapture();
+                // CameraServer.startAutomaticCapture();
 
                 // Creates the CvSink and connects it to the UsbCamera
-                CvSink cvSink = CameraServer.getVideo();
+                // CvSink cvSink = CameraServer.getVideo();
 
                 // Creates the CvSource and MjpegServer [2] and connects them
-                CvSource outputStream = CameraServer.putVideo("Shooting", 640, 480);
+                // CvSource outputStream = CameraServer.putVideo("Shooting", 640, 480);
 
                 DataLogManager.start();
                 DriverStation.startDataLog(DataLogManager.getLog());
@@ -191,23 +191,22 @@ public class RobotContainer {
         public void createAuto() {
                 auto = new SendableChooser<>();
 
-                auto.setDefaultOption("Center-No Move", new PathPlannerAuto("Center-No Move"));
-                auto.addOption("Do Nothing", new WaitCommand(15));
-                auto.addOption("Taxi Forward", new PathPlannerAuto("Taxi Forward"));
-                auto.addOption("Taxi Backward", new PathPlannerAuto("Taxi Backward"));
-                auto.addOption("Center-Center", new PathPlannerAuto("Center-Center"));
-                auto.addOption("Center-Center-Amp", new PathPlannerAuto("Center-Center-Amp"));
-                auto.addOption("Center-Center-Mid", new PathPlannerAuto("Center-Center-Mid"));
-                auto.addOption("Amp-No Move", new PathPlannerAuto("Amp-No Move"));
-                auto.addOption("Amp-Wait-Taxi", new PathPlannerAuto("Amp-Wait-Taxi"));
-                auto.addOption("Amp-Amp", new PathPlannerAuto("Amp-Amp"));
-                auto.addOption("Amp-Amp-Cross field", new PathPlannerAuto("Amp-Amp-Cross field"));
-                auto.addOption("Source-No Move", new PathPlannerAuto("Source-No Move"));
-                auto.addOption("Source-Cross field", new PathPlannerAuto("Source-Cross field"));
-                auto.addOption("Troll", new PathPlannerAuto("Troll"));
-                auto.addOption("Four-Note", new PathPlannerAuto("Four-Note"));
-                auto.addOption("Source-Center-1", new PathPlannerAuto("Source-Center-1"));
-                auto.addOption("Source-Center-2", new PathPlannerAuto("Source-Center-2"));
+                auto.setDefaultOption("Center-No Move - (1)", new PathPlannerAuto("Center-No Move"));
+                auto.addOption("Do Nothing - (0)", new WaitCommand(15));
+                auto.addOption("Taxi Forward - (0)", new PathPlannerAuto("Taxi Forward"));
+                auto.addOption("Taxi Backward - (0)", new PathPlannerAuto("Taxi Backward"));
+                auto.addOption("Center-Center - (2)", new PathPlannerAuto("Center-Center"));
+                auto.addOption("Center-Center-Amp - (3)", new PathPlannerAuto("Center-Center-Amp"));
+                auto.addOption("Four-Note - (4)", new PathPlannerAuto("Four-Note"));
+                auto.addOption("Amp-No Move - (1)", new PathPlannerAuto("Amp-No Move"));
+                auto.addOption("Amp-Wait-Taxi - (1)", new PathPlannerAuto("Amp-Wait-Taxi"));
+                auto.addOption("Amp-Amp - (2)", new PathPlannerAuto("Amp-Amp"));
+                auto.addOption("Source-No Move - (1)", new PathPlannerAuto("Source-No Move"));
+                auto.addOption("Source-Wait-Taxi - (1)", new PathPlannerAuto("Source-Cross field"));
+                auto.addOption("Source-Source - (2)", new PathPlannerAuto("Source-Source"));
+                auto.addOption("Source-Center-1 - (2)", new PathPlannerAuto("Source-Center-1"));
+                auto.addOption("Source-Center-2 - (2)", new PathPlannerAuto("Source-Center-2"));
+                auto.addOption("Troll - (0)", new PathPlannerAuto("Troll"));
                 
 
                 SmartDashboard.putData("Autonomous Command", auto);

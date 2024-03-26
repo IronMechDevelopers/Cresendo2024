@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.187851014590918,
-        "y": 6.956582964091854
+        "x": 3.440833075753161,
+        "y": 7.5499945799217585
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.032042737349364,
-        "y": 6.860300102776132
+        "x": 3.2850247985116074,
+        "y": 7.453711718606036
       },
       "isLocked": false,
       "linkedName": "PickUpLeft"
@@ -36,7 +36,7 @@
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 4.5,
-        "maxAcceleration": 4.5,
+        "maxAcceleration": 3.5,
         "maxAngularVelocity": 360.0,
         "maxAngularAcceleration": 360.0
       }
@@ -52,12 +52,12 @@
   "goalEndState": {
     "velocity": 0,
     "rotation": 180.0,
-    "rotateFast": false
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "Center",
   "previewStartingState": {
-    "rotation": 180.0,
+    "rotation": -120.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

@@ -3,41 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.75,
-        "y": 4.5
+        "x": 2.9187161215927824,
+        "y": 4.147089017217251
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3193290910683124,
-        "y": 3.4438018723501056
+        "x": 1.9187161215927824,
+        "y": 4.147089017217251
       },
       "isLocked": false,
-      "linkedName": "ShootSource"
+      "linkedName": "PickUpSource"
     },
     {
       "anchor": {
-        "x": 2.023579305277483,
-        "y": 1.235697102215284
+        "x": 0.9331831002816416,
+        "y": 4.624983599691465
       },
       "prevControl": {
-        "x": 1.4135793052774832,
-        "y": 1.235697102215284
-      },
-      "nextControl": {
-        "x": 2.7740851908511237,
-        "y": 1.235697102215284
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 5.433650713349221,
-        "y": 1.2824532534788111
-      },
-      "prevControl": {
-        "x": 6.236732710174142,
-        "y": 1.282453253478811
+        "x": 1.4331831002816418,
+        "y": 3.758958195907026
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": 120.0,
     "rotateFast": true
   },
   "reversed": false,
   "folder": "Source",
   "previewStartingState": {
-    "rotation": 121.00723088769067,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true
