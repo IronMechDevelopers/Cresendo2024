@@ -258,10 +258,11 @@ public class DriveSubsystem extends SubsystemBase {
    * @param rateLimit        Whether to enable rate limiting for smoother control.
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean rateLimit) {
-    // if (DriverStation.getAlliance().get() == Alliance.Red) {
-    //   {
-    //     xSpeed=-1*xSpeed;
-    //   }
+    if (DriverStation.getAlliance().get() == Alliance.Red) 
+      {
+        xSpeed=-1*xSpeed;
+        ySpeed=-1*ySpeed;
+      }
     
     double xSpeedCommanded;
     double ySpeedCommanded;
@@ -327,7 +328,7 @@ public class DriveSubsystem extends SubsystemBase {
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldOrientation
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
-                Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)))
+                getCurrentPose().getRotation())
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, maxSpeed);
@@ -371,9 +372,13 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
+    
     m_gyro.reset();
+    poseEstimator.resetPosition(
+        getGyroscopeRotation(),
+        getModulePositions(),
+        new Pose2d(getCurrentPose().getTranslation(), new Rotation2d()));
   }
-
   /**
    * Returns the heading of the robot.
    *

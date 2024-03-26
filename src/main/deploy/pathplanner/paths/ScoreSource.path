@@ -3,40 +3,40 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.194227838455677,
-        "y": 5.604688690627381
+        "x": 2.848839231685816,
+        "y": 3.9836206441714364
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7893617443484888,
-        "y": 5.624330073660147
+        "x": 2.011268569006077,
+        "y": 4.890984471495494
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "PickUpSource"
     },
     {
       "anchor": {
-        "x": 4.014021524519764,
-        "y": 5.589878534996042
+        "x": 0.9643802613279245,
+        "y": 5.604408177259983
       },
       "prevControl": {
-        "x": 4.178447959622634,
-        "y": 5.577372184983342
+        "x": 1.8405490843184844,
+        "y": 4.918332684670545
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "PickUpCenter"
+      "linkedName": "ShootCenter"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.45,
-      "maxWaypointRelativePos": 1.0,
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0,
       "constraints": {
-        "maxVelocity": 1.5,
-        "maxAcceleration": 3.0,
+        "maxVelocity": 4.5,
+        "maxAcceleration": 4.5,
         "maxAngularVelocity": 360.0,
         "maxAngularAcceleration": 360.0
       }
@@ -50,7 +50,7 @@
     "maxAngularAcceleration": 360.0
   },
   "goalEndState": {
-    "velocity": 1.0,
+    "velocity": 0,
     "rotation": 180.0,
     "rotateFast": false
   },

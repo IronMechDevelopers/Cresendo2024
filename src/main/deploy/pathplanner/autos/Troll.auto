@@ -2,19 +2,45 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.351679578359157,
-      "y": 1.4421091310616962
+      "x": 1.4689190750561956,
+      "y": 1.4875250897118342
     },
-    "rotation": 0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Troll"
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "shootLow"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "intake"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Troll"
+                }
+              }
+            ]
           }
         }
       ]
