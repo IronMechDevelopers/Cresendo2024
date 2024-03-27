@@ -8,36 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6841089736523829,
-        "y": 4.794528726949916
+        "x": 1.8062285259068065,
+        "y": 4.026576126068919
       },
       "isLocked": false,
       "linkedName": "ShootCenter"
     },
     {
       "anchor": {
-        "x": 2.1282164837613986,
-        "y": 3.9839373666186066
+        "x": 2.75,
+        "y": 4.106936004272725
       },
       "prevControl": {
-        "x": 1.7461199933442746,
-        "y": 4.000395692360213
-      },
-      "nextControl": {
-        "x": 2.361449744714136,
-        "y": 3.9738911372529655
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.9187161215927824,
-        "y": 4.147089017217251
-      },
-      "prevControl": {
-        "x": 2.7267125859566383,
-        "y": 4.100514697878136
+        "x": 2.557996464363856,
+        "y": 4.060361684933611
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,10 +32,10 @@
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.7,
-      "maxWaypointRelativePos": 2.0,
+      "minWaypointRelativePos": 0.5,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.0,
+        "maxVelocity": 0.5,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 360.0,
         "maxAngularAcceleration": 360.0

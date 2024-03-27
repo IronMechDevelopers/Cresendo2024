@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7750594185318272,
-      "y": 6.618276320958279
+      "x": 0.75,
+      "y": 6.62
     },
     "rotation": -120.0
   },
@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "AmpFromAmp"
+                  "pathName": "SetUpAmpFromAmp"
                 }
               }
             ]
@@ -43,7 +43,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "AmpScoreAmp"
+                  "pathName": "ScoreAmpFromAmp"
                 }
               },
               {

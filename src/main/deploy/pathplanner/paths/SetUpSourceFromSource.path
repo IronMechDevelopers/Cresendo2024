@@ -3,36 +3,36 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3,
-        "y": 5.55
+        "x": 0.75,
+        "y": 4.45
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8954579329143868,
-        "y": 5.55
+        "x": 1.8717650743614884,
+        "y": 4.126417652258578
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ShootSource"
     },
     {
       "anchor": {
-        "x": 3.2399487574664376,
-        "y": 5.55
+        "x": 2.75,
+        "y": 4.11
       },
       "prevControl": {
-        "x": 3.404375098367611,
-        "y": 5.537492411538223
+        "x": 2.1840179570126166,
+        "y": 4.113654922472467
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "PickUpCenter"
+      "linkedName": "PickUpSource"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.45,
+      "minWaypointRelativePos": 0.8,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 1.0,
@@ -50,15 +50,15 @@
     "maxAngularAcceleration": 360.0
   },
   "goalEndState": {
-    "velocity": 1.0,
+    "velocity": 0,
     "rotation": 180.0,
-    "rotateFast": false
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": "Center",
+  "folder": "Source",
   "previewStartingState": {
-    "rotation": 180.0,
-    "velocity": 0.0
+    "rotation": 120.0,
+    "velocity": 0
   },
   "useDefaultConstraints": true
 }

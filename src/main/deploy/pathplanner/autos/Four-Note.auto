@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SetUpCenter"
+                  "pathName": "SetUpCenterFromCenter"
                 }
               }
             ]
@@ -87,7 +87,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SetUpAmpFromCenter(Fast)"
+                  "pathName": "SetUpAmpFromCenter"
                 }
               }
             ]

@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 0.75,
-        "y": 4.5
+        "y": 4.45326569693211
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7500000000000002,
-        "y": 4.5
+        "x": 1.7500000000000004,
+        "y": 4.45326569693211
       },
       "isLocked": false,
       "linkedName": "ShootSource"

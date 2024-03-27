@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.92,
-        "y": 4.147089017217251
+        "x": 2.75,
+        "y": 4.106936004272725
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.082429337320261,
-        "y": 5.054452844541308
+        "x": 1.912429337320261,
+        "y": 5.014299831596783
       },
       "isLocked": false,
       "linkedName": "PickUpSource"
@@ -20,8 +20,8 @@
         "y": 5.55
       },
       "prevControl": {
-        "x": 2.17616882299056,
-        "y": 4.8639245074105615
+        "x": 1.2918459415226677,
+        "y": 5.55
       },
       "nextControl": null,
       "isLocked": false,
@@ -36,7 +36,7 @@
       "maxWaypointRelativePos": 0,
       "constraints": {
         "maxVelocity": 4.5,
-        "maxAcceleration": 4.5,
+        "maxAcceleration": 3.5,
         "maxAngularVelocity": 360.0,
         "maxAngularAcceleration": 360.0
       }

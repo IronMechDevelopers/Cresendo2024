@@ -197,6 +197,7 @@ public class RobotContainer {
                 auto.addOption("Taxi Backward - (0)", new PathPlannerAuto("Taxi Backward"));
                 auto.addOption("Center-Center - (2)", new PathPlannerAuto("Center-Center"));
                 auto.addOption("Center-Center-Amp - (3)", new PathPlannerAuto("Center-Center-Amp"));
+                auto.addOption("Center-Center-Source - (3)", new PathPlannerAuto("Center-Center-Source"));
                 auto.addOption("Four-Note - (4)", new PathPlannerAuto("Four-Note"));
                 auto.addOption("Amp-No Move - (1)", new PathPlannerAuto("Amp-No Move"));
                 auto.addOption("Amp-Wait-Taxi - (1)", new PathPlannerAuto("Amp-Wait-Taxi"));
