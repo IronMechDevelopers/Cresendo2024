@@ -3,40 +3,56 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.014021524519764,
-        "y": 5.589878534996042
+        "x": 1.3,
+        "y": 5.55
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0140215245197632,
-        "y": 5.589878534996042
+        "x": 1.6841089736523829,
+        "y": 4.794528726949916
       },
       "isLocked": false,
-      "linkedName": "PickUpCenter"
+      "linkedName": "ShootCenter"
     },
     {
       "anchor": {
-        "x": 1.19,
-        "y": 5.6
+        "x": 2.1282164837613986,
+        "y": 3.9839373666186066
       },
       "prevControl": {
-        "x": 2.1900000000000004,
-        "y": 5.6
+        "x": 1.7461199933442746,
+        "y": 4.000395692360213
+      },
+      "nextControl": {
+        "x": 2.361449744714136,
+        "y": 3.9738911372529655
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.9187161215927824,
+        "y": 4.147089017217251
+      },
+      "prevControl": {
+        "x": 2.7267125859566383,
+        "y": 4.100514697878136
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "ShootCenter"
+      "linkedName": "PickUpSource"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 1.0,
+      "minWaypointRelativePos": 0.7,
+      "maxWaypointRelativePos": 2.0,
       "constraints": {
-        "maxVelocity": 4.5,
-        "maxAcceleration": 3.5,
+        "maxVelocity": 1.0,
+        "maxAcceleration": 3.0,
         "maxAngularVelocity": 360.0,
         "maxAngularAcceleration": 360.0
       }
