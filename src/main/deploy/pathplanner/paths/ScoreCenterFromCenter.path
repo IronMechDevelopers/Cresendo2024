@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.75,
-        "y": 5.526177732808897
+        "x": 3.0,
+        "y": 5.53
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.749999999999999,
-        "y": 5.526177732808897
+        "x": 1.9999999999999991,
+        "y": 5.53
       },
       "isLocked": false,
       "linkedName": "PickUpCenter"
@@ -35,7 +35,7 @@
       "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 4.5,
+        "maxVelocity": 4.85,
         "maxAcceleration": 3.5,
         "maxAngularVelocity": 360.0,
         "maxAngularAcceleration": 360.0

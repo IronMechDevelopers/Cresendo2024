@@ -8,11 +8,11 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.5941917227584463,
-        "y": 6.903717138684278
+        "x": 3.57,
+        "y": 7.0
       },
       "isLocked": false,
-      "linkedName": "PickUpLeft"
+      "linkedName": "pickUpAmp"
     },
     {
       "anchor": {
@@ -35,8 +35,8 @@
       "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 4.5,
-        "maxAcceleration": 3.5,
+        "maxVelocity": 3.85,
+        "maxAcceleration": 4.0,
         "maxAngularVelocity": 360.0,
         "maxAngularAcceleration": 360.0
       }
@@ -57,8 +57,8 @@
   "reversed": false,
   "folder": "Center",
   "previewStartingState": {
-    "rotation": -120.0,
-    "velocity": 0
+    "rotation": 180.0,
+    "velocity": 0.0
   },
   "useDefaultConstraints": true
 }

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.75,
-        "y": 4.106936004272725
+        "x": 2.752634788357812,
+        "y": 4.002703171613452
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.912429337320261,
-        "y": 5.014299831596783
+        "x": 1.915064125678073,
+        "y": 4.910066998937509
       },
       "isLocked": false,
       "linkedName": "PickUpSource"
@@ -33,10 +33,10 @@
     {
       "name": "New Constraints Zone",
       "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 4.5,
-        "maxAcceleration": 3.5,
+        "maxAcceleration": 3.0,
         "maxAngularVelocity": 360.0,
         "maxAngularAcceleration": 360.0
       }

@@ -113,13 +113,13 @@ public class RobotContainer {
                 NamedCommands.registerCommand("intake", m_StagingSubsystem.drivingIntakeCommand().withTimeout(5));
                 NamedCommands.registerCommand("shootHigh", Commands.race(
                                 m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"),
-                                m_StagingSubsystem.runIntakeCommand().withTimeout(1)));
+                                m_StagingSubsystem.runIntakeCommand().withTimeout(.4)));
                 NamedCommands.registerCommand("shootLow", Commands.race(
                                 m_ShooterSubsystem.setMotorToPercentCommand("Slow Speed"),
                                 m_StagingSubsystem.runIntakeCommand().withTimeout(1)));
                 NamedCommands.registerCommand("WarmUpShooter",
                                 m_ShooterSubsystem.warmUpMotorToPercentCommand("Fast Speed"));
-                NamedCommands.registerCommand("ArmDown", m_AmpFlopper.ampFlopperDownCommand().withTimeout(1));
+                NamedCommands.registerCommand("ArmDown", m_AmpFlopper.ampFlopperDownCommand().withTimeout(.15));
 
                 // Configure the button bindings
                 configureButtonBindings();
@@ -205,8 +205,8 @@ public class RobotContainer {
                 auto.addOption("Source-No Move - (1)", new PathPlannerAuto("Source-No Move"));
                 auto.addOption("Source-Wait-Taxi - (1)", new PathPlannerAuto("Source-Cross field"));
                 auto.addOption("Source-Source - (2)", new PathPlannerAuto("Source-Source"));
-                auto.addOption("Source-Center-1 - (2)", new PathPlannerAuto("Source-Center-1"));
-                auto.addOption("Source-Center-2 - (2)", new PathPlannerAuto("Source-Center-2"));
+                auto.addOption("Source-Center1 - (2)", new PathPlannerAuto("Source-Center1"));
+                auto.addOption("Source-Center2 - (2)", new PathPlannerAuto("Source-Center2"));
                 auto.addOption("Troll - (0)", new PathPlannerAuto("Troll"));
                 
 

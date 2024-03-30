@@ -14,16 +14,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorIds;
 
 public class AmpFlopper extends SubsystemBase {
-  private CANSparkMax ampFlopperMotor;
+  private CANSparkMax soundMotor;
   private double currentPercentage;
 
   /** Creates a new AmpFlopper. */
   public AmpFlopper() {
     super();
-    this.ampFlopperMotor = new CANSparkMax(MotorIds.kAmpFlopperMotorCanId, MotorType.kBrushed);
-    ampFlopperMotor.restoreFactoryDefaults();
+    this.soundMotor = new CANSparkMax(MotorIds.kAmpFlopperMotorCanId, MotorType.kBrushed);
+    soundMotor.restoreFactoryDefaults();
     currentPercentage = 0;
-    ampFlopperMotor.setInverted(true);
+    soundMotor.setInverted(true);
   }
 
   @Override
@@ -35,7 +35,7 @@ public class AmpFlopper extends SubsystemBase {
 
   public void setMotor(double speed) {
     currentPercentage = speed;
-    this.ampFlopperMotor.set(speed);
+    this.soundMotor.set(speed);
   }
 
   public void stopMotor() {
