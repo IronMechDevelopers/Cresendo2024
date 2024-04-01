@@ -89,6 +89,7 @@ public final class Constants {
 
     public static final int kClimberMotorCanId = 35;
     public static final int kAmpFlopperMotorCanId = 19;
+    public static final int kSoundAngleMotorCanId = 56;
   }
 
   public static final class ClimberConstants {
@@ -185,6 +186,11 @@ public final class Constants {
 
   public static class BlinkinConstants {
     public static final int kPwmPort = 9;
+  }
+
+    public static class VolumeConstants {
+      public static final int kVolumeDownAngle = 0;
+    public static final int kVolumeAmpAngle = 80;
   }
 
   public static class GlobalConstants {
