@@ -18,7 +18,7 @@
           }
         },
         {
-          "type": "race",
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -75,7 +75,7 @@
           }
         },
         {
-          "type": "race",
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -87,7 +87,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SetUpAmpFromCenter"
+                  "pathName": "SetUpAmpFromCenter(Fast)"
                 }
               }
             ]
@@ -100,7 +100,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "ScoreCenterFromAmp"
+                  "pathName": "SetUpAmpFromCenter(Fast)"
                 }
               },
               {

@@ -3,40 +3,51 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.53,
-        "y": 7.0
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 3.3499999999999996,
-        "y": 7.0
-      },
-      "isLocked": false,
-      "linkedName": "pickUpAmp"
-    },
-    {
-      "anchor": {
         "x": 1.3,
         "y": 5.55
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.8954579329143868,
+        "y": 5.55
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.0,
+        "y": 5.53
+      },
       "prevControl": {
-        "x": 1.602838826202664,
-        "y": 5.57287687685655
+        "x": 3.1644263409011733,
+        "y": 5.517492411538224
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "PickUpCenter"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0,
+      "minWaypointRelativePos": 0.45,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 3.85,
-        "maxAcceleration": 4.0,
+        "maxVelocity": 32.5,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 360.0,
+        "maxAngularAcceleration": 360.0
+      }
+    },
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.45,
+      "constraints": {
+        "maxVelocity": 4.85,
+        "maxAcceleration": 3.5,
         "maxAngularVelocity": 360.0,
         "maxAngularAcceleration": 360.0
       }
@@ -50,9 +61,9 @@
     "maxAngularAcceleration": 360.0
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 1.0,
     "rotation": 180.0,
-    "rotateFast": true
+    "rotateFast": false
   },
   "reversed": false,
   "folder": "Center",

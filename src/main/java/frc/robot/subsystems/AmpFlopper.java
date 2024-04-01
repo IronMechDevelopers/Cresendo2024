@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,29 +16,36 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorIds;
 
 public class AmpFlopper extends SubsystemBase {
-  private CANSparkMax ampFlopperMotor;
+  private CANSparkMax soundFlapMotor;
   private double currentPercentage;
+  
 
   /** Creates a new AmpFlopper. */
   public AmpFlopper() {
     super();
-    this.ampFlopperMotor = new CANSparkMax(MotorIds.kAmpFlopperMotorCanId, MotorType.kBrushed);
-    ampFlopperMotor.restoreFactoryDefaults();
+    this.soundFlapMotor = new CANSparkMax(MotorIds.kAmpFlopperMotorCanId, MotorType.kBrushed);
+
+    soundFlapMotor.restoreFactoryDefaults();
     currentPercentage = 0;
-    ampFlopperMotor.setInverted(true);
+    soundFlapMotor.setInverted(true);
   }
+
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     super.periodic();
     SmartDashboard.putNumber("ArmFlopper Percentage", currentPercentage);
+    
   }
 
   public void setMotor(double speed) {
     currentPercentage = speed;
-    this.ampFlopperMotor.set(speed);
+    this.soundFlapMotor.set(speed);
   }
+
+
+
 
   public void stopMotor() {
     setMotor(0);
@@ -53,6 +62,8 @@ public class AmpFlopper extends SubsystemBase {
   public Command ampFlopperUpCommand(double speed) {
     return Commands.startEnd(() -> setMotor(speed), () -> stopMotor(), this);
   }
+
+
 
   public Command ampFlopperDownCommand() {
     return Commands.startEnd(() -> setMotor(-.5), () -> stopMotor(), this);

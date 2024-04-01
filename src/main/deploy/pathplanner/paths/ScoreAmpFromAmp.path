@@ -3,33 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.5,
-        "y": 2.0
+        "x": 3.35,
+        "y": 7.01
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7682716832781118,
-        "y": 1.9346424627564305
+        "x": 2.349999999999999,
+        "y": 7.01
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.931577990606962,
-        "y": 1.6257012055997155
+        "x": 0.75,
+        "y": 6.616
       },
       "prevControl": {
-        "x": 6.931577990606962,
-        "y": 1.6257012055997153
+        "x": 0.8000000000000002,
+        "y": 6.702602540378443
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ShootAmp"
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.5,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 360.0,
+        "maxAngularAcceleration": 360.0
+      }
+    }
+  ],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.25,
@@ -39,11 +51,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
-    "rotateFast": false
+    "rotation": -119.99779117901949,
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": "Taxi",
+  "folder": "Amp",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0

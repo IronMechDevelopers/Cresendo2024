@@ -3,55 +3,55 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.9643802613279245,
-        "y": 5.604408177259983
+        "x": 1.3,
+        "y": 5.55
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.948065888074178,
-        "y": 5.626453436975503
+        "x": 1.2836856267462535,
+        "y": 5.5720452597155194
       },
       "isLocked": false,
       "linkedName": "ShootCenter"
     },
     {
       "anchor": {
-        "x": 1.7630355021739454,
-        "y": 7.1353257159639325
+        "x": 2.301305301140014,
+        "y": 7.023245559971513
       },
       "prevControl": {
-        "x": 1.4782388648886804,
-        "y": 7.109554644445968
+        "x": 1.929022864108679,
+        "y": 7.028398350148418
       },
       "nextControl": {
-        "x": 2.3204274188879275,
-        "y": 7.185763765675816
+        "x": 3.421198034308524,
+        "y": 7.007745037516911
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.187851014590918,
-        "y": 6.956582964091854
+        "x": 3.53,
+        "y": 7.0
       },
       "prevControl": {
-        "x": 5.282355309784915,
-        "y": 6.956582964091854
+        "x": 3.6245042951939968,
+        "y": 7.0
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "PickUpLeft"
+      "linkedName": "pickUpAmp"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 1.25,
+      "minWaypointRelativePos": 1.05,
       "maxWaypointRelativePos": 2.0,
       "constraints": {
-        "maxVelocity": 1.5,
+        "maxVelocity": 2.5,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 360.0,
         "maxAngularAcceleration": 360.0

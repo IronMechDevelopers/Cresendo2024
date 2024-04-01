@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Source-Center-1"
+                  "pathName": "Source-Center1"
                 }
               }
             ]
@@ -72,25 +72,6 @@
           "type": "named",
           "data": {
             "name": "shootHigh"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "intake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Source-Center-2"
-                }
-              }
-            ]
           }
         }
       ]

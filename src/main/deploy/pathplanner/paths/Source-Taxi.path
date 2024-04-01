@@ -3,25 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.53,
-        "y": 7.0
+        "x": 0.75,
+        "y": 4.45326569693211
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.3499999999999996,
-        "y": 7.0
+        "x": 0.45935579008300675,
+        "y": 3.082363017096029
       },
       "isLocked": false,
-      "linkedName": "pickUpAmp"
+      "linkedName": "ShootSource"
     },
     {
       "anchor": {
-        "x": 1.3,
-        "y": 5.55
+        "x": 2.4955749321731484,
+        "y": 1.185457004032881
       },
       "prevControl": {
-        "x": 1.602838826202664,
-        "y": 5.57287687685655
+        "x": 0.7836109246054275,
+        "y": 1.3684038075796738
+      },
+      "nextControl": {
+        "x": 3.241831843053794,
+        "y": 1.1057092313771422
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.433650713349221,
+        "y": 1.2824532534788111
+      },
+      "prevControl": {
+        "x": 4.377101551822151,
+        "y": 1.158611540280725
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,10 +49,10 @@
     {
       "name": "New Constraints Zone",
       "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 1.0,
+      "maxWaypointRelativePos": 2.0,
       "constraints": {
-        "maxVelocity": 3.85,
-        "maxAcceleration": 4.0,
+        "maxVelocity": 1.0,
+        "maxAcceleration": 1.0,
         "maxAngularVelocity": 360.0,
         "maxAngularAcceleration": 360.0
       }
@@ -55,10 +71,10 @@
     "rotateFast": true
   },
   "reversed": false,
-  "folder": "Center",
+  "folder": "Source",
   "previewStartingState": {
-    "rotation": 180.0,
-    "velocity": 0.0
+    "rotation": 121.00723088769067,
+    "velocity": 0
   },
   "useDefaultConstraints": true
 }

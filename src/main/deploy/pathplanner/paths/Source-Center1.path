@@ -4,69 +4,63 @@
     {
       "anchor": {
         "x": 0.75,
-        "y": 4.5
+        "y": 4.45326569693211
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5175756056167806,
-        "y": 3.4726285659696305
+        "x": 1.7500000000000004,
+        "y": 4.45326569693211
       },
       "isLocked": false,
       "linkedName": "ShootSource"
     },
     {
       "anchor": {
-        "x": 5.406333402280775,
-        "y": 1.809202273429058
+        "x": 4.622366164922281,
+        "y": 1.8605904904824524
       },
       "prevControl": {
-        "x": 5.249377664047835,
-        "y": 1.8144429678207226
+        "x": 3.8615988468190166,
+        "y": 2.073982239263497
       },
       "nextControl": {
-        "x": 5.711059986764698,
-        "y": 1.7990275648119964
+        "x": 4.932190833381493,
+        "y": 1.7736860898270022
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.97977092951735,
-        "y": 2.442647167769827
+        "x": 7.174871956974306,
+        "y": 1.673486704816548
       },
       "prevControl": {
-        "x": 6.644361857963796,
-        "y": 2.397395448132071
+        "x": 6.671777228080916,
+        "y": 1.7831923230068778
       },
       "nextControl": {
-        "x": 7.62616772979835,
-        "y": 2.529855801232169
+        "x": 7.899097422735286,
+        "y": 1.515560974596216
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.851402640764723,
-        "y": 2.4819603415265643
+        "x": 8.193807659827328,
+        "y": 0.9907518796348876
       },
       "prevControl": {
-        "x": 7.851402640764723,
-        "y": 2.4819603415265643
+        "x": 7.691683810144579,
+        "y": 1.7597935716704778
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Center-2"
+      "linkedName": "Center-1"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 1.1500000000000001,
-      "rotationDegrees": 180.0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
@@ -84,7 +78,7 @@
       "minWaypointRelativePos": 0.25,
       "maxWaypointRelativePos": 2.3,
       "constraints": {
-        "maxVelocity": 3.0,
+        "maxVelocity": 4.5,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 360.0,
         "maxAngularAcceleration": 360.0
@@ -100,8 +94,8 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
-    "rotateFast": false
+    "rotation": 120.0,
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "Source",

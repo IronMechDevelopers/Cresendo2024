@@ -14,9 +14,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.VolumeConstants;
 import frc.robot.commands.TestingSubsystemsCommand;
 import frc.robot.commands.TurnOffFieldOrientCommand;
 import frc.robot.commands.VibrateController;
+import frc.robot.commands.VolumeAngleCommand;
 import frc.robot.subsystems.AmpFlopper;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -24,6 +26,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.PowerDistributionModule;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StagingSubsystem;
+import frc.robot.subsystems.VolumeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -53,6 +56,7 @@ public class RobotContainer {
         private final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
         private final ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
         private final AmpFlopper m_AmpFlopper = new AmpFlopper();
+        private final VolumeSubsystem m_volume = new VolumeSubsystem();
         private final PowerDistributionModule powerDistributionModule = new PowerDistributionModule();
 
         private final Blinkin blinkn = new Blinkin(m_StagingSubsystem);
@@ -66,11 +70,19 @@ public class RobotContainer {
         private final JoystickButton left3Button = new JoystickButton(driverLeftStick, 3);
         private final JoystickButton left4Button = new JoystickButton(driverLeftStick, 4);
 
+        private final JoystickButton left7Button = new JoystickButton(driverLeftStick, 7);
+        private final JoystickButton left8Button = new JoystickButton(driverLeftStick, 8);
+        private final JoystickButton left9Button = new JoystickButton(driverLeftStick, 9);
+        private final JoystickButton left10Button = new JoystickButton(driverLeftStick, 10);
+
         private final JoystickButton right1Button = new JoystickButton(driverRightStick, 1);
         private final JoystickButton right2Button = new JoystickButton(driverRightStick, 2);
         private final JoystickButton right3Button = new JoystickButton(driverRightStick, 3);
         private final JoystickButton right4Button = new JoystickButton(driverRightStick, 4);
         private final JoystickButton right6Button = new JoystickButton(driverRightStick, 6);
+
+        private final JoystickButton right9Button = new JoystickButton(driverRightStick, 9);
+        private final JoystickButton right10Button = new JoystickButton(driverRightStick, 10);
 
         private final JoystickButton xButton = new JoystickButton(copilotXbox, Button.kX.value);
         private final JoystickButton bButton = new JoystickButton(copilotXbox, Button.kB.value);
@@ -99,13 +111,13 @@ public class RobotContainer {
 
                 blinkn.aqua();
 
-                CameraServer.startAutomaticCapture();
+                // CameraServer.startAutomaticCapture();
 
                 // Creates the CvSink and connects it to the UsbCamera
-                CvSink cvSink = CameraServer.getVideo();
+                // CvSink cvSink = CameraServer.getVideo();
 
                 // Creates the CvSource and MjpegServer [2] and connects them
-                CvSource outputStream = CameraServer.putVideo("Shooting", 640, 480);
+                // CvSource outputStream = CameraServer.putVideo("Shooting", 640, 480);
 
                 DataLogManager.start();
                 DriverStation.startDataLog(DataLogManager.getLog());
@@ -113,13 +125,13 @@ public class RobotContainer {
                 NamedCommands.registerCommand("intake", m_StagingSubsystem.drivingIntakeCommand().withTimeout(5));
                 NamedCommands.registerCommand("shootHigh", Commands.race(
                                 m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"),
-                                m_StagingSubsystem.runIntakeCommand().withTimeout(1)));
+                                m_StagingSubsystem.runIntakeCommand().withTimeout(.5)));
                 NamedCommands.registerCommand("shootLow", Commands.race(
                                 m_ShooterSubsystem.setMotorToPercentCommand("Slow Speed"),
                                 m_StagingSubsystem.runIntakeCommand().withTimeout(1)));
                 NamedCommands.registerCommand("WarmUpShooter",
                                 m_ShooterSubsystem.warmUpMotorToPercentCommand("Fast Speed"));
-                NamedCommands.registerCommand("ArmDown", m_AmpFlopper.ampFlopperDownCommand().withTimeout(1));
+                NamedCommands.registerCommand("ArmDown", m_AmpFlopper.ampFlopperDownCommand().withTimeout(.15));
 
                 // Configure the button bindings
                 configureButtonBindings();
@@ -140,6 +152,7 @@ public class RobotContainer {
                                                                                 OIConstants.kDriveDeadband),
                                                                 false),
                                                 m_robotDrive));
+                // m_volume.setDefaultCommand(new VolumeAngleCommand(m_volume, VolumeConstants.kVolumeDownAngle));
         }
 
         /**
@@ -156,6 +169,9 @@ public class RobotContainer {
                 left1Button.whileTrue(m_ShooterSubsystem.setMotorToInvesePercentCommand());
                 left2Button.whileTrue(m_robotDrive.setXCommand());
                 left3Button.whileTrue(m_StagingSubsystem.askForNote());
+                left7Button.onTrue(new VolumeAngleCommand(m_volume, VolumeConstants.kVolumeAmpAngle).withTimeout(.5));
+                left9Button.onTrue(new VolumeAngleCommand(m_volume, VolumeConstants.kVolumeDownAngle).withTimeout(.5));
+
                 
 
                 right1Button.whileTrue(new TurnOffFieldOrientCommand(m_robotDrive));
@@ -163,9 +179,14 @@ public class RobotContainer {
                 right3Button.onTrue(m_robotDrive.zeroGyroCommand());
                 right4Button.whileTrue(m_ClimberSubsystem.climberDownCommand());
                 right6Button.whileTrue(m_ClimberSubsystem.climberUpCommand());
+                right9Button.whileTrue(m_volume.putVolumeDown());
+                right10Button.whileTrue(m_volume.putVolumeUp());
 
                 rightBumperButton.whileTrue(m_ShooterSubsystem.setMotorToPercentCommand("Fast Speed"));
-                leftBumperButton.whileTrue(m_ShooterSubsystem.setMotorToPercentCommand("Slow Speed"));
+                leftBumperButton.whileTrue(Commands.parallel(m_ShooterSubsystem.setMotorToPercentCommand("Slow Speed"),
+                               new VolumeAngleCommand(m_volume, VolumeConstants.kVolumeAmpAngle).withTimeout(1)));
+                leftBumperButton.toggleOnFalse(new VolumeAngleCommand(m_volume, VolumeConstants.kVolumeDownAngle).withTimeout(.5));
+                // leftBumperButton.whileTrue(m_ShooterSubsystem.setMotorToPercentCommand("Slow Speed"));
                 xButton.whileTrue(m_StagingSubsystem.drivingIntakeCommand());
                 aButton.toggleOnTrue(m_StagingSubsystem.runIntakeCommand());
                 bButton.whileTrue(m_StagingSubsystem.runOuttakeCommand());
@@ -177,13 +198,8 @@ public class RobotContainer {
 
                 noteInsideTrigger.onTrue(new VibrateController(copilotXbox).withTimeout(2));
 
-                SmartDashboard.putData("Invert Field Orientation", m_robotDrive.invertFieldRelativeComand());
                 SmartDashboard.putData("DANIEL USE ONLY",
                                 new TestingSubsystemsCommand(m_robotDrive, m_StagingSubsystem, m_ShooterSubsystem));
-                SmartDashboard.putData("Start Match", getStartCommand());
-
-                // SmartDashboard.putData("Reset Autos:", Commands.runOnce(() -> createAuto()));
-
                 createAuto();
 
         }
@@ -191,31 +207,30 @@ public class RobotContainer {
         public void createAuto() {
                 auto = new SendableChooser<>();
 
-                auto.setDefaultOption("Center-No Move", new PathPlannerAuto("Center-No Move"));
-                auto.addOption("Do Nothing", new WaitCommand(15));
-                auto.addOption("Taxi Forward", new PathPlannerAuto("Taxi Forward"));
-                auto.addOption("Taxi Backward", new PathPlannerAuto("Taxi Backward"));
-                auto.addOption("Center-Center", new PathPlannerAuto("Center-Center"));
-                auto.addOption("Center-Center-Amp", new PathPlannerAuto("Center-Center-Amp"));
-                auto.addOption("Center-Center-Mid", new PathPlannerAuto("Center-Center-Mid"));
-                auto.addOption("Amp-No Move", new PathPlannerAuto("Amp-No Move"));
-                auto.addOption("Amp-Wait-Taxi", new PathPlannerAuto("Amp-Wait-Taxi"));
-                auto.addOption("Amp-Amp", new PathPlannerAuto("Amp-Amp"));
-                auto.addOption("Amp-Amp-Cross field", new PathPlannerAuto("Amp-Amp-Cross field"));
-                auto.addOption("Source-No Move", new PathPlannerAuto("Source-No Move"));
-                auto.addOption("Source-Cross field", new PathPlannerAuto("Source-Cross field"));
-                auto.addOption("Troll", new PathPlannerAuto("Troll"));
-                auto.addOption("Four-Note", new PathPlannerAuto("Four-Note"));
-                auto.addOption("Source-Center-1", new PathPlannerAuto("Source-Center-1"));
-                auto.addOption("Source-Center-2", new PathPlannerAuto("Source-Center-2"));
-                
+                auto.setDefaultOption("Center-No Move - (1)", new PathPlannerAuto("Center-No Move"));
+                auto.addOption("Do Nothing - (0)", new WaitCommand(15));
+                auto.addOption("Taxi Forward - (0)", new PathPlannerAuto("Taxi Forward"));
+                auto.addOption("Taxi Backward - (0)", new PathPlannerAuto("Taxi Backward"));
+                auto.addOption("Center-Center - (2)", new PathPlannerAuto("Center-Center"));
+                auto.addOption("Center-Center-Amp - (3)", new PathPlannerAuto("Center-Center-Amp"));
+                auto.addOption("Center-Center-Source - (3)", new PathPlannerAuto("Center-Center-Source"));
+                auto.addOption("Four-Note - (4)", new PathPlannerAuto("Four-Note"));
+                auto.addOption("Amp-No Move - (1)", new PathPlannerAuto("Amp-No Move"));
+                auto.addOption("Amp-Wait-Taxi - (1)", new PathPlannerAuto("Amp-Wait-Taxi"));
+                auto.addOption("Amp-Amp - (2)", new PathPlannerAuto("Amp-Amp"));
+                auto.addOption("Source-No Move - (1)", new PathPlannerAuto("Source-No Move"));
+                auto.addOption("Source-Wait-Taxi - (1)", new PathPlannerAuto("Source-Cross field"));
+                auto.addOption("Source-Source - (2)", new PathPlannerAuto("Source-Source"));
+                auto.addOption("Source-Center1 - (2)", new PathPlannerAuto("Source-Center1"));
+                auto.addOption("Source-Center2 - (2)", new PathPlannerAuto("Source-Center2"));
+                auto.addOption("Troll - (0)", new PathPlannerAuto("Troll"));
 
                 SmartDashboard.putData("Autonomous Command", auto);
         }
 
         private Command getStartCommand() {
                 return Commands.parallel(m_ShooterSubsystem.warmUpMotorToPercentCommand("Fast Speed"),
-                                m_AmpFlopper.ampFlopperDownCommand()).withTimeout(.25);
+                                m_AmpFlopper.ampFlopperDownCommand(), m_volume.putVolumeDown()).withTimeout(.25);
         }
 
         /**
@@ -230,7 +245,7 @@ public class RobotContainer {
                 // } else {
                 // m_robotDrive.setFlipped(false);
                 // }
-                Command command = Commands.sequence(getStartCommand(), new WaitCommand(.5), auto.getSelected());
+                Command command = Commands.sequence(getStartCommand(), auto.getSelected());
                 createAuto();
                 return command;
         }
