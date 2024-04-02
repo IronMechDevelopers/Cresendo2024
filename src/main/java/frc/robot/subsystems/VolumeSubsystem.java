@@ -48,7 +48,8 @@ public class VolumeSubsystem extends SubsystemBase {
   }
 
   public double getAngle() {
-    return encoder.getDistance();
+    double rawAngle = encoder.getDistance();
+    return (rawAngle + 180.0) % 360.0 - 180.0;
   }
 
   public void setMotor(double speed) {
@@ -67,8 +68,11 @@ public class VolumeSubsystem extends SubsystemBase {
   public Command putVolumeUp() {
     return Commands.startEnd(() -> setMotor(.75), () -> stopMotor(), this);
   }
-   public Command putVolumeDown() {
+  public Command putVolumeDown() {
     return Commands.startEnd(() -> setMotor(-.5), () -> stopMotor(), this);
+  }
+  public Command putVolumeDownAuto() {
+    return Commands.startEnd(() -> setMotor(-1.0), () -> stopMotor(), this);
   }
 
   public void setGoalAngle(double goalAngle) {
