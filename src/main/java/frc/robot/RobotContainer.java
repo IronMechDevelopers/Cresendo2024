@@ -229,8 +229,11 @@ public class RobotContainer {
         }
 
         private Command getStartCommand() {
-                return Commands.parallel(m_ShooterSubsystem.warmUpMotorToPercentCommand("Fast Speed"),
-                                m_AmpFlopper.ampFlopperDownCommand(), m_volume.putVolumeDown()).withTimeout(.25);
+                return Commands.parallel(
+                        m_ShooterSubsystem.warmUpMotorToPercentCommand("Fast Speed"),
+                        m_AmpFlopper.ampFlopperDownCommand(), 
+                        m_volume.putVolumeDownAuto()
+                ).withTimeout(.25);
         }
 
         /**
