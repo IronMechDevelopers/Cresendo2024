@@ -79,4 +79,9 @@ public class VolumeSubsystem extends SubsystemBase {
     this.goalAngle = goalAngle;
   }
 
+  public Command zeroEncoder() {
+    return Commands.runOnce(() -> encoder.reset(), this);
+  }
+
+
 }
