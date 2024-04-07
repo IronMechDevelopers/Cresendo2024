@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.75,
-        "y": 4.45326569693211
+        "x": 0.7615888907703744,
+        "y": 4.5541584127333
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.45935579008300675,
-        "y": 3.082363017096029
+        "x": 0.47094468085338115,
+        "y": 3.183255732897219
       },
       "isLocked": false,
       "linkedName": "ShootSource"
@@ -61,7 +61,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.25,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 2.75,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 360.0
   },

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2162845193745944,
-        "y": 3.8614989469562278
+        "x": 1.6444625360145328,
+        "y": 4.177454781839711
       },
       "isLocked": false,
       "linkedName": "ShootCenter"
@@ -45,7 +45,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.25,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 2.75,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 360.0
   },
