@@ -200,6 +200,8 @@ public class RobotContainer {
 
                 SmartDashboard.putData("DANIEL USE ONLY",
                                 new TestingSubsystemsCommand(m_robotDrive, m_StagingSubsystem, m_ShooterSubsystem));
+
+                SmartDashboard.putData("ZERO VOLUME", m_volume.zeroEncoder());        
                 createAuto();
 
         }

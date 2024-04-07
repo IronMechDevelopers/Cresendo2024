@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.752634788357812,
-        "y": 4.002703171613452
+        "x": 2.85,
+        "y": 4.1
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.993835564619014,
-        "y": 3.8427699454314963
+        "x": 1.0912007762612022,
+        "y": 3.940066773818044
       },
       "isLocked": false,
       "linkedName": "PickUpSource"
@@ -45,7 +45,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.25,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 2.75,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 360.0
   },

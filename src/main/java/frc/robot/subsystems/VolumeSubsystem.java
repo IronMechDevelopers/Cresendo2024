@@ -33,7 +33,7 @@ public class VolumeSubsystem extends SubsystemBase {
     this.soundAngleMotor.setInverted(false);
     DigitalInput input = new DigitalInput(3);
     encoder = new DutyCycleEncoder(input);
-    encoder.setPositionOffset(180.0/360);
+    encoder.setPositionOffset(59.0/360);
     encoder.setDutyCycleRange(1.0 / 1024.0, 1023.0 / 1024.0);
     encoder.setDistancePerRotation(360.0);
   }
@@ -78,5 +78,10 @@ public class VolumeSubsystem extends SubsystemBase {
   public void setGoalAngle(double goalAngle) {
     this.goalAngle = goalAngle;
   }
+
+  public Command zeroEncoder() {
+    return Commands.runOnce(() -> encoder.reset(), this);
+  }
+
 
 }
